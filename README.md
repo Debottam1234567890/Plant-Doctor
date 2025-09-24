@@ -15,19 +15,6 @@ It uses a **ResNet18-based CNN model** trained on the [PlantVillage dataset](htt
 
 ---
 
-## Project Structure
-
-```
-Plant_Disease_Detection/
-│── ui.py                                 # User Interface file
-│── engine.py                             # Training & evaluation engine
-│── requirements.txt                      # Python dependencies
-│── README.md                             # Project documentation
-|── resnet18_plant_disease_detection.pth  # Model file
-```
-
----
-
 ## Installation
 
 Clone the repository and install dependencies:
