@@ -1,4 +1,4 @@
-# Plant Doctor – Plant Disease Detection
+# Plant Doctor
 
 Plant Doctor is a deep learning-powered application designed to help identify plant diseases from leaf images.
 It uses a **ResNet18-based CNN model** trained on the [PlantVillage dataset](https://www.tensorflow.org/datasets/catalog/plant_village) and [PlantDoc dataset](https://github.com/pratikkayal/PlantDoc-Dataset), making it a valuable tool for farmers, researchers, and anyone interested in precision agriculture.
