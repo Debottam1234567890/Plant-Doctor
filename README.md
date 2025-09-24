@@ -81,7 +81,7 @@ streamlit run ui.py
 Below is an example of the Plant Doctor prediction UI and result:
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/Debottam1234567890/Plant-Doctor/main/assets/prediction_screenshot.png" alt="Plant Doctor Prediction Example" width="600"/>
+  <img src="https://github.com/Debottam1234567890/Plant-Doctor/blob/main/assets/prediction.png" alt="Plant Doctor Prediction Example" width="600"/>
 </p>
 
 > *A screenshot of the Streamlit-based Plant Doctor UI, showing an uploaded leaf image and the model's predicted disease result.*
