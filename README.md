@@ -44,7 +44,7 @@ If you have the UI file (e.g., `ui.py` with Streamlit):
 ```bash
 streamlit run ui.py
 ```
-
+Note: The actual hosted app (plant-doctor-ai.streamlit.app) has to be "waken up" at times due to streamlit requirements, but the actual loading of the app takes 2-3 seconds only.
 ---
 
 ## Dataset
