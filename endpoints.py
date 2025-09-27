@@ -2877,5 +2877,6 @@ def internal_error(error):
 
 if __name__ == '__main__':
     initialize_app()
-    # Configure Flask to run on all hosts (required for cloud deployment)
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    port = int(os.environ.get("PORT", 10000))  # Render gives you this automatically
+    app.run(host="0.0.0.0", port=port, debug=False)
+
