@@ -1,0 +1,2927 @@
+{
+    "Peach Leaf Curl": {
+        "plant": "Peach",
+        "disease": "Leaf Curl",
+        "causes": [
+            "Fungal infection",
+            "Poor air circulation",
+            "High humidity"
+        ],
+        "symptoms": [
+            "Curling of leaves",
+            "Red or yellow discoloration",
+            "Leaf drop"
+        ],
+        "severity_mild": "Leaves may curl slightly but the plant remains healthy overall.",
+        "severity_moderate": "Leaves show significant curling and discoloration, affecting plant health.",
+        "severity_severe": "Leaves are severely curled and discolored, leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Prune affected leaves",
+            "Improve air circulation",
+            "Apply fungicide",
+            "Maintain proper humidity levels"
+        ],
+        "medicines": [
+            "Copper fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 14,
+        "prevention": [
+            "Regularly inspect plants for early signs of disease",
+            "Ensure good air circulation around plants",
+            "Avoid overhead watering"
+        ]
+    },
+    "Tomato Late Blight": {
+        "plant": "Tomato",
+        "disease": "Late Blight",
+        "causes": [
+            "Fungal infection (Phytophthora infestans)",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Dark, water-soaked spots on leaves",
+            "White fungal growth on undersides of leaves",
+            "Wilting and browning of leaves"
+        ],
+        "severity_mild": "Few leaves show dark spots but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant wilting and discoloration.",
+        "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected plants",
+            "Apply fungicide",
+            "Improve air circulation",
+            "Avoid overhead watering"
+        ],
+        "medicines": [
+            "Copper fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 10,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Corn Leaf Blight": {
+        "plant": "Corn",
+        "disease": "Leaf Blight",
+        "causes": [
+            "Fungal infection",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Brown spots on leaves",
+            "Yellowing of leaf edges",
+            "Wilting of leaves"
+        ],
+        "severity_mild": "Few leaves show brown spots but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+        "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected leaves",
+            "Apply fungicide",
+            "Improve air circulation",
+            "Avoid overhead watering"
+        ],
+        "medicines": [
+            "Copper fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 12,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Apple Rust": {
+        "plant": "Apple",
+        "disease": "Rust",
+        "causes": [
+            "Fungal infection",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Orange or yellow spots on leaves",
+            "Rusty appearance on undersides of leaves",
+            "Leaf drop"
+        ],
+        "severity_mild": "Few leaves show orange spots but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant discoloration and leaf drop.",
+        "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected leaves",
+            "Apply fungicide",
+            "Improve air circulation",
+            "Maintain proper humidity levels"
+        ],
+        "medicines": [
+            "Copper fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 10,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Apple Black Rot": {
+        "plant": "Apple",
+        "disease": "Black Rot",
+        "causes": [
+            "Fungal infection (Botryosphaeria obtusa)",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Dark, sunken lesions on fruit",
+            "Black streaks on leaves",
+            "Leaf drop"
+        ],
+        "severity_mild": "Few fruits show dark lesions but the plant remains healthy.",
+        "severity_moderate": "Multiple fruits affected with significant lesions and leaf drop.",
+        "severity_severe": "Widespread fruit damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected fruits",
+            "Apply fungicide",
+            "Improve air circulation",
+            "Maintain proper humidity levels"
+        ],
+        "medicines": [
+            "Copper fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 14,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Tomato Mosaic Virus": {
+        "plant": "Tomato",
+        "disease": "Mosaic Virus",
+        "causes": [
+            "Viral infection",
+            "Insect vectors (aphids, whiteflies)",
+            "Contaminated tools or seeds"
+        ],
+        "symptoms": [
+            "Mosaic pattern on leaves",
+            "Stunted growth",
+            "Yellowing of leaves"
+        ],
+        "severity_mild": "Few leaves show mosaic patterns but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant stunting and yellowing.",
+        "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected plants",
+            "Control insect vectors",
+            "Sanitize tools and equipment"
+        ],
+        "medicines": [
+            "Insecticidal soap",
+            "Neem oil"
+        ],
+        "progression_days": 7,
+        "prevention": [
+            "Use virus-resistant varieties",
+            "Control insect populations",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Peach Healthy": {
+        "plant": "Peach",
+        "disease": "Healthy",
+        "causes": [],
+        "symptoms": [],
+        "severity_mild": "",
+        "severity_moderate": "",
+        "severity_severe": "",
+        "treatment": [],
+        "medicines": [],
+        "progression_days": 0,
+        "prevention": []
+    },
+    "Potato Healthy": {
+        "plant": "Potato",
+        "disease": "Healthy",
+        "causes": [],
+        "symptoms": [],
+        "severity_mild": "",
+        "severity_moderate": "",
+        "severity_severe": "",
+        "treatment": [],
+        "medicines": [],
+        "progression_days": 0,
+        "prevention": []
+    },
+    "Tomato Yellow Virus": {
+        "plant": "Tomato",
+        "disease": "Yellow Virus",
+        "causes": [
+            "Viral infection",
+            "Insect vectors (aphids, whiteflies)",
+            "Contaminated tools or seeds"
+        ],
+        "symptoms": [
+            "Yellowing of leaves",
+            "Stunted growth",
+            "Leaf curling"
+        ],
+        "severity_mild": "Few leaves show yellowing but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant stunting and curling.",
+        "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected plants",
+            "Control insect vectors",
+            "Sanitize tools and equipment"
+        ],
+        "medicines": [
+            "Insecticidal soap",
+            "Neem oil"
+        ],
+        "progression_days": 7,
+        "prevention": [
+            "Use virus-resistant varieties",
+            "Control insect populations",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Squash Powdery Mildew": {
+        "plant": "Squash",
+        "disease": "Powdery Mildew",
+        "causes": [
+            "Fungal infection",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "White, powdery spots on leaves",
+            "Leaf curling and distortion",
+            "Yellowing of leaves"
+        ],
+        "severity_mild": "Few leaves show white spots but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant curling and yellowing.",
+        "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected leaves",
+            "Apply fungicide",
+            "Improve air circulation",
+            "Maintain proper humidity levels"
+        ],
+        "medicines": [
+            "Sulfur fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 10,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Tomato Early Blight": {
+        "plant": "Tomato",
+        "disease": "Early Blight",
+        "causes": [
+            "Fungal infection (Alternaria solani)",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Dark, concentric rings on leaves",
+            "Yellowing of leaf edges",
+            "Wilting of leaves"
+        ],
+        "severity_mild": "Few leaves show dark rings but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+        "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected leaves",
+            "Apply fungicide",
+            "Improve air circulation",
+            "Avoid overhead watering"
+        ],
+        "medicines": [
+            "Copper fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 12,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Orange Citrus Greening": {
+        "plant": "Orange",
+        "disease": "Citrus Greening",
+        "causes": [
+            "Bacterial infection (Candidatus Liberibacter asiaticus)",
+            "Insect vectors (Asian citrus psyllid)"
+        ],
+        "symptoms": [
+            "Yellowing of leaves",
+            "Stunted growth",
+            "Bitter, misshapen fruit"
+        ],
+        "severity_mild": "Few leaves show yellowing but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant stunting and fruit deformities.",
+        "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected plants",
+            "Control insect vectors",
+            "Sanitize tools and equipment"
+        ],
+        "medicines": [
+            "Insecticidal soap",
+            "Neem oil"
+        ],
+        "progression_days": 14,
+        "prevention": [
+            "Use disease-resistant varieties",
+            "Control insect populations",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Bell Pepper Leaf Spot": {
+        "plant": "Bell Pepper",
+        "disease": "Leaf Spot",
+        "causes": [
+            "Fungal infection",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Brown or black spots on leaves",
+            "Yellowing of leaf edges",
+            "Wilting of leaves"
+        ],
+        "severity_mild": "Few leaves show spots but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+        "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected leaves",
+            "Apply fungicide",
+            "Improve air circulation",
+            "Avoid overhead watering"
+        ],
+        "medicines": [
+            "Copper fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 10,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Strawberry Healthy": {
+        "plant": "Strawberry",
+        "disease": "Healthy",
+        "causes": [],
+        "symptoms": [],
+        "severity_mild": "",
+        "severity_moderate": "",
+        "severity_severe": "",
+        "treatment": [],
+        "medicines": [],
+        "progression_days": 0,
+        "prevention": []
+    },
+    "Apple Scab": {
+        "plant": "Apple",
+        "disease": "Scab",
+        "causes": [
+            "Fungal infection (Venturia inaequalis)",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Olive-green to black lesions on leaves",
+            "Deformed fruit",
+            "Leaf drop"
+        ],
+        "severity_mild": "Few leaves show lesions but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant lesions and leaf drop.",
+        "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected leaves",
+            "Apply fungicide",
+            "Improve air circulation",
+            "Maintain proper humidity levels"
+        ],
+        "medicines": [
+            "Copper fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 12,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Tomato Leaf Mold": {
+        "plant": "Tomato",
+        "disease": "Leaf Mold",
+        "causes": [
+            "Fungal infection (Fulvia fulva)",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Yellowing of leaves",
+            "Grayish mold on undersides of leaves",
+            "Wilting of leaves"
+        ],
+        "severity_mild": "Few leaves show yellowing but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant wilting and discoloration.",
+        "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected leaves",
+            "Apply fungicide",
+            "Improve air circulation",
+            "Avoid overhead watering"
+        ],
+        "medicines": [
+            "Copper fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 10,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Tomato Target Spot": {
+        "plant": "Tomato",
+        "disease": "Target Spot",
+        "causes": [
+            "Fungal infection (Corynespora cassiicola)",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Dark, circular spots on leaves",
+            "Yellowing of leaf edges",
+            "Wilting of leaves"
+        ],
+        "severity_mild": "Few leaves show dark spots but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+        "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected leaves",
+            "Apply fungicide",
+            "Improve air circulation",
+            "Avoid overhead watering"
+        ],
+        "medicines": [
+            "Copper fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 12,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Soybean Healthy": {
+        "plant": "Soybean",
+        "disease": "Healthy",
+        "causes": [],
+        "symptoms": [],
+        "severity_mild": "",
+        "severity_moderate": "",
+        "severity_severe": "",
+        "treatment": [],
+        "medicines": [],
+        "progression_days": 0,
+        "prevention": []
+    },
+    "Grape Esca": {
+        "plant": "Grape",
+        "disease": "Esca",
+        "causes": [
+            "Fungal infection (Phaeomoniella chlamydospora)",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Leaf yellowing and wilting",
+            "Dark streaks on wood",
+            "Poor fruit development"
+        ],
+        "severity_mild": "Few leaves show yellowing but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant wilting and poor fruit development.",
+        "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected plants",
+            "Improve air circulation",
+            "Maintain proper humidity levels"
+        ],
+        "medicines": [
+            "Copper fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 14,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Tomato Bacterial Spot": {
+        "plant": "Tomato",
+        "disease": "Bacterial Spot",
+        "causes": [
+            "Bacterial infection (Xanthomonas campestris pv. vesicatoria)",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Water-soaked spots on leaves",
+            "Yellowing of leaf edges",
+            "Wilting of leaves"
+        ],
+        "severity_mild": "Few leaves show water-soaked spots but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+        "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected leaves",
+            "Apply bactericide",
+            "Improve air circulation",
+            "Avoid overhead watering"
+        ],
+        "medicines": [
+            "Copper bactericide",
+            "Neem oil"
+        ],
+        "progression_days": 10,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Strawberry Leaf Scorch": {
+        "plant": "Strawberry",
+        "disease": "Leaf Scorch",
+        "causes": [
+            "Fungal infection",
+            "High temperatures",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Brown, scorched edges on leaves",
+            "Wilting of leaves",
+            "Reduced fruit yield"
+        ],
+        "severity_mild": "Few leaves show scorched edges but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant wilting and reduced yield.",
+        "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy affected leaves",
+            "Improve air circulation",
+            "Maintain proper watering practices"
+        ],
+        "medicines": [
+            "Copper fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 10,
+        "prevention": [
+            "Plant resistant varieties",
+            "Ensure proper spacing between plants",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Grape Leaf Blight": {
+        "plant": "Grape",
+        "disease": "Leaf Blight",
+        "causes": [
+            "Fungal infection (Phomopsis viticola)",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Brown spots on leaves",
+            "Yellowing of leaf edges",
+            "Wilting of leaves"
+        ],
+        "severity_mild": "Few leaves show brown spots but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+        "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected leaves",
+            "Apply fungicide",
+            "Improve air circulation",
+            "Avoid overhead watering"
+        ],
+        "medicines": [
+            "Copper fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 12,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Potato Late Blight": {
+        "plant": "Potato",
+        "disease": "Late Blight",
+        "causes": [
+            "Fungal infection (Phytophthora infestans)",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Dark, water-soaked spots on leaves",
+            "White fungal growth on undersides of leaves",
+            "Wilting and browning of leaves"
+        ],
+        "severity_mild": "Few leaves show dark spots but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant wilting and discoloration.",
+        "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected plants",
+            "Apply fungicide",
+            "Improve air circulation",
+            "Avoid overhead watering"
+        ],
+        "medicines": [
+            "Copper fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 10,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Corn Healthy": {
+        "plant": "Corn",
+        "disease": "Healthy",
+        "causes": [],
+        "symptoms": [],
+        "severity_mild": "",
+        "severity_moderate": "",
+        "severity_severe": "",
+        "treatment": [],
+        "medicines": [],
+        "progression_days": 0,
+        "prevention": []
+    },
+    "Cherry Healthy": {
+        "plant": "Cherry",
+        "disease": "Healthy",
+        "causes": [],
+        "symptoms": [],
+        "severity_mild": "",
+        "severity_moderate": "",
+        "severity_severe": "",
+        "treatment": [],
+        "medicines": [],
+        "progression_days": 0,
+        "prevention": []
+    },
+    "Bell Pepper Healthy": {
+        "plant": "Bell Pepper",
+        "disease": "Healthy",
+        "causes": [],
+        "symptoms": [],
+        "severity_mild": "",
+        "severity_moderate": "",
+        "severity_severe": "",
+        "treatment": [],
+        "medicines": [],
+        "progression_days": 0,
+        "prevention": []
+    },
+    "Corn Rust": {
+        "plant": "Corn",
+        "disease": "Rust",
+        "causes": [
+            "Fungal infection (Puccinia sorghi)",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Orange or brown pustules on leaves",
+            "Yellowing of leaf edges",
+            "Wilting of leaves"
+        ],
+        "severity_mild": "Few leaves show pustules but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+        "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected leaves",
+            "Apply fungicide",
+            "Improve air circulation",
+            "Avoid overhead watering"
+        ],
+        "medicines": [
+            "Copper fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 10,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Blueberry Healthy": {
+        "plant": "Blueberry",
+        "disease": "Healthy",
+        "causes": [],
+        "symptoms": [],
+        "severity_mild": "",
+        "severity_moderate": "",
+        "severity_severe": "",
+        "treatment": [],
+        "medicines": [],
+        "progression_days": 0,
+        "prevention": []
+    },
+    "Apple Healthy": {
+        "plant": "Apple",
+        "disease": "Healthy",
+        "causes": [],
+        "symptoms": [],
+        "severity_mild": "",
+        "severity_moderate": "",
+        "severity_severe": "",
+        "treatment": [],
+        "medicines": [],
+        "progression_days": 0,
+        "prevention": []
+    },
+    "Potato Early Blight": {
+        "plant": "Potato",
+        "disease": "Early Blight",
+        "causes": [
+            "Fungal infection (Alternaria solani)",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Dark, concentric rings on leaves",
+            "Yellowing of leaf edges",
+            "Wilting of leaves"
+        ],
+        "severity_mild": "Few leaves show dark rings but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+        "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected leaves",
+            "Apply fungicide",
+            "Improve air circulation",
+            "Avoid overhead watering"
+        ],
+        "medicines": [
+            "Copper fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 12,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Cherry Powdery Mildew": {
+        "plant": "Cherry",
+        "disease": "Powdery Mildew",
+        "causes": [
+            "Fungal infection",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "White, powdery spots on leaves",
+            "Leaf curling and distortion",
+            "Yellowing of leaves"
+        ],
+        "severity_mild": "Few leaves show white spots but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant curling and yellowing.",
+        "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected leaves",
+            "Apply fungicide",
+            "Improve air circulation",
+            "Maintain proper humidity levels"
+        ],
+        "medicines": [
+            "Sulfur fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 10,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Corn Gray Leaf Spot": {
+        "plant": "Corn",
+        "disease": "Gray Leaf Spot",
+        "causes": [
+            "Fungal infection (Cercospora zeae-maydis)",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Grayish-brown spots on leaves",
+            "Yellowing of leaf edges",
+            "Wilting of leaves"
+        ],
+        "severity_mild": "Few leaves show gray spots but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+        "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected leaves",
+            "Apply fungicide",
+            "Improve air circulation",
+            "Avoid overhead watering"
+        ],
+        "medicines": [
+            "Copper fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 12,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Grape Black Rot": {
+        "plant": "Grape",
+        "disease": "Black Rot",
+        "causes": [
+            "Fungal infection (Guignardia bidwellii)",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Dark, sunken lesions on fruit",
+            "Black streaks on leaves",
+            "Leaf drop"
+        ],
+        "severity_mild": "Few fruits show dark lesions but the plant remains healthy.",
+        "severity_moderate": "Multiple fruits affected with significant lesions and leaf drop.",
+        "severity_severe": "Widespread fruit damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected fruits",
+            "Apply fungicide",
+            "Improve air circulation",
+            "Maintain proper humidity levels"
+        ],
+        "medicines": [
+            "Copper fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 14,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Raspberry Healthy": {
+        "plant": "Raspberry",
+        "disease": "Healthy",
+        "causes": [],
+        "symptoms": [],
+        "severity_mild": "",
+        "severity_moderate": "",
+        "severity_severe": "",
+        "treatment": [],
+        "medicines": [],
+        "progression_days": 0,
+        "prevention": []
+    },
+    "Grape Healthy": {
+        "plant": "Grape",
+        "disease": "Healthy",
+        "causes": [],
+        "symptoms": [],
+        "severity_mild": "",
+        "severity_moderate": "",
+        "severity_severe": "",
+        "treatment": [],
+        "medicines": [],
+        "progression_days": 0,
+        "prevention": []
+    },
+    "Tomato Spider Mite": {
+        "plant": "Tomato",
+        "disease": "Spider Mite",
+        "causes": [
+            "Insect infestation (Tetranychus urticae)",
+            "High temperatures",
+            "Low humidity"
+        ],
+        "symptoms": [
+            "Fine webbing on leaves",
+            "Yellowing and stippling of leaves",
+            "Leaf drop"
+        ],
+        "severity_mild": "Few leaves show webbing but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant yellowing and stippling.",
+        "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infested leaves",
+            "Apply miticide",
+            "Increase humidity around plants"
+        ],
+        "medicines": [
+            "Insecticidal soap",
+            "Neem oil"
+        ],
+        "progression_days": 7,
+        "prevention": [
+            "Regularly inspect plants for early signs of infestation",
+            "Maintain proper humidity levels",
+            "Avoid overcrowding plants"
+        ]
+    },
+    "Tomato Healthy": {
+        "plant": "Tomato",
+        "disease": "Healthy",
+        "causes": [],
+        "symptoms": [],
+        "severity_mild": "",
+        "severity_moderate": "",
+        "severity_severe": "",
+        "treatment": [],
+        "medicines": [],
+        "progression_days": 0,
+        "prevention": []
+    },
+    "Tomato Septoria Leaf Spot": {
+        "plant": "Tomato",
+        "disease": "Septoria Leaf Spot",
+        "causes": [
+            "Fungal infection (Septoria lycopersici)",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Small, dark spots on leaves",
+            "Yellowing of leaf edges",
+            "Wilting of leaves"
+        ],
+        "severity_mild": "Few leaves show dark spots but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+        "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected leaves",
+            "Apply fungicide",
+            "Improve air circulation",
+            "Avoid overhead watering"
+        ],
+        "medicines": [
+            "Copper fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 10,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Banana Bunchy Top Virus": {
+        "plant": "Banana",
+        "disease": "Bunchy Top Virus",
+        "causes": [
+            "Viral infection",
+            "Insect vectors (aphids)",
+            "Contaminated tools or seeds"
+        ],
+        "symptoms": [
+            "Stunted growth",
+            "Bunchy appearance of leaves",
+            "Yellowing of leaf edges"
+        ],
+        "severity_mild": "Few leaves show stunted growth but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant stunting and yellowing.",
+        "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected plants",
+            "Control insect vectors",
+            "Sanitize tools and equipment"
+        ],
+        "medicines": [
+            "Insecticidal soap",
+            "Neem oil"
+        ],
+        "progression_days": 7,
+        "prevention": [
+            "Use virus-resistant varieties",
+            "Control insect populations",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Banana Sigatoka": {
+        "plant": "Banana",
+        "disease": "Sigatoka",
+        "causes": [
+            "Fungal infection (Mycosphaerella fijiensis)",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Dark streaks on leaves",
+            "Yellowing of leaf edges",
+            "Leaf drop"
+        ],
+        "severity_mild": "Few leaves show dark streaks but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant yellowing and leaf drop.",
+        "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected leaves",
+            "Apply fungicide",
+            "Improve air circulation",
+            "Maintain proper humidity levels"
+        ],
+        "medicines": [
+            "Copper fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 10,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Guava Rust": {
+        "plant": "Guava",
+        "disease": "Rust",
+        "causes": [
+            "Fungal infection (Puccinia psidii)",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Rusty, orange spots on leaves",
+            "Yellowing of leaf edges",
+            "Wilting of leaves"
+        ],
+        "severity_mild": "Few leaves show rusty spots but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+        "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected leaves",
+            "Apply fungicide",
+            "Improve air circulation",
+            "Avoid overhead watering"
+        ],
+        "medicines": [
+            "Copper fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 10,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Guava Wilt": {
+        "plant": "Guava",
+        "disease": "Wilt",
+        "causes": [
+            "Fungal infection (Fusarium oxysporum)",
+            "High temperatures",
+            "Poor drainage"
+        ],
+        "symptoms": [
+            "Wilting of leaves",
+            "Yellowing of leaf edges",
+            "Stunted growth"
+        ],
+        "severity_mild": "Few leaves show wilting but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant yellowing and stunting.",
+        "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected plants",
+            "Improve soil drainage",
+            "Avoid overwatering"
+        ],
+        "medicines": [
+            "Copper fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 14,
+        "prevention": [
+            "Plant resistant varieties",
+            "Ensure proper soil drainage",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Mango Anthracnose": {
+        "plant": "Mango",
+        "disease": "Anthracnose",
+        "causes": [
+            "Fungal infection (Colletotrichum gloeosporioides)",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Dark, sunken lesions on fruit",
+            "Leaf spots",
+            "Wilting of leaves"
+        ],
+        "severity_mild": "Few fruits show dark lesions but the plant remains healthy.",
+        "severity_moderate": "Multiple fruits affected with significant lesions and leaf spots.",
+        "severity_severe": "Widespread fruit damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected fruits",
+            "Apply fungicide",
+            "Improve air circulation",
+            "Maintain proper humidity levels"
+        ],
+        "medicines": [
+            "Copper fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 14,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Mango Powdery Mildew": {
+        "plant": "Mango",
+        "disease": "Powdery Mildew",
+        "causes": [
+            "Fungal infection",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "White, powdery spots on leaves",
+            "Leaf curling and distortion",
+            "Yellowing of leaves"
+        ],
+        "severity_mild": "Few leaves show white spots but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant curling and yellowing.",
+        "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected leaves",
+            "Apply fungicide",
+            "Improve air circulation",
+            "Maintain proper humidity levels"
+        ],
+        "medicines": [
+            "Sulfur fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 10,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Papaya Ring Spot Virus": {
+        "plant": "Papaya",
+        "disease": "Ring Spot Virus",
+        "causes": [
+            "Viral infection",
+            "Insect vectors (aphids)",
+            "Contaminated tools or seeds"
+        ],
+        "symptoms": [
+            "Yellow rings on leaves",
+            "Stunted growth",
+            "Reduced fruit yield"
+        ],
+        "severity_mild": "Few leaves show yellow rings but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant stunting and reduced yield.",
+        "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected plants",
+            "Control insect vectors",
+            "Sanitize tools and equipment"
+        ],
+        "medicines": [
+            "Insecticidal soap",
+            "Neem oil"
+        ],
+        "progression_days": 7,
+        "prevention": [
+            "Use virus-resistant varieties",
+            "Control insect populations",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Peach Leaf Spot": {
+        "plant": "Peach",
+        "disease": "Leaf Spot",
+        "causes": [
+            "Fungal infection (Cladosporium carpophilum)",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Brown or black spots on leaves",
+            "Yellowing of leaf edges",
+            "Wilting of leaves"
+        ],
+        "severity_mild": "Few leaves show spots but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+        "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected leaves",
+            "Apply fungicide",
+            "Improve air circulation",
+            "Avoid overhead watering"
+        ],
+        "medicines": [
+            "Copper fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 10,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Pomegranate Bacterial Blight": {
+        "plant": "Pomegranate",
+        "disease": "Bacterial Blight",
+        "causes": [
+            "Bacterial infection (Xanthomonas axonopodis)",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Water-soaked spots on leaves",
+            "Yellowing of leaf edges",
+            "Wilting of leaves"
+        ],
+        "severity_mild": "Few leaves show water-soaked spots but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+        "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected leaves",
+            "Apply bactericide",
+            "Improve air circulation",
+            "Avoid overhead watering"
+        ],
+        "medicines": [
+            "Copper bactericide",
+            "Neem oil"
+        ],
+        "progression_days": 10,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Pomegranate Leaf Spot": {
+        "plant": "Pomegranate",
+        "disease": "Leaf Spot",
+        "causes": [
+            "Fungal infection (Alternaria spp.)",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Dark, circular spots on leaves",
+            "Yellowing of leaf edges",
+            "Wilting of leaves"
+        ],
+        "severity_mild": "Few leaves show dark spots but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+        "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected leaves",
+            "Apply fungicide",
+            "Improve air circulation",
+            "Avoid overhead watering"
+        ],
+        "medicines": [
+            "Copper fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 12,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Rice Bacterial Leaf Blight": {
+        "plant": "Rice",
+        "disease": "Bacterial Leaf Blight",
+        "causes": [
+            "Bacterial infection (Xanthomonas oryzae pv. oryzae)",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Water-soaked lesions on leaves",
+            "Yellowing of leaf edges",
+            "Wilting of leaves"
+        ],
+        "severity_mild": "Few leaves show water-soaked lesions but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+        "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected leaves",
+            "Apply bactericide",
+            "Improve air circulation",
+            "Avoid overhead watering"
+        ],
+        "medicines": [
+            "Copper bactericide",
+            "Neem oil"
+        ],
+        "progression_days": 10,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Rice Brown Spot": {
+        "plant": "Rice",
+        "disease": "Brown Spot",
+        "causes": [
+            "Fungal infection (Bipolaris oryzae)",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Brown, oval spots on leaves",
+            "Yellowing of leaf edges",
+            "Wilting of leaves"
+        ],
+        "severity_mild": "Few leaves show brown spots but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+        "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected leaves",
+            "Apply fungicide",
+            "Improve air circulation",
+            "Avoid overhead watering"
+        ],
+        "medicines": [
+            "Copper fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 12,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Sugarcane Red Rot": {
+        "plant": "Sugarcane",
+        "disease": "Red Rot",
+        "causes": [
+            "Fungal infection (Colletotrichum falcatum)",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Red or brown lesions on stalks",
+            "Wilting of leaves",
+            "Reduced sugar content"
+        ],
+        "severity_mild": "Few stalks show red lesions but the plant remains healthy.",
+        "severity_moderate": "Multiple stalks affected with significant wilting and reduced sugar content.",
+        "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected plants",
+            "Apply fungicide",
+            "Improve air circulation",
+            "Maintain proper humidity levels"
+        ],
+        "medicines": [
+            "Copper fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 14,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Wheat Leaf Rust": {
+        "plant": "Wheat",
+        "disease": "Leaf Rust",
+        "causes": [
+            "Fungal infection (Puccinia triticina)",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Orange or brown pustules on leaves",
+            "Yellowing of leaf edges",
+            "Wilting of leaves"
+        ],
+        "severity_mild": "Few leaves show pustules but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+        "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected leaves",
+            "Apply fungicide",
+            "Improve air circulation",
+            "Avoid overhead watering"
+        ],
+        "medicines": [
+            "Copper fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 10,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Wheat Stem Rust": {
+        "plant": "Wheat",
+        "disease": "Stem Rust",
+        "causes": [
+            "Fungal infection (Puccinia graminis)",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Dark brown or black pustules on stems",
+            "Yellowing of leaves",
+            "Wilting of leaves"
+        ],
+        "severity_mild": "Few stems show pustules but the plant remains healthy.",
+        "severity_moderate": "Multiple stems affected with significant yellowing and wilting.",
+        "severity_severe": "Widespread stem damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected plants",
+            "Apply fungicide",
+            "Improve air circulation",
+            "Avoid overhead watering"
+        ],
+        "medicines": [
+            "Copper fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 12,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Tea Blister Blight": {
+        "plant": "Tea",
+        "disease": "Blister Blight",
+        "causes": [
+            "Fungal infection (Exobasidium vexans)",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Blister-like lesions on leaves",
+            "Yellowing of leaf edges",
+            "Wilting of leaves"
+        ],
+        "severity_mild": "Few leaves show blisters but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+        "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected leaves",
+            "Apply fungicide",
+            "Improve air circulation",
+            "Maintain proper humidity levels"
+        ],
+        "medicines": [
+            "Copper fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 10,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Cabbage Looper": {
+        "plant": "Cabbage",
+        "disease": "Looper",
+        "causes": [
+            "Insect infestation (Trichoplusia ni)",
+            "High temperatures",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Chewed holes in leaves",
+            "Caterpillar-like larvae on leaves",
+            "Wilting of leaves"
+        ],
+        "severity_mild": "Few leaves show chewed holes but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant chewing and wilting.",
+        "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infested leaves",
+            "Apply insecticide",
+            "Increase air circulation",
+            "Regularly inspect plants for early signs of infestation"
+        ],
+        "medicines": [
+            "Insecticidal soap",
+            "Neem oil"
+        ],
+        "progression_days": 7,
+        "prevention": [
+            "Regularly inspect plants for early signs of infestation",
+            "Maintain proper humidity levels",
+            "Avoid overcrowding plants"
+        ]
+    },
+    "Apple Powdery Mildew": {
+        "plant": "Apple",
+        "disease": "Powdery Mildew",
+        "causes": [
+            "Fungal infection",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "White, powdery spots on leaves",
+            "Leaf curling and distortion",
+            "Yellowing of leaves"
+        ],
+        "severity_mild": "Few leaves show white spots but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant curling and yellowing.",
+        "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected leaves",
+            "Apply fungicide",
+            "Improve air circulation",
+            "Maintain proper humidity levels"
+        ],
+        "medicines": [
+            "Sulfur fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 10,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Cashew Anthracnose": {
+        "plant": "Cashew",
+        "disease": "Anthracnose",
+        "causes": [
+            "Fungal infection (Colletotrichum gloeosporioides)",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Dark, sunken lesions on leaves and fruit",
+            "Leaf drop",
+            "Wilting of leaves"
+        ],
+        "severity_mild": "Few leaves show dark lesions but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant lesions and leaf drop.",
+        "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected leaves and fruit",
+            "Apply fungicide",
+            "Improve air circulation",
+            "Maintain proper humidity levels"
+        ],
+        "medicines": [
+            "Copper fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 14,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Cashew Gumosis": {
+        "plant": "Cashew",
+        "disease": "Gummosis",
+        "causes": [
+            "Fungal infection (Phytophthora spp.)",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Gum oozing from bark",
+            "Wilting of leaves",
+            "Stunted growth"
+        ],
+        "severity_mild": "Few branches show gum oozing but the plant remains healthy.",
+        "severity_moderate": "Multiple branches affected with significant wilting and stunting.",
+        "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected branches",
+            "Apply fungicide",
+            "Improve air circulation",
+            "Avoid overhead watering"
+        ],
+        "medicines": [
+            "Copper fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 10,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Cashew Healthy": {
+        "plant": "Cashew",
+        "disease": "Healthy",
+        "causes": [],
+        "symptoms": [],
+        "severity_mild": "",
+        "severity_moderate": "",
+        "severity_severe": "",
+        "treatment": [],
+        "medicines": [],
+        "progression_days": 0,
+        "prevention": []
+    },
+    "Cashew Leaf Miner": {
+        "plant": "Cashew",
+        "disease": "Leaf Miner",
+        "causes": [
+            "Insect infestation (Leucoptera coffeella)",
+            "High temperatures",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Tunnels in leaves",
+            "Yellowing of leaf edges",
+            "Wilting of leaves"
+        ],
+        "severity_mild": "Few leaves show tunnels but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+        "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infested leaves",
+            "Apply insecticide",
+            "Increase air circulation",
+            "Regularly inspect plants for early signs of infestation"
+        ],
+        "medicines": [
+            "Insecticidal soap",
+            "Neem oil"
+        ],
+        "progression_days": 7,
+        "prevention": [
+            "Regularly inspect plants for early signs of infestation",
+            "Maintain proper humidity levels",
+            "Avoid overcrowding plants"
+        ]
+    },
+    "Cashew Red Rust": {
+        "plant": "Cashew",
+        "disease": "Red Rust",
+        "causes": [
+            "Fungal infection (Puccinia psidii)",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Rusty, orange spots on leaves",
+            "Yellowing of leaf edges",
+            "Wilting of leaves"
+        ],
+        "severity_mild": "Few leaves show rusty spots but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+        "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected leaves",
+            "Apply fungicide",
+            "Improve air circulation",
+            "Avoid overhead watering"
+        ],
+        "medicines": [
+            "Copper fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 10,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Cassava Bacterial Blight": {
+        "plant": "Cassava",
+        "disease": "Bacterial Blight",
+        "causes": [
+            "Bacterial infection (Xanthomonas axonopodis)",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Water-soaked spots on leaves",
+            "Yellowing of leaf edges",
+            "Wilting of leaves"
+        ],
+        "severity_mild": "Few leaves show water-soaked spots but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+        "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected leaves",
+            "Apply bactericide",
+            "Improve air circulation",
+            "Avoid overhead watering"
+        ],
+        "medicines": [
+            "Copper bactericide",
+            "Neem oil"
+        ],
+        "progression_days": 10,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Cassava Brown Spot": {
+        "plant": "Cassava",
+        "disease": "Brown Spot",
+        "causes": [
+            "Fungal infection (Alternaria spp.)",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Dark, circular spots on leaves",
+            "Yellowing of leaf edges",
+            "Wilting of leaves"
+        ],
+        "severity_mild": "Few leaves show dark spots but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+        "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected leaves",
+            "Apply fungicide",
+            "Improve air circulation",
+            "Avoid overhead watering"
+        ],
+        "medicines": [
+            "Copper fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 12,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Cassava Green Mite": {
+        "plant": "Cassava",
+        "disease": "Green Mite",
+        "causes": [
+            "Insect infestation (Mononychellus tanajoa)",
+            "High temperatures",
+            "Low humidity"
+        ],
+        "symptoms": [
+            "Yellowing and stippling of leaves",
+            "Webbing on leaves",
+            "Leaf drop"
+        ],
+        "severity_mild": "Few leaves show yellowing but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant stippling and webbing.",
+        "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infested leaves",
+            "Apply miticide",
+            "Increase humidity around plants"
+        ],
+        "medicines": [
+            "Insecticidal soap",
+            "Neem oil"
+        ],
+        "progression_days": 7,
+        "prevention": [
+            "Regularly inspect plants for early signs of infestation",
+            "Maintain proper humidity levels",
+            "Avoid overcrowding plants"
+        ]
+    },
+    "Cassava Healthy": {
+        "plant": "Cassava",
+        "disease": "Healthy",
+        "causes": [],
+        "symptoms": [],
+        "severity_mild": "",
+        "severity_moderate": "",
+        "severity_severe": "",
+        "treatment": [],
+        "medicines": [],
+        "progression_days": 0,
+        "prevention": []
+    },
+    "Cassava Mosaic": {
+        "plant": "Cassava",
+        "disease": "Mosaic",
+        "causes": [
+            "Viral infection (Cassava mosaic virus)",
+            "Insect vectors (whiteflies)",
+            "Contaminated tools or seeds"
+        ],
+        "symptoms": [
+            "Mosaic patterns on leaves",
+            "Stunted growth",
+            "Reduced yield"
+        ],
+        "severity_mild": "Few leaves show mosaic patterns but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant stunting and reduced yield.",
+        "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected plants",
+            "Control insect vectors",
+            "Sanitize tools and equipment"
+        ],
+        "medicines": [
+            "Insecticidal soap",
+            "Neem oil"
+        ],
+        "progression_days": 7,
+        "prevention": [
+            "Use virus-resistant varieties",
+            "Control insect populations",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Cercospora Leaf Spot": {
+        "plant": "Cassava",
+        "disease": "Cercospora Leaf Spot",
+        "causes": [
+            "Fungal infection (Cercospora spp.)",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Dark, circular spots on leaves",
+            "Yellowing of leaf edges",
+            "Wilting of leaves"
+        ],
+        "severity_mild": "Few leaves show dark spots but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+        "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected leaves",
+            "Apply fungicide",
+            "Improve air circulation",
+            "Avoid overhead watering"
+        ],
+        "medicines": [
+            "Copper fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 12,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Citrus Rust Mite": {
+        "plant": "Citrus",
+        "disease": "Rust Mite",
+        "causes": [
+            "Insect infestation (Phyllocoptruta oleivora)",
+            "High temperatures",
+            "Low humidity"
+        ],
+        "symptoms": [
+            "Bronzing of leaves",
+            "Stippling on fruit",
+            "Reduced fruit quality"
+        ],
+        "severity_mild": "Few leaves show bronzing but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant stippling and reduced fruit quality.",
+        "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infested leaves",
+            "Apply miticide",
+            "Increase humidity around plants"
+        ],
+        "medicines": [
+            "Insecticidal soap",
+            "Neem oil"
+        ],
+        "progression_days": 7,
+        "prevention": [
+            "Regularly inspect plants for early signs of infestation",
+            "Maintain proper humidity levels",
+            "Avoid overcrowding plants"
+        ]
+    },
+    "Coffee Rust": {
+        "plant": "Coffee",
+        "disease": "Rust",
+        "causes": [
+            "Fungal infection (Hemileia vastatrix)",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Yellow-orange spots on leaves",
+            "Leaf drop",
+            "Reduced yield"
+        ],
+        "severity_mild": "Few leaves show yellow-orange spots but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant leaf drop and reduced yield.",
+        "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected leaves",
+            "Apply fungicide",
+            "Improve air circulation",
+            "Maintain proper humidity levels"
+        ],
+        "medicines": [
+            "Copper fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 14,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Garlic Healthy": {
+        "plant": "Garlic",
+        "disease": "Healthy",
+        "causes": [],
+        "symptoms": [],
+        "severity_mild": "",
+        "severity_moderate": "",
+        "severity_severe": "",
+        "treatment": [],
+        "medicines": [],
+        "progression_days": 0,
+        "prevention": []
+    },
+    "Ginger Healthy": {
+        "plant": "Ginger",
+        "disease": "Healthy",
+        "causes": [],
+        "symptoms": [],
+        "severity_mild": "",
+        "severity_moderate": "",
+        "severity_severe": "",
+        "treatment": [],
+        "medicines": [],
+        "progression_days": 0,
+        "prevention": []
+    },
+    "Grape Leaf Rust Mite": {
+        "plant": "Grape",
+        "disease": "Leaf Rust Mite",
+        "causes": [
+            "Insect infestation (Calepitrimerus vitis)",
+            "High temperatures",
+            "Low humidity"
+        ],
+        "symptoms": [
+            "Bronzing of leaves",
+            "Stippling on fruit",
+            "Reduced fruit quality"
+        ],
+        "severity_mild": "Few leaves show bronzing but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant stippling and reduced fruit quality.",
+        "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infested leaves",
+            "Apply miticide",
+            "Increase humidity around plants"
+        ],
+        "medicines": [
+            "Insecticidal soap",
+            "Neem oil"
+        ],
+        "progression_days": 7,
+        "prevention": [
+            "Regularly inspect plants for early signs of infestation",
+            "Maintain proper humidity levels",
+            "Avoid overcrowding plants"
+        ]
+    },
+    "Lemon Canker": {
+        "plant": "Lemon",
+        "disease": "Canker",
+        "causes": [
+            "Bacterial infection (Xanthomonas citri)",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Water-soaked lesions on leaves and fruit",
+            "Yellowing of leaf edges",
+            "Wilting of leaves"
+        ],
+        "severity_mild": "Few leaves show water-soaked lesions but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+        "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected leaves and fruit",
+            "Apply bactericide",
+            "Improve air circulation",
+            "Avoid overhead watering"
+        ],
+        "medicines": [
+            "Copper bactericide",
+            "Neem oil"
+        ],
+        "progression_days": 10,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Maize Fall Armyworm": {
+        "plant": "Maize",
+        "disease": "Fall Armyworm",
+        "causes": [
+            "Insect infestation (Spodoptera frugiperda)",
+            "High temperatures",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Chewed holes in leaves",
+            "Caterpillar-like larvae on leaves",
+            "Wilting of leaves"
+        ],
+        "severity_mild": "Few leaves show chewed holes but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant chewing and wilting.",
+        "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infested leaves",
+            "Apply insecticide",
+            "Increase air circulation",
+            "Regularly inspect plants for early signs of infestation"
+        ],
+        "medicines": [
+            "Insecticidal soap",
+            "Neem oil"
+        ],
+        "progression_days": 7,
+        "prevention": [
+            "Regularly inspect plants for early signs of infestation",
+            "Maintain proper humidity levels",
+            "Avoid overcrowding plants"
+        ]
+    },
+    "Maize Grasshopper": {
+        "plant": "Maize",
+        "disease": "Grasshopper",
+        "causes": [
+            "Insect infestation (Zonocerus variegatus)",
+            "High temperatures",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Chewed holes in leaves",
+            "Wilting of leaves",
+            "Reduced yield"
+        ],
+        "severity_mild": "Few leaves show chewed holes but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant wilting and reduced yield.",
+        "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infested leaves",
+            "Apply insecticide",
+            "Increase air circulation",
+            "Regularly inspect plants for early signs of infestation"
+        ],
+        "medicines": [
+            "Insecticidal soap",
+            "Neem oil"
+        ],
+        "progression_days": 7,
+        "prevention": [
+            "Regularly inspect plants for early signs of infestation",
+            "Maintain proper humidity levels",
+            "Avoid overcrowding plants"
+        ]
+    },
+    "Maize Healthy": {
+        "plant": "Maize",
+        "disease": "Healthy",
+        "causes": [],
+        "symptoms": [],
+        "severity_mild": "",
+        "severity_moderate": "",
+        "severity_severe": "",
+        "treatment": [],
+        "medicines": [],
+        "progression_days": 0,
+        "prevention": []
+    },
+    "Maize Leaf Beetle": {
+        "plant": "Maize",
+        "disease": "Leaf Beetle",
+        "causes": [
+            "Insect infestation (Diabrotica spp.)",
+            "High temperatures",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Chewed holes in leaves",
+            "Wilting of leaves",
+            "Reduced yield"
+        ],
+        "severity_mild": "Few leaves show chewed holes but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant wilting and reduced yield.",
+        "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infested leaves",
+            "Apply insecticide",
+            "Increase air circulation",
+            "Regularly inspect plants for early signs of infestation"
+        ],
+        "medicines": [
+            "Insecticidal soap",
+            "Neem oil"
+        ],
+        "progression_days": 7,
+        "prevention": [
+            "Regularly inspect plants for early signs of infestation",
+            "Maintain proper humidity levels",
+            "Avoid overcrowding plants"
+        ]
+    },
+    "Maize Leaf Blight": {
+        "plant": "Maize",
+        "disease": "Leaf Blight",
+        "causes": [
+            "Fungal infection (Exserohilum turcicum)",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Water-soaked lesions on leaves",
+            "Yellowing of leaf edges",
+            "Wilting of leaves"
+        ],
+        "severity_mild": "Few leaves show water-soaked lesions but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+        "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected leaves",
+            "Apply fungicide",
+            "Improve air circulation",
+            "Avoid overhead watering"
+        ],
+        "medicines": [
+            "Copper fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 10,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Maize Leaf Spot": {
+        "plant": "Maize",
+        "disease": "Leaf Spot",
+        "causes": [
+            "Fungal infection (Cercospora zeae-maydis)",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Dark, circular spots on leaves",
+            "Yellowing of leaf edges",
+            "Wilting of leaves"
+        ],
+        "severity_mild": "Few leaves show dark spots but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+        "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected leaves",
+            "Apply fungicide",
+            "Improve air circulation",
+            "Avoid overhead watering"
+        ],
+        "medicines": [
+            "Copper fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 12,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Maize Streak Virus": {
+        "plant": "Maize",
+        "disease": "Streak Virus",
+        "causes": [
+            "Viral infection (Maize streak virus)",
+            "Insect vectors (leafhoppers)",
+            "Contaminated tools or seeds"
+        ],
+        "symptoms": [
+            "Streaks on leaves",
+            "Stunted growth",
+            "Reduced yield"
+        ],
+        "severity_mild": "Few leaves show streaks but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant stunting and reduced yield.",
+        "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected plants",
+            "Control insect vectors",
+            "Sanitize tools and equipment"
+        ],
+        "medicines": [
+            "Insecticidal soap",
+            "Neem oil"
+        ],
+        "progression_days": 7,
+        "prevention": [
+            "Use virus-resistant varieties",
+            "Control insect populations",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Myrtle Rust": {
+        "plant": "Myrtle",
+        "disease": "Rust",
+        "causes": [
+            "Fungal infection (Puccinia psidii)",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Rusty, orange spots on leaves",
+            "Yellowing of leaf edges",
+            "Wilting of leaves"
+        ],
+        "severity_mild": "Few leaves show rusty spots but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+        "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected leaves",
+            "Apply fungicide",
+            "Improve air circulation",
+            "Avoid overhead watering"
+        ],
+        "medicines": [
+            "Copper fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 10,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Nitrogen Deficiency": {
+        "plant": "General",
+        "disease": "Nitrogen Deficiency",
+        "causes": [
+            "Insufficient nitrogen in soil",
+            "Poor soil fertility",
+            "Lack of organic matter"
+        ],
+        "symptoms": [
+            "Yellowing of older leaves",
+            "Stunted growth",
+            "Reduced yield"
+        ],
+        "severity_mild": "Few leaves show yellowing but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant stunting and reduced yield.",
+        "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Apply nitrogen-rich fertilizer",
+            "Incorporate organic matter into soil",
+            "Regularly test soil for nutrient levels"
+        ],
+        "medicines": [
+            "Urea fertilizer",
+            "Compost"
+        ],
+        "progression_days": 14,
+        "prevention": [
+            "Regularly test soil for nutrient levels",
+            "Maintain proper soil fertility",
+            "Incorporate organic matter into soil"
+        ]
+    },
+    "Onion Healthy": {
+        "plant": "Onion",
+        "disease": "Healthy",
+        "causes": [],
+        "symptoms": [],
+        "severity_mild": "",
+        "severity_moderate": "",
+        "severity_severe": "",
+        "treatment": [],
+        "medicines": [],
+        "progression_days": 0,
+        "prevention": []
+    },
+    "Peach Scab": {
+        "plant": "Peach",
+        "disease": "Scab",
+        "causes": [
+            "Fungal infection (Cladosporium carpophilum)",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Dark, sunken lesions on fruit",
+            "Leaf drop",
+            "Wilting of leaves"
+        ],
+        "severity_mild": "Few fruits show dark lesions but the plant remains healthy.",
+        "severity_moderate": "Multiple fruits affected with significant leaf drop and wilting.",
+        "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected fruit",
+            "Apply fungicide",
+            "Improve air circulation",
+            "Maintain proper humidity levels"
+        ],
+        "medicines": [
+            "Copper fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 14,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Pear Scab": {
+        "plant": "Pear",
+        "disease": "Scab",
+        "causes": [
+            "Fungal infection (Venturia pirina)",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Dark, sunken lesions on leaves and fruit",
+            "Leaf drop",
+            "Wilting of leaves"
+        ],
+        "severity_mild": "Few leaves and fruits show dark lesions but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves and fruits affected with significant leaf drop and wilting.",
+        "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected leaves and fruit",
+            "Apply fungicide",
+            "Improve air circulation",
+            "Maintain proper humidity levels"
+        ],
+        "medicines": [
+            "Copper fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 14,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Potassium Deficiency": {
+        "plant": "General",
+        "disease": "Potassium Deficiency",
+        "causes": [
+            "Insufficient potassium in soil",
+            "Poor soil fertility",
+            "Lack of organic matter"
+        ],
+        "symptoms": [
+            "Yellowing of leaf edges",
+            "Wilting of leaves",
+            "Reduced yield"
+        ],
+        "severity_mild": "Few leaves show yellowing but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant wilting and reduced yield.",
+        "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Apply potassium-rich fertilizer",
+            "Incorporate organic matter into soil",
+            "Regularly test soil for nutrient levels"
+        ],
+        "medicines": [
+            "Potassium sulfate fertilizer",
+            "Compost"
+        ],
+        "progression_days": 14,
+        "prevention": [
+            "Regularly test soil for nutrient levels",
+            "Maintain proper soil fertility",
+            "Incorporate organic matter into soil"
+        ]
+    },
+    "Potato Hollow Heart": {
+        "plant": "Potato",
+        "disease": "Hollow Heart",
+        "causes": [
+            "Rapid growth due to excess nitrogen",
+            "Inconsistent watering",
+            "Poor soil aeration"
+        ],
+        "symptoms": [
+            "Hollow cavities in tubers",
+            "Reduced yield",
+            "Poor quality of tubers"
+        ],
+        "severity_mild": "Few tubers show small cavities but the plant remains healthy.",
+        "severity_moderate": "Multiple tubers affected with significant cavities and reduced yield.",
+        "severity_severe": "Widespread damage leading to poor quality of tubers if untreated.",
+        "treatment": [
+            "Adjust nitrogen levels in soil",
+            "Ensure consistent watering",
+            "Improve soil aeration"
+        ],
+        "medicines": [],
+        "progression_days": 14,
+        "prevention": [
+            "Regularly test soil for nutrient levels",
+            "Maintain proper soil fertility",
+            "Avoid excessive nitrogen fertilization"
+        ]
+    },
+    "Rice Leaf Smut": {
+        "plant": "Rice",
+        "disease": "Leaf Smut",
+        "causes": [
+            "Fungal infection (Entyloma oryzae)",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "White, powdery spots on leaves",
+            "Yellowing of leaf edges",
+            "Wilting of leaves"
+        ],
+        "severity_mild": "Few leaves show white spots but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+        "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected leaves",
+            "Apply fungicide",
+            "Improve air circulation",
+            "Avoid overhead watering"
+        ],
+        "medicines": [
+            "Copper fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 10,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Sogatella Rice": {
+        "plant": "Rice",
+        "disease": "Sogatella",
+        "causes": [
+            "Insect infestation (Sogatella furcifera)",
+            "High temperatures",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Yellowing and wilting of leaves",
+            "Stippling on leaves",
+            "Reduced yield"
+        ],
+        "severity_mild": "Few leaves show yellowing but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant stippling and reduced yield.",
+        "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infested leaves",
+            "Apply insecticide",
+            "Increase air circulation",
+            "Regularly inspect plants for early signs of infestation"
+        ],
+        "medicines": [
+            "Insecticidal soap",
+            "Neem oil"
+        ],
+        "progression_days": 7,
+        "prevention": [
+            "Regularly inspect plants for early signs of infestation",
+            "Maintain proper humidity levels",
+            "Avoid overcrowding plants"
+        ]
+    },
+    "Tea Algal Leaf": {
+        "plant": "Tea",
+        "disease": "Algal Leaf",
+        "causes": [
+            "Algal infection (Cephaleuros virescens)",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Green, velvety patches on leaves",
+            "Yellowing of leaf edges",
+            "Wilting of leaves"
+        ],
+        "severity_mild": "Few leaves show green patches but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+        "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected leaves",
+            "Apply fungicide",
+            "Improve air circulation",
+            "Avoid overhead watering"
+        ],
+        "medicines": [
+            "Copper fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 10,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Tea Anthracnose": {
+        "plant": "Tea",
+        "disease": "Anthracnose",
+        "causes": [
+            "Fungal infection (Colletotrichum camelliae)",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Dark, sunken lesions on leaves",
+            "Leaf drop",
+            "Wilting of leaves"
+        ],
+        "severity_mild": "Few leaves show dark lesions but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant leaf drop and wilting.",
+        "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected leaves",
+            "Apply fungicide",
+            "Improve air circulation",
+            "Maintain proper humidity levels"
+        ],
+        "medicines": [
+            "Copper fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 14,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Tea Bird Eye Spot": {
+        "plant": "Tea",
+        "disease": "Bird Eye Spot",
+        "causes": [
+            "Fungal infection (Cercospora theae)",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Small, circular spots on leaves",
+            "Yellowing of leaf edges",
+            "Wilting of leaves"
+        ],
+        "severity_mild": "Few leaves show small spots but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+        "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected leaves",
+            "Apply fungicide",
+            "Improve air circulation",
+            "Avoid overhead watering"
+        ],
+        "medicines": [
+            "Copper fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 12,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Tea Brown Blight": {
+        "plant": "Tea",
+        "disease": "Brown Blight",
+        "causes": [
+            "Fungal infection (Pestalotiopsis spp.)",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Brown, sunken lesions on leaves",
+            "Leaf drop",
+            "Wilting of leaves"
+        ],
+        "severity_mild": "Few leaves show brown lesions but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant leaf drop and wilting.",
+        "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected leaves",
+            "Apply fungicide",
+            "Improve air circulation",
+            "Maintain proper humidity levels"
+        ],
+        "medicines": [
+            "Copper fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 14,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Tea Healthy": {
+        "plant": "Tea",
+        "disease": "Healthy",
+        "causes": [],
+        "symptoms": [],
+        "severity_mild": "",
+        "severity_moderate": "",
+        "severity_severe": "",
+        "treatment": [],
+        "medicines": [],
+        "progression_days": 0,
+        "prevention": []
+    },
+    "Tea Red Leaf Spot": {
+        "plant": "Tea",
+        "disease": "Red Leaf Spot",
+        "causes": [
+            "Fungal infection (Diplocarpon earliana)",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Red, circular spots on leaves",
+            "Yellowing of leaf edges",
+            "Wilting of leaves"
+        ],
+        "severity_mild": "Few leaves show red spots but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+        "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected leaves",
+            "Apply fungicide",
+            "Improve air circulation",
+            "Avoid overhead watering"
+        ],
+        "medicines": [
+            "Copper fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 12,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Tomato Canker": {
+        "plant": "Tomato",
+        "disease": "Canker",
+        "causes": [
+            "Bacterial infection (Clavibacter michiganensis)",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Water-soaked lesions on stems and leaves",
+            "Yellowing of leaf edges",
+            "Wilting of leaves"
+        ],
+        "severity_mild": "Few stems show water-soaked lesions but the plant remains healthy.",
+        "severity_moderate": "Multiple stems affected with significant yellowing and wilting.",
+        "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected stems and leaves",
+            "Apply bactericide",
+            "Improve air circulation",
+            "Avoid overhead watering"
+        ],
+        "medicines": [
+            "Copper bactericide",
+            "Neem oil"
+        ],
+        "progression_days": 10,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Tomato Leaf Blight": {
+        "plant": "Tomato",
+        "disease": "Leaf Blight",
+        "causes": [
+            "Fungal infection (Alternaria solani)",
+            "High humidity",
+            "Poor air circulation"
+        ],
+        "symptoms": [
+            "Water-soaked lesions on leaves",
+            "Yellowing of leaf edges",
+            "Wilting of leaves"
+        ],
+        "severity_mild": "Few leaves show water-soaked lesions but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+        "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected leaves",
+            "Apply fungicide",
+            "Improve air circulation",
+            "Avoid overhead watering"
+        ],
+        "medicines": [
+            "Copper fungicide",
+            "Neem oil"
+        ],
+        "progression_days": 10,
+        "prevention": [
+            "Plant resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Tomato Leaf Curl": {
+        "plant": "Tomato",
+        "disease": "Leaf Curl",
+        "causes": [
+            "Viral infection (Tomato yellow leaf curl virus)",
+            "Insect vectors (whiteflies)",
+            "Contaminated tools or seeds"
+        ],
+        "symptoms": [
+            "Curling of leaves",
+            "Stunted growth",
+            "Reduced yield"
+        ],
+        "severity_mild": "Few leaves show curling but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant stunting and reduced yield.",
+        "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected plants",
+            "Control insect vectors",
+            "Sanitize tools and equipment"
+        ],
+        "medicines": [
+            "Insecticidal soap",
+            "Neem oil"
+        ],
+        "progression_days": 7,
+        "prevention": [
+            "Use virus-resistant varieties",
+            "Control insect populations",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Tomato Two-Spotted Spider Mite": {
+        "plant": "Tomato",
+        "disease": "Two-Spotted Spider Mite",
+        "causes": [
+            "Insect infestation (Tetranychus urticae)",
+            "High temperatures",
+            "Low humidity"
+        ],
+        "symptoms": [
+            "Fine webbing on leaves",
+            "Yellowing and stippling of leaves",
+            "Reduced yield"
+        ],
+        "severity_mild": "Few leaves show fine webbing but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant yellowing and stippling.",
+        "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infested leaves",
+            "Apply miticide",
+            "Increase humidity around plants"
+        ],
+        "medicines": [
+            "Insecticidal soap",
+            "Neem oil"
+        ],
+        "progression_days": 7,
+        "prevention": [
+            "Regularly inspect plants for early signs of infestation",
+            "Maintain proper humidity levels",
+            "Avoid overcrowding plants"
+        ]
+    },
+    "Tomato Verticulium Wilt": {
+        "plant": "Tomato",
+        "disease": "Verticillium Wilt",
+        "causes": [
+            "Fungal infection (Verticillium dahliae)",
+            "Poor soil drainage",
+            "Contaminated tools or seeds"
+        ],
+        "symptoms": [
+            "Wilting of leaves",
+            "Yellowing of leaf edges",
+            "Stunted growth"
+        ],
+        "severity_mild": "Few leaves show wilting but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant yellowing and stunting.",
+        "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Remove and destroy infected plants",
+            "Improve soil drainage",
+            "Sanitize tools and equipment"
+        ],
+        "medicines": [
+            "Fungicidal drench",
+            "Neem oil"
+        ],
+        "progression_days": 10,
+        "prevention": [
+            "Use resistant varieties",
+            "Rotate crops annually",
+            "Regularly inspect plants for early signs of disease"
+        ]
+    },
+    "Waterlogging in Plant": {
+        "plant": "General",
+        "disease": "Waterlogging",
+        "causes": [
+            "Excessive rainfall",
+            "Poor soil drainage",
+            "Overwatering"
+        ],
+        "symptoms": [
+            "Wilting of leaves",
+            "Yellowing of leaf edges",
+            "Root rot"
+        ],
+        "severity_mild": "Few leaves show wilting but the plant remains healthy.",
+        "severity_moderate": "Multiple leaves affected with significant yellowing and root issues.",
+        "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+        "treatment": [
+            "Improve soil drainage",
+            "Reduce watering frequency",
+            "Remove affected plants"
+        ],
+        "medicines": [],
+        "progression_days": 14,
+        "prevention": [
+            "Ensure proper soil drainage",
+            "Avoid overwatering",
+            "Regularly inspect plants for early signs of waterlogging"
+        ]
+    }
+}
