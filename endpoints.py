@@ -1247,13 +1247,1367 @@ def predict_page():
         else:
             return """
             <!DOCTYPE html>
-            <html>
-            <head><title>Plant Doctor AI - Predict</title></head>
+            <html lang="en">
+            <head>
+            <meta charset="UTF-8">
+            <title>Upload & Predict - Plant Doctor AI</title>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <style>
+                /* General styles */
+                body {
+                margin: 0;
+                font-family: 'Segoe UI', 'Arial', sans-serif;
+                background: linear-gradient(135deg, #f0fdf4 0%, #d1fae5 100%);
+                color: #222;
+                min-height: 100vh;
+                }
+                .container {
+                max-width: 1100px;
+                margin: 0 auto;
+                padding: 0 1rem;
+                }
+                .flex { display: flex; }
+                .flex-between { display: flex; align-items: center; justify-content: space-between; }
+                .items-center { align-items: center; }
+                .gap-2 { gap: 0.5rem; }
+                .text-center { text-align: center; }
+                .mb-12 { margin-bottom: 3rem; }
+                .mb-10 { margin-bottom: 2.5rem; }
+                .mb-8 { margin-bottom: 2rem; }
+                .mb-4 { margin-bottom: 1rem; }
+                .mr-3 { margin-right: 0.75rem; }
+                
+                /* Header */
+                .header {
+                background: #fff;
+                box-shadow: 0 2px 8px -2px rgba(16, 185, 129, 0.08);
+                border-bottom: 1px solid #bbf7d0;
+                }
+                .title {
+                font-size: 2rem;
+                font-weight: bold;
+                color: #065f46;
+                }
+                .nav {
+                display: flex;
+                align-items: center;
+                gap: 1.5rem;
+                }
+                .nav a {
+                color: #047857;
+                font-weight: 500;
+                text-decoration: none;
+                transition: color 0.2s;
+                }
+                .nav a:hover, .nav a.active {
+                color: #065f46;
+                }
+                .nav-actions {
+                display: flex;
+                gap: 0.75rem;
+                margin-left: 1.5rem;
+                }
+                .btn {
+                padding: 0.5rem 1rem;
+                border-radius: 0.75rem;
+                font-weight: 500;
+                transition: all .2s;
+                box-shadow: none;
+                border: none;
+                cursor: pointer;
+                }
+                .btn-green {
+                background: #16a34a;
+                color: #fff;
+                }
+                .btn-green:hover {
+                background: #166534;
+                box-shadow: 0 2px 8px -2px #16a34a44;
+                }
+                .btn-outline-green {
+                background: #fff;
+                border: 2px solid #16a34a;
+                color: #16a34a;
+                }
+                .btn-outline-green:hover {
+                background: #f0fdf4;
+                box-shadow: 0 2px 8px -2px #16a34a22;
+                }
+                
+                /* Main content */
+                .hero-title {
+                font-size: 2.5rem;
+                font-weight: bold;
+                color: #065f46;
+                margin-bottom: 1.5rem;
+                }
+                .hero-subtitle {
+                font-size: 1.25rem;
+                color: #047857;
+                max-width: 700px;
+                margin: 0 auto 2rem auto;
+                line-height: 1.6;
+                }
+                
+                /* Upload section */
+                .upload-area {
+                background: #fff;
+                border-radius: 1.25rem;
+                box-shadow: 0 4px 24px -8px #16a34a22;
+                padding: 2rem;
+                margin: 2rem 0;
+                border: 2px dashed #bbf7d0;
+                transition: all .3s;
+                cursor: pointer;
+                text-align: center;
+                }
+                .upload-area:hover, .upload-area.dragover {
+                border-color: #16a34a;
+                box-shadow: 0 8px 32px -8px #16a34a22;
+                transform: translateY(-2px);
+                }
+                .upload-icon {
+                width: 64px;
+                height: 64px;
+                background: #16a34a;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto 1rem;
+                color: #fff;
+                }
+                .upload-text {
+                font-size: 1.2rem;
+                font-weight: 600;
+                color: #065f46;
+                margin-bottom: 0.5rem;
+                }
+                .upload-subtext {
+                color: #047857;
+                font-size: 1rem;
+                }
+                
+                /* Image preview */
+                .image-preview {
+                background: #fff;
+                border-radius: 1.25rem;
+                box-shadow: 0 4px 24px -8px #16a34a22;
+                padding: 2rem;
+                margin: 2rem 0;
+                text-align: center;
+                display: none;
+                }
+                .preview-image {
+                max-width: 100%;
+                max-height: 400px;
+                border-radius: 1rem;
+                box-shadow: 0 4px 16px -4px rgba(0,0,0,0.1);
+                }
+                
+                /* Results section */
+                .results-section {
+                background: #fff;
+                border-radius: 1.25rem;
+                box-shadow: 0 4px 24px -8px #16a34a22;
+                padding: 2rem;
+                margin: 2rem 0;
+                display: none;
+                }
+                .result-title {
+                font-size: 1.5rem;
+                font-weight: bold;
+                color: #065f46;
+                margin-bottom: 1rem;
+                }
+                .confidence-bar {
+                background: #f0fdf4;
+                border-radius: 1rem;
+                overflow: hidden;
+                margin: 1rem 0;
+                }
+                .confidence-fill {
+                background: linear-gradient(90deg, #16a34a, #22c55e);
+                height: 20px;
+                border-radius: 1rem;
+                transition: width 1s ease-out;
+                }
+                
+                /* Enhanced Disease Information Cards */
+                .disease-info {
+                background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+                border-radius: 1.25rem;
+                padding: 2rem;
+                margin: 1rem 0;
+                border-left: 6px solid #16a34a;
+                box-shadow: 0 8px 32px -8px rgba(16, 163, 74, 0.15);
+                animation: fadeInUp 0.6s ease-out;
+                }
+                
+                @keyframes fadeInUp {
+                from {
+                opacity: 0;
+                transform: translateY(30px);
+                }
+                to {
+                opacity: 1;
+                transform: translateY(0);
+                }
+                }
+                
+                .info-cards-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                gap: 1.5rem;
+                margin-top: 2rem;
+                }
+                
+                .info-card {
+                background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+                border-radius: 1rem;
+                padding: 1.5rem;
+                border: 1px solid #e2e8f0;
+                box-shadow: 0 4px 16px -4px rgba(0, 0, 0, 0.1);
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                position: relative;
+                overflow: hidden;
+                animation: slideInCard 0.5s ease-out forwards;
+                opacity: 0;
+                transform: translateY(20px);
+                }
+                
+                .info-card:nth-child(1) { animation-delay: 0.1s; }
+                .info-card:nth-child(2) { animation-delay: 0.2s; }
+                .info-card:nth-child(3) { animation-delay: 0.3s; }
+                .info-card:nth-child(4) { animation-delay: 0.4s; }
+                .info-card:nth-child(5) { animation-delay: 0.5s; }
+                .info-card:nth-child(6) { animation-delay: 0.6s; }
+                
+                @keyframes slideInCard {
+                to {
+                opacity: 1;
+                transform: translateY(0);
+                }
+                }
+                
+                .info-card:hover {
+                transform: translateY(-8px) scale(1.02);
+                box-shadow: 0 12px 40px -8px rgba(16, 163, 74, 0.25);
+                border-color: #16a34a;
+                }
+                
+                .info-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 4px;
+                background: linear-gradient(90deg, #16a34a, #22c55e, #34d399);
+                border-radius: 1rem 1rem 0 0;
+                }
+                
+                .card-header {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                margin-bottom: 1rem;
+                }
+                
+                .card-icon {
+                width: 48px;
+                height: 48px;
+                border-radius: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #fff;
+                font-size: 1.5rem;
+                flex-shrink: 0;
+                }
+                
+                .symptoms-icon { background: linear-gradient(135deg, #ef4444, #f87171); }
+                .causes-icon { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
+                .treatment-icon { background: linear-gradient(135deg, #16a34a, #22c55e); }
+                .medicines-icon { background: linear-gradient(135deg, #3b82f6, #60a5fa); }
+                .prevention-icon { background: linear-gradient(135deg, #8b5cf6, #a78bfa); }
+                .severity-icon { background: linear-gradient(135deg, #dc2626, #ef4444); }
+                
+                .card-title {
+                font-size: 1.2rem;
+                font-weight: 600;
+                color: #1f2937;
+                margin: 0;
+                }
+                
+                .card-content {
+                color: #4b5563;
+                line-height: 1.6;
+                }
+                
+                .card-list {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                }
+                
+                .card-list li {
+                padding: 0.5rem 0;
+                border-bottom: 1px solid #f1f5f9;
+                display: flex;
+                align-items: flex-start;
+                gap: 0.75rem;
+                transition: all 0.2s;
+                }
+                
+                .card-list li:last-child {
+                border-bottom: none;
+                }
+                
+                .card-list li:hover {
+                background: #f8fafc;
+                margin: 0 -1rem;
+                padding: 0.5rem 1rem;
+                border-radius: 0.5rem;
+                }
+                
+                .list-bullet {
+                width: 6px;
+                height: 6px;
+                background: #16a34a;
+                border-radius: 50%;
+                margin-top: 0.6rem;
+                flex-shrink: 0;
+                }
+                
+                /* Severity Cards */
+                .severity-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 1rem;
+                margin-top: 1rem;
+                }
+                
+                .severity-card {
+                padding: 1rem;
+                border-radius: 0.75rem;
+                border-left: 4px solid;
+                transition: all 0.3s;
+                animation: pulseIn 0.6s ease-out;
+                }
+                
+                @keyframes pulseIn {
+                0% {
+                opacity: 0;
+                transform: scale(0.95);
+                }
+                100% {
+                opacity: 1;
+                transform: scale(1);
+                }
+                }
+                
+                .severity-mild {
+                background: linear-gradient(135deg, #fef3c7, #fef9e7);
+                border-left-color: #f59e0b;
+                color: #92400e;
+                }
+                
+                .severity-moderate {
+                background: linear-gradient(135deg, #fed7aa, #fef2e2);
+                border-left-color: #ea580c;
+                color: #9a3412;
+                }
+                
+                .severity-severe {
+                background: linear-gradient(135deg, #fecaca, #fef2f2);
+                border-left-color: #dc2626;
+                color: #991b1b;
+                }
+                
+                .severity-card h5 {
+                font-weight: 600;
+                margin: 0 0 0.5rem 0;
+                font-size: 0.9rem;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                }
+                
+                .severity-card p {
+                margin: 0;
+                font-size: 0.85rem;
+                line-height: 1.4;
+                }
+                
+                /* Medicine Carousel */
+                .medicine-carousel {
+                margin-top: 2rem;
+                padding: 1.5rem;
+                background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+                border-radius: 1rem;
+                border: 1px solid #bae6fd;
+                }
+                
+                .carousel-container {
+                position: relative;
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                }
+                
+                .carousel-items {
+                display: flex;
+                gap: 1rem;
+                overflow-x: auto;
+                scroll-behavior: smooth;
+                padding: 1rem 0;
+                flex: 1;
+                }
+                
+                .carousel-items::-webkit-scrollbar {
+                height: 6px;
+                }
+                
+                .carousel-items::-webkit-scrollbar-track {
+                background: #f1f5f9;
+                border-radius: 3px;
+                }
+                
+                .carousel-items::-webkit-scrollbar-thumb {
+                background: #cbd5e1;
+                border-radius: 3px;
+                }
+                
+                .medicine-card {
+                min-width: 200px;
+                padding: 1rem;
+                background: #fff;
+                border-radius: 0.75rem;
+                border: 1px solid #e2e8f0;
+                box-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.1);
+                transition: all 0.3s;
+                animation: slideInMedicine 0.4s ease-out;
+                }
+                
+                @keyframes slideInMedicine {
+                from {
+                opacity: 0;
+                transform: translateX(20px);
+                }
+                to {
+                opacity: 1;
+                transform: translateX(0);
+                }
+                }
+                
+                .medicine-card:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 8px 24px -4px rgba(59, 130, 246, 0.3);
+                border-color: #3b82f6;
+                }
+                
+                .carousel-btn {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                border: 2px solid #16a34a;
+                background: #fff;
+                color: #16a34a;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.2rem;
+                transition: all 0.2s;
+                }
+                
+                .carousel-btn:hover {
+                background: #16a34a;
+                color: #fff;
+                transform: scale(1.1);
+                }
+                
+                /* Action buttons */
+                .action-buttons {
+                display: flex;
+                gap: 1rem;
+                justify-content: center;
+                flex-wrap: wrap;
+                margin: 2rem 0;
+                }
+                
+                .btn-action {
+                background: linear-gradient(135deg, #16a34a, #22c55e);
+                color: #fff;
+                font-weight: 500;
+                padding: 0.75rem 1.5rem;
+                border-radius: 0.75rem;
+                border: none;
+                cursor: pointer;
+                transition: all .3s cubic-bezier(0.4, 0, 0.2, 1);
+                position: relative;
+                overflow: hidden;
+                }
+                
+                .btn-action::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+                transition: left 0.5s;
+                }
+                
+                .btn-action:hover::before {
+                left: 100%;
+                }
+                
+                .btn-action:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 24px -4px rgba(16, 163, 74, 0.4);
+                }
+                
+                .btn-action:disabled {
+                background: #9ca3af;
+                cursor: not-allowed;
+                transform: none;
+                box-shadow: none;
+                }
+                
+                .btn-action:disabled::before {
+                display: none;
+                }
+                
+                .btn-secondary {
+                background: #fff;
+                color: #16a34a;
+                border: 2px solid #16a34a;
+                }
+                
+                .btn-secondary:hover {
+                background: #f0fdf4;
+                }
+                
+                /* Loading spinner */
+                .loading {
+                display: none;
+                text-align: center;
+                padding: 2rem;
+                }
+                
+                .spinner {
+                border: 4px solid #f0fdf4;
+                border-top: 4px solid #16a34a;
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+                animation: spin 1s linear infinite;
+                margin: 0 auto 1rem;
+                }
+                
+                @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+                }
+                
+                /* Footer */
+                .footer {
+                background: #065f46;
+                color: #fff;
+                margin-top: 5rem;
+                padding: 2rem 0;
+                }
+                .footer-title {
+                font-size: 1.1rem;
+                font-weight: 600;
+                color: #fff;
+                }
+                .footer-desc {
+                color: #bbf7d0;
+                font-size: 1rem;
+                }
+                .icon-lg { width: 32px; height: 32px;}
+                .icon-md { width: 24px; height: 24px;}
+                
+                /* Responsive */
+                @media (max-width: 768px) {
+                .action-buttons {
+                flex-direction: column;
+                align-items: center;
+                }
+                .btn-action {
+                width: 100%;
+                max-width: 300px;
+                }
+                .info-cards-grid {
+                grid-template-columns: 1fr;
+                }
+                .severity-grid {
+                grid-template-columns: 1fr;
+                }
+                }
+                
+                /* Utility */
+                .hidden { display: none; }
+                .profile-circle {
+                width: 40px;
+                height: 40px;
+                background: #16a34a;
+                color: #fff;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: bold;
+                font-size: 1.2rem;
+                cursor: pointer;
+                border: 2px solid #fff;
+                box-shadow: 0 2px 8px -2px #16a34a44;
+                transition: background .2s;
+                }
+                .profile-circle:hover {
+                background: #166534;
+                }
+                
+                /* Progress indication */
+                .progress-dots {
+                display: flex;
+                justify-content: center;
+                gap: 0.5rem;
+                margin: 2rem 0;
+                }
+                
+                .progress-dot {
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background: #cbd5e1;
+                transition: all 0.3s;
+                }
+                
+                .progress-dot.active {
+                background: #16a34a;
+                transform: scale(1.2);
+                }
+                
+                /* Enhanced animations */
+                @keyframes bounce {
+                0%, 20%, 53%, 80%, 100% {
+                transform: translate3d(0, 0, 0);
+                }
+                40%, 43% {
+                transform: translate3d(0, -8px, 0);
+                }
+                70% {
+                transform: translate3d(0, -4px, 0);
+                }
+                90% {
+                transform: translate3d(0, -2px, 0);
+                }
+                }
+                
+                .bounce-animation {
+                animation: bounce 1s ease-in-out;
+                }
+                
+                /* Floating elements */
+                .floating {
+                animation: float 3s ease-in-out infinite;
+                }
+                
+                @keyframes float {
+                0% {
+                transform: translateY(0px);
+                }
+                50% {
+                transform: translateY(-6px);
+                }
+                100% {
+                transform: translateY(0px);
+                }
+                }
+            body {
+            margin: 0;
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+            background: linear-gradient(135deg, #f0fdf4 0%, #d1fae5 100%);
+            color: #222;
+            min-height: 100vh;
+            }
+            </style>
+            <!-- Firebase SDKs for profile.js -->
+            <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+            <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+            </head>
             <body>
-            <h1>Plant Doctor AI</h1>
-            <p>Upload an image to predict plant diseases</p>
-            <p>HTML file not found. Please ensure predict.html is in the same directory.</p>
-            <a href="/">← Back to Home</a>
+            <!-- Header -->
+            <header class="header">
+            <div class="container flex-between">
+            <div class="flex items-center gap-2">
+              <!-- Leaf Icon SVG -->
+              <svg class="icon-lg text-green" fill="none" stroke="green" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M2 22s9-2 15-8 5-12 5-12-9 2-15 8-5 12-5 12z"/>
+              </svg>
+              <h1 class="title">Plant Doctor AI</h1>
+            </div>
+            <nav class="nav">
+                <a href="/">Home</a>
+                <a href="/predict" class="active">Upload & Predict</a>
+                <a href="/chatbot">Plant Saathi</a>
+                <a href="/about">About</a>
+            <div class="nav-actions" id="nav-actions">
+            <!-- Login/Signup or Profile will be injected here by profile.js -->
+            </div>
+            </nav>
+            </div>
+            </header>
+            
+            <!-- Main Content -->
+            <main class="container">
+            <!-- Hero Section -->
+            <section class="text-center mb-12">
+            <h2 class="hero-title">Plant Disease Detection</h2>
+            <p class="hero-subtitle">
+            Upload a <strong>leaf image</strong> and our AI will analyze it to detect potential diseases and provide treatment recommendations.
+            </p>
+            </section>
+            
+            <!-- Upload Section -->
+            <section class="upload-area" id="uploadArea">
+            <div class="upload-icon">
+            <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h3l2-3h6l2 3h3a2 2 0 0 1 2 2z"/>
+            <circle cx="12" cy="13" r="4"/>
+            </svg>
+            </div>
+            <div class="upload-text">Drop your plant image here or click to browse</div>
+            <div class="upload-subtext">Supported formats: JPG, PNG, GIF (Max size: 10MB)</div>
+            <input type="file" id="imageInput" accept="image/*" style="display: none;">
+            </section>
+            
+            <!-- Camera Option -->
+            <div class="text-center mb-8">
+            <button class="btn-action" id="cameraBtn">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin-right: 0.5rem;">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h3l2-3h6l2 3h3a2 2 0 0 1 2 2z"/>
+            <circle cx="12" cy="13" r="4"/>
+            </svg>
+            Take Photo with Camera
+            </button>
+            </div>
+            
+            <!-- Image Preview -->
+            <section class="image-preview" id="imagePreview">
+            <img id="previewImg" class="preview-image" alt="Preview">
+            <div class="action-buttons" style="margin-top: 1rem;">
+            <button class="btn-action" id="predictBtn">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin-right: 0.5rem;">
+            <path d="M9 11l3 3L22 4"/>
+            </svg>
+            Analyze Plant
+            </button>
+            <button class="btn-action btn-secondary" id="newImageBtn">Choose Different Image</button>
+            </div>
+            </section>
+            
+            <!-- Loading Section -->
+            <section class="loading" id="loadingSection">
+            <div class="spinner"></div>
+            <p style="color: #047857; font-weight: 500;">Analyzing your plant image...</p>
+            <p style="color: #6b7280; font-size: 0.9rem;">This may take a few seconds</p>
+            <div class="progress-dots">
+            <div class="progress-dot active"></div>
+            <div class="progress-dot"></div>
+            <div class="progress-dot"></div>
+            </div>
+            </section>
+            
+            <!-- Results Section -->
+            <section class="results-section" id="resultsSection">
+            <h3 class="result-title" style="text-align: center;">Diagnosis🕵🏻‍♂️</h3>
+            
+            <!-- Prediction Result -->
+            <div id="predictionResult" style="text-align: center; margin: 2rem 0;">
+            <div style="font-size: 1.5rem; font-weight: bold; color: #065f46; margin-bottom: 1rem;" id="diseaseTitle"></div>
+            <div style="font-size: 1.1rem; color: #047857; margin-bottom: 1rem;">Confidence: <span id="confidenceText"></span></div>
+            <div class="confidence-bar">
+            <div class="confidence-fill" id="confidenceFill" style="width: 0%"></div>
+            </div>
+            </div>
+            
+            <!-- Enhanced Disease Information with Beautiful Cards -->
+            <div class="disease-info" id="diseaseInfo">
+            <h4 style="color: #065f46; margin-bottom: 2rem; text-align: center; font-size: 1.3rem;">Disease Information & Treatment Guide</h4>
+            
+            <div class="info-cards-grid" id="infoCardsGrid">
+            <!-- Cards will be dynamically generated here -->
+            </div>
+            
+            <!-- Medicine Carousel -->
+            <div id="medicineSection" class="medicine-carousel" style="display: none;">
+            <h4 style="color: #3b82f6; margin-bottom: 1rem; text-align: center;">Recommended Medicines</h4>
+            <div class="carousel-container">
+            <button class="carousel-btn" id="medicinePrevBtn">‹</button>
+            <div id="medicineItems" class="carousel-items"></div>
+            <button class="carousel-btn" id="medicineNextBtn">›</button>
+            </div>
+            </div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+            <button class="btn-action" id="generateReportBtn">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin-right: 0.5rem;">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14,2 14,8 20,8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+            </svg>
+            Generate PDF Report
+            </button>
+            <button class="btn-action btn-secondary" id="newAnalysisBtn">Analyze Another Image</button>
+            </div>
+            </section>
+            
+            <!-- GradCAM Visualization -->
+            <section class="results-section hidden" id="gradcamSection">
+            <h3 class="result-title">Analysis Heatmap (GradCAM)</h3>
+            <div style="text-align: center;">
+            <p style="color: #6b7280; margin-bottom: 1rem;">This heatmap shows which areas of the leaf our AI focused on when making the diagnosis:</p>
+            <img id="gradcamImage" style="max-width: 100%; border-radius: 1rem; box-shadow: 0 4px 16px -4px rgba(0,0,0,0.1);">
+            </div>
+            </section>
+            </main>
+            
+            <!-- Footer -->
+            <footer class="footer">
+            <div class="container text-center">
+            <div class="flex items-center justify-center gap-2 mb-4">
+            <!-- Leaf Icon SVG -->
+            <svg class="icon-md" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: #fff;">
+            <path d="M2 22s9-2 15-8 5-12 5-12-9 2-15 8-5 12-5 12z"/>
+            </svg>
+            <span class="footer-title">Plant Doctor AI</span>
+            </div>
+            <p class="footer-desc">Powered by AI • Helping farmers worldwide</p>
+            </div>
+            </footer>
+            
+            <!-- Profile.js Logic -->
+            <script>
+            const firebaseConfig = {
+                apiKey: "AIzaSyB-y52ekJkjgXYXhRNvvir0r9gU8CObpkM",
+                authDomain: "plant-doctor-63da7.firebaseapp.com",
+                projectId: "plant-doctor-63da7",
+                storageBucket: "plant-doctor-63da7.appspot.com",
+                messagingSenderId: "94281353808",
+                appId: "1:94281353808:web:5fa49e3d6e494868be5f55",
+                measurementId: "G-E5P4MZ68HW"
+            };
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+            const auth = firebase.auth();
+            
+            function renderProfile(user) {
+                const navActions = document.getElementById("nav-actions");
+                if (!navActions) return;
+            
+                // Show profile circle with first letter
+                let displayName = user.displayName || user.email || "U";
+                let firstLetter = displayName.charAt(0).toUpperCase();
+            
+                navActions.innerHTML = `
+                  <div class="profile-circle" title="${displayName}" onclick="logout()">
+                    ${firstLetter}
+                  </div>
+                `;
+            }
+            
+            function renderLoginSignup() {
+                const navActions = document.getElementById("nav-actions");
+                if (!navActions) return;
+                navActions.innerHTML = `
+                  <a href="/signin" class="btn btn-green">Log In</a>
+                  <a href="/signup" class="btn btn-outline-green">Sign Up</a>
+                `;
+            }
+            
+            // Logout function
+            function logout() {
+                firebase.auth().signOut().then(() => {
+                  window.location.reload();
+                });
+            }
+            
+            // Listen for auth state changes
+            auth.onAuthStateChanged(user => {
+                if (user) {
+                  renderProfile(user);
+                } else {
+                  renderLoginSignup();
+                }
+            });
+            </script>
+            
+            <!-- Main JS for prediction page -->
+            <script>
+            // Global variables
+            let currentImage = null;
+            let currentPredictionId = null;
+            let currentDiseaseInfo = null;
+            
+            // DOM elements
+            const uploadArea = document.getElementById('uploadArea');
+            const imageInput = document.getElementById('imageInput');
+            const imagePreview = document.getElementById('imagePreview');
+            const previewImg = document.getElementById('previewImg');
+            const loadingSection = document.getElementById('loadingSection');
+            const resultsSection = document.getElementById('resultsSection');
+            const gradcamSection = document.getElementById('gradcamSection');
+            const infoCardsGrid = document.getElementById('infoCardsGrid');
+            
+            // Event listeners
+            uploadArea.addEventListener('click', () => imageInput.click());
+            uploadArea.addEventListener('dragover', handleDragOver);
+            uploadArea.addEventListener('drop', handleDrop);
+            imageInput.addEventListener('change', handleImageSelect);
+            
+            document.getElementById('predictBtn').addEventListener('click', analyzeImage);
+            document.getElementById('newImageBtn').addEventListener('click', resetUpload);
+            document.getElementById('newAnalysisBtn').addEventListener('click', resetUpload);
+            document.getElementById('generateReportBtn').addEventListener('click', generateReport);
+            document.getElementById('viewGradcamBtn').addEventListener('click', showGradcam);
+            document.getElementById('cameraBtn').addEventListener('click', openCamera);
+            
+            // Progress dots animation
+            function animateProgressDots() {
+            const dots = document.querySelectorAll('.progress-dot');
+            let currentDot = 0;
+            const interval = setInterval(() => {
+            if (loadingSection.style.display === 'none') {
+            clearInterval(interval);
+            dots.forEach(dot => dot.classList.remove('active'));
+            return;
+            }
+            dots.forEach(dot => dot.classList.remove('active'));
+            dots[currentDot].classList.add('active');
+            currentDot = (currentDot + 1) % dots.length;
+            }, 500);
+            }
+            document.addEventListener('DOMContentLoaded', animateProgressDots);
+            
+            function handleDragOver(e) {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+            }
+            
+            function handleDrop(e) {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+            handleFile(files[0]);
+            }
+            }
+            
+            function handleImageSelect(e) {
+            const file = e.target.files[0];
+            if (file) {
+            handleFile(file);
+            }
+            }
+            
+            function handleFile(file) {
+            if (!file.type.startsWith('image/')) {
+            alert('Please select a valid image file.');
+            return;
+            }
+            if (file.size > 10 * 1024 * 1024) { // 10MB limit
+            alert('File size must be less than 10MB.');
+            return;
+            }
+            currentImage = file;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+            previewImg.src = e.target.result;
+            uploadArea.style.display = 'none';
+            imagePreview.style.display = 'block';
+            resultsSection.style.display = 'none';
+            gradcamSection.classList.add('hidden');
+            };
+            reader.readAsDataURL(file);
+            }
+            
+            function openCamera() {
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function(stream) {
+            const video = document.createElement('video');
+            video.srcObject = stream;
+            video.play();
+            const cameraDiv = document.createElement('div');
+            cameraDiv.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;';
+            video.style.cssText = 'max-width: 90%; max-height: 70%; border-radius: 1rem;';
+            const captureBtn = document.createElement('button');
+            captureBtn.textContent = 'Capture Photo';
+            captureBtn.className = 'btn-action';
+            captureBtn.style.cssText = 'margin: 1rem; padding: 1rem 2rem;';
+            const closeBtn = document.createElement('button');
+            closeBtn.textContent = 'Close Camera';
+            closeBtn.className = 'btn-action btn-secondary';
+            closeBtn.style.cssText = 'margin: 1rem; padding: 1rem 2rem;';
+            cameraDiv.appendChild(video);
+            cameraDiv.appendChild(captureBtn);
+            cameraDiv.appendChild(closeBtn);
+            document.body.appendChild(cameraDiv);
+            captureBtn.addEventListener('click', function() {
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0);
+            canvas.toBlob(function(blob) {
+            const file = new File([blob], 'camera-capture.jpg', { type: 'image/jpeg' });
+            handleFile(file);
+            stream.getTracks().forEach(track => track.stop());
+            document.body.removeChild(cameraDiv);
+            });
+            });
+            closeBtn.addEventListener('click', function() {
+            stream.getTracks().forEach(track => track.stop());
+            document.body.removeChild(cameraDiv);
+            });
+            })
+            .catch(function(err) {
+            alert('Camera access denied or not available.');
+            console.error('Camera error:', err);
+            });
+            } else {
+            alert('Camera is not supported in this browser.');
+            }
+            }
+            
+            function analyzeImage() {
+            if (!currentImage) return;
+            imagePreview.style.display = 'none';
+            loadingSection.style.display = 'block';
+            resultsSection.style.display = 'none';
+            animateProgressDots();
+            const formData = new FormData();
+            formData.append('image', currentImage);
+            fetch('/api/predict', {
+            method: 'POST',
+            body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+            loadingSection.style.display = 'none';
+            if (data.success) {
+            currentPredictionId = data.prediction_id;
+            displayResults(data);
+            } else {
+            alert('Error: ' + data.error);
+            resetUpload();
+            }
+            })
+            .catch(error => {
+            loadingSection.style.display = 'none';
+            alert('Network error. Please try again.');
+            console.error('Error:', error);
+            resetUpload();
+            });
+            }
+            
+            function displayResults(data) {
+            document.getElementById('diseaseTitle').textContent = data.prediction;
+            document.getElementById('confidenceText').textContent = data.confidence_percent + '%';
+            document.getElementById('confidenceFill').style.width = data.confidence_percent + '%';
+            fetchDetailedDiseaseInfo(data.prediction);
+            resultsSection.style.display = 'block';
+            resultsSection.scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('diseaseTitle').classList.add('bounce-animation');
+            }
+            
+            function fetchDetailedDiseaseInfo(diseaseName) {
+            fetch(`/disease_info/${encodeURIComponent(diseaseName)}`)
+            .then(response => response.json())
+            .then(data => {
+            if (data.success && data.disease_info) {
+            currentDiseaseInfo = data.disease_info;
+            createBeautifulInfoCards(data.disease_info);
+            } else {
+            document.getElementById('diseaseDescription').textContent =
+            'Detailed information for this disease is being processed...';
+            }
+            })
+            .catch(error => {
+            console.error('Error fetching disease info:', error);
+            document.getElementById('diseaseDescription').textContent =
+            'Unable to fetch detailed information at this time.';
+            });
+            }
+            
+            function createBeautifulInfoCards(diseaseInfo) {
+            const cardsGrid = document.getElementById('infoCardsGrid');
+            cardsGrid.innerHTML = '';
+            if (diseaseInfo.symptoms && diseaseInfo.symptoms.length > 0) {
+            const symptomsCard = createInfoCard(
+            '🩺',
+            'symptoms-icon',
+            'Symptoms',
+            diseaseInfo.symptoms,
+            'list'
+            );
+            cardsGrid.appendChild(symptomsCard);
+            }
+            if (diseaseInfo.causes && diseaseInfo.causes.length > 0) {
+            const causesCard = createInfoCard(
+            '🔍',
+            'causes-icon',
+            'Causes',
+            diseaseInfo.causes,
+            'list'
+            );
+            cardsGrid.appendChild(causesCard);
+            }
+            if (diseaseInfo.treatment && diseaseInfo.treatment.length > 0) {
+            const treatmentCard = createInfoCard(
+            '🌿',
+            'treatment-icon',
+            'Treatment',
+            diseaseInfo.treatment,
+            'list'
+            );
+            cardsGrid.appendChild(treatmentCard);
+            }
+            if (diseaseInfo.prevention && diseaseInfo.prevention.length > 0) {
+            const preventionCard = createInfoCard(
+            '🛡️',
+            'prevention-icon',
+            'Prevention',
+            diseaseInfo.prevention,
+            'list'
+            );
+            cardsGrid.appendChild(preventionCard);
+            }
+            if (diseaseInfo.severity_mild || diseaseInfo.severity_moderate || diseaseInfo.severity_severe) {
+            const severityCard = createSeverityCard(diseaseInfo);
+            cardsGrid.appendChild(severityCard);
+            }
+            if (diseaseInfo.medicines && diseaseInfo.medicines.length > 0) {
+            const medicinesCard = createInfoCard(
+            '💊',
+            'medicines-icon',
+            'Medicines',
+            diseaseInfo.medicines,
+            'list'
+            );
+            cardsGrid.appendChild(medicinesCard);
+            createMedicineCarousel(diseaseInfo.medicines);
+            }
+            if (diseaseInfo.progression_days) {
+            const progressCard = createProgressCard(diseaseInfo);
+            cardsGrid.appendChild(progressCard);
+            }
+            }
+            
+            function createInfoCard(icon, iconClass, title, content, type = 'text') {
+            const card = document.createElement('div');
+            card.className = 'info-card';
+            const cardHTML = `
+            <div class="card-header">
+            <div class="card-icon ${iconClass}">
+            ${icon}
+            </div>
+            <h4 class="card-title">${title}</h4>
+            </div>
+            <div class="card-content">
+            ${type === 'list' && Array.isArray(content) ?
+            `<ul class="card-list">
+            ${content.map(item => `
+            <li>
+            <div class="list-bullet"></div>
+            <span>${item}</span>
+            </li>
+            `).join('')}
+            </ul>` :
+            `<p>${Array.isArray(content) ? content.join(', ') : content}</p>`
+            }
+            </div>
+            `;
+            card.innerHTML = cardHTML;
+            return card;
+            }
+            
+            function createSeverityCard(diseaseInfo) {
+            const card = document.createElement('div');
+            card.className = 'info-card';
+            const severityHTML = `
+            <div class="card-header">
+            <div class="card-icon severity-icon">⚡</div>
+            <h4 class="card-title">Severity Levels</h4>
+            </div>
+            <div class="card-content">
+            <div class="severity-grid">
+            ${diseaseInfo.severity_mild ? `
+            <div class="severity-card severity-mild">
+            <h5>Mild</h5>
+            <p>${diseaseInfo.severity_mild}</p>
+            </div>
+            ` : ''}
+            ${diseaseInfo.severity_moderate ? `
+            <div class="severity-card severity-moderate">
+            <h5>Moderate</h5>
+            <p>${diseaseInfo.severity_moderate}</p>
+            </div>
+            ` : ''}
+            ${diseaseInfo.severity_severe ? `
+            <div class="severity-card severity-severe">
+            <h5>Severe</h5>
+            <p>${diseaseInfo.severity_severe}</p>
+            </div>
+            ` : ''}
+            </div>
+            </div>
+            `;
+            card.innerHTML = severityHTML;
+            return card;
+            }
+            
+            function createProgressCard(diseaseInfo) {
+            const card = document.createElement('div');
+            card.className = 'info-card';
+            const progressHTML = `
+            <div class="card-header">
+            <div class="card-icon" style="background: linear-gradient(135deg, #06b6d4, #67e8f9);">⏱️</div>
+            <h4 class="card-title">Disease Progression</h4>
+            </div>
+            <div class="card-content">
+            <p><strong>Typical progression time:</strong> ${diseaseInfo.progression_days} days</p>
+            <div style="margin-top: 1rem; padding: 1rem; background: #f0f9ff; border-radius: 0.5rem; border-left: 4px solid #06b6d4;">
+            <p style="margin: 0; color: #0c4a6e; font-size: 0.9rem;">
+            Early detection and treatment can significantly reduce the progression time and severity of symptoms.
+            </p>
+            </div>
+            </div>
+            `;
+            card.innerHTML = progressHTML;
+            return card;
+            }
+            
+            function createMedicineCarousel(medicines) {
+            const medicineSection = document.getElementById('medicineSection');
+            const medicineItems = document.getElementById('medicineItems');
+            const prevBtn = document.getElementById('medicinePrevBtn');
+            const nextBtn = document.getElementById('medicineNextBtn');
+            medicineItems.innerHTML = '';
+            medicines.forEach((medicine, index) => {
+            const medicineCard = document.createElement('div');
+            medicineCard.className = 'medicine-card';
+            medicineCard.style.animationDelay = `${index * 0.1}s`;
+            medicineCard.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+            <div style="width: 8px; height: 8px; background: #3b82f6; border-radius: 50%;"></div>
+            <strong style="color: #1e40af;">${medicine}</strong>
+            </div>
+            <p style="margin: 0; font-size: 0.85rem; color: #64748b;">
+            Recommended treatment option
+            </p>
+            `;
+            medicineItems.appendChild(medicineCard);
+            });
+            medicineSection.style.display = 'block';
+            prevBtn.addEventListener('click', () => {
+            medicineItems.scrollBy({ left: -200, behavior: 'smooth' });
+            });
+            nextBtn.addEventListener('click', () => {
+            medicineItems.scrollBy({ left: 200, behavior: 'smooth' });
+            });
+            }
+            
+            function generateReport() {
+            if (!currentPredictionId) {
+            alert('No prediction available to generate report.');
+            return;
+            }
+            console.log('Generating report for prediction ID:', currentPredictionId);
+            const reportBtn = document.getElementById('generateReportBtn');
+            const originalText = reportBtn.innerHTML;
+            reportBtn.innerHTML = 'Generating Report...';
+            reportBtn.disabled = true;
+            fetch('/api/generate_report', {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+            prediction_id: currentPredictionId
+            })
+            })
+            .then(response => {
+            console.log('Generate report response status:', response.status);
+            return response.json();
+            })
+            .then(data => {
+            console.log('Generate report response data:', data);
+            reportBtn.innerHTML = originalText;
+            reportBtn.disabled = false;
+            if (data.success && data.report_id) {
+            console.log('Report generated successfully, downloading...');
+            const downloadUrl = `/api/download_report/${data.report_id}`;
+            const tempLink = document.createElement('a');
+            tempLink.href = downloadUrl;
+            tempLink.download = `plant_disease_report_${data.report_id}.pdf`;
+            document.body.appendChild(tempLink);
+            tempLink.click();
+            document.body.removeChild(tempLink);
+            } else {
+            console.error('Report generation failed:', data.error);
+            alert('Error generating report: ' + (data.error || 'Unknown error'));
+            }
+            })
+            .catch(error => {
+            console.error('Network error generating report:', error);
+            reportBtn.innerHTML = originalText;
+            reportBtn.disabled = false;
+            alert('Network error. Please try again.');
+            });
+            }
+            
+            function showGradcam() {
+            if (!currentPredictionId) return;
+            fetch(`/api/gradcam/${currentPredictionId}`)
+            .then(response => response.json())
+            .then(data => {
+            if (data.success) {
+            document.getElementById('gradcamImage').src = 'data:image/png;base64,' + data.gradcam_image;
+            gradcamSection.classList.remove('hidden');
+            gradcamSection.scrollIntoView({ behavior: 'smooth' });
+            } else {
+            alert('Error generating heatmap: ' + data.error);
+            }
+            })
+            .catch(error => {
+            alert('Network error. Please try again.');
+            console.error('Error:', error);
+            });
+            }
+            
+            function resetUpload() {
+            currentImage = null;
+            currentPredictionId = null;
+            currentDiseaseInfo = null;
+            uploadArea.style.display = 'block';
+            imagePreview.style.display = 'none';
+            loadingSection.style.display = 'none';
+            resultsSection.style.display = 'none';
+            gradcamSection.classList.add('hidden');
+            imageInput.value = '';
+            infoCardsGrid.innerHTML = '';
+            document.getElementById('medicineSection').style.display = 'none';
+            }
+            </script>
             </body>
             </html>
             """
@@ -2651,13 +4005,818 @@ def chatbot():
         return send_from_directory('.', 'chatbot.html')
     except FileNotFoundError:
         return """
-        <h1>Error: chatbot.html not found</h1>
-        <p>Make sure chatbot.html is in the same directory as app.py</p>
-        <p>Current directory files:</p>
-        <ul>
-        """ + "".join([f"<li>{f}</li>" for f in os.listdir('.')]) + """
-        </ul>
-        """, 404
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <title>Plant Saathi - Plant Doctor AI</title>
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <style>
+            body {
+              margin: 0;
+              font-family: 'Segoe UI', 'Arial', sans-serif;
+              background: linear-gradient(135deg, #f0fdf4 0%, #d1fae5 100%);
+              color: #222;
+            }
+            .min-h-screen { min-height: 100vh; }
+            .container {
+              max-width: 1100px;
+              margin: 0 auto;
+              padding: 0 1rem;
+            }
+            .flex { display: flex; }
+            .flex-between { display: flex; align-items: center; justify-content: space-between; }
+            .items-center { align-items: center; }
+            .gap-2 { gap: 0.5rem; }
+            .gap-3 { gap: 0.75rem; }
+            .text-center { text-align: center; }
+            .mb-12 { margin-bottom: 3rem; }
+            .mb-10 { margin-bottom: 2.5rem; }
+            .mt-12 { margin-top: 3rem; }
+            .mb-4 { margin-bottom: 1rem; }
+            .mr-3 { margin-right: 0.75rem; }
+            .center { display: flex; justify-content: center; }
+            .animate-pulse {
+              animation: pulse 2s infinite;
+            }
+            @keyframes pulse {
+              0%, 100% { opacity: 1; }
+              50% { opacity: .7; }
+            }
+            .animate-bounce {
+              animation: bounce 1.5s infinite;
+            }
+            @keyframes bounce {
+              0%, 100% { transform: translateY(0);}
+              50% { transform: translateY(-8px);}
+            }
+            .animate-spin {
+              animation: spin 8s linear infinite;
+            }
+            @keyframes spin {
+              100% { transform: rotate(360deg);}
+            }
+            .header {
+              background: #fff;
+              box-shadow: 0 2px 8px -2px rgba(16, 185, 129, 0.08);
+              border-bottom: 1px solid #bbf7d0;
+            }
+            .icon-lg {
+              width: 32px;
+              height: 32px;
+            }
+        
+            .title {
+              font-size: 2rem;
+              font-weight: bold;
+              color: #065f46;
+            }
+            .nav {
+              display: flex;
+              align-items: center;
+              gap: 1.5rem;
+            }
+            .nav a {
+              color: #047857;
+              font-weight: 500;
+              text-decoration: none;
+              transition: color 0.2s;
+            }
+            .nav a:hover, .nav a.active {
+              color: #065f46;
+            }
+            .nav-actions {
+              display: flex;
+              gap: 0.75rem;
+              margin-left: 1.5rem;
+            }
+            .btn {
+              padding: 0.5rem 1rem;
+              border-radius: 0.75rem;
+              font-weight: 500;
+              transition: all .2s;
+              box-shadow: none;
+              border: none;
+              cursor: pointer;
+            }
+            .btn-green {
+              background: #16a34a;
+              color: #fff;
+            }
+            .btn-green:hover {
+              background: #166534;
+              box-shadow: 0 2px 8px -2px #16a34a44;
+            }
+            .btn-outline-green {
+              background: #fff;
+              border: 2px solid #16a34a;
+              color: #16a34a;
+            }
+            .btn-outline-green:hover {
+              background: #f0fdf4;
+              box-shadow: 0 2px 8px -2px #16a34a22;
+            }
+            .profile-circle {
+              width: 40px;
+              height: 40px;
+              background: #16a34a;
+              color: #fff;
+              border-radius: 50%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-weight: bold;
+              font-size: 1.2rem;
+              cursor: pointer;
+              border: 2px solid #fff;
+              box-shadow: 0 2px 8px -2px #16a34a44;
+              transition: background .2s;
+            }
+            .profile-circle:hover {
+              background: #166534;
+            }
+            /* Chatbot UI styles */
+            .chatbot-section {
+              max-width: 700px;
+              margin: 0 auto 3rem auto;
+              background: #fff;
+              border-radius: 1.25rem;
+              box-shadow: 0 4px 32px -8px #16a34a22;
+              padding: 2rem;
+              margin-top: 3rem;
+            }
+            .chat-header {
+              text-align: center;
+              margin-bottom: 2rem;
+            }
+            .chat-header h2 {
+              color: #065f46;
+              font-size: 2rem;
+              font-weight: 700;
+            }
+            .chat-header p {
+              color: #047857;
+              font-size: 1.2rem;
+              margin-top: 0.5rem;
+            }
+            .chat-area {
+              width: 100%;
+              min-height: 340px;
+              max-height: 420px;
+              overflow-y: auto;
+              margin-bottom: 1rem;
+              padding-right: 6px;
+            }
+            .chat-message {
+              margin: 8px 0;
+              clear: both;
+              max-width: 70%;
+            }
+            .chat-message.user {
+              background: #CFEFFF;
+              color: #000;
+              padding: 10px;
+              border-radius: 10px;
+              float: right;
+              box-shadow: 0 1px 8px -2px #16a34a22;
+              margin-right: 0;
+              margin-left: auto;
+            }
+            .chat-message.bot {
+              background: #E2FFE2;
+              color: #000;
+              padding: 10px;
+              border-radius: 10px;
+              float: left;
+              box-shadow: 0 1px 8px -2px #16a34a22;
+              margin-left: 0;
+              margin-right: auto;
+              line-height: 1.5;
+            }
+            
+            .chat-message.bot h1,
+            .chat-message.bot h2, 
+            .chat-message.bot h3 {
+              margin-top: 1rem;
+              margin-bottom: 0.5rem;
+            }
+            
+            .chat-message.bot h1:first-child,
+            .chat-message.bot h2:first-child,
+            .chat-message.bot h3:first-child {
+              margin-top: 0;
+            }
+            
+            .chat-message.bot ul,
+            .chat-message.bot ol {
+              margin: 0.5rem 0;
+              padding-left: 1.5rem;
+            }
+            
+            .chat-message.bot p {
+              margin: 0.5rem 0;
+            }
+            .chat-timestamp {
+              font-size: 0.85em;
+              color: #888;
+              margin-bottom: 4px;
+              display: block;
+            }
+            .chat-clear {
+              clear: both;
+            }
+            .chat-form {
+              display: flex;
+              gap: 1rem;
+              align-items: flex-end;
+              margin-top: 1rem;
+            }
+            .chat-input {
+              flex: 1;
+              padding: 0.75rem;
+              border: 1px solid #bbf7d0;
+              border-radius: 0.75rem;
+              font-size: 1.05rem;
+              background: #f0fdf4;
+              color: #222;
+              transition: border .2s;
+              min-height: 50px;
+              resize: vertical;
+            }
+            .chat-input:focus {
+              border: 2px solid #16a34a;
+              outline: none;
+              background: #e6fcf0;
+            }
+            .chat-send-btn {
+              padding: 0.75rem 1.5rem;
+              background: linear-gradient(135deg, #16a34a, #22c55e);
+              color: #fff;
+              font-weight: 500;
+              border-radius: 0.75rem;
+              border: none;
+              cursor: pointer;
+              font-size: 1.05rem;
+              transition: background .2s;
+              box-shadow: 0 2px 8px -2px #16a34a22;
+            }
+            .chat-send-btn:hover:not(:disabled) {
+              background: #166534;
+            }
+            .chat-send-btn:disabled {
+              opacity: 0.7;
+              cursor: not-allowed;
+            }
+            .chat-clear-btn {
+              padding: 0.75rem 1rem;
+              background: #fff;
+              color: #16a34a;
+              border: 2px solid #16a34a;
+              border-radius: 0.75rem;
+              font-size: 1rem;
+              cursor: pointer;
+              margin-left: 1rem;
+              transition: background .2s;
+            }
+            .chat-clear-btn:hover {
+              background: #f0fdf4;
+            }
+            .chat-loader {
+              display: inline-block;
+              width: 20px;
+              height: 20px;
+              border: 3px solid #f0fdf4;
+              border-top: 3px solid #16a34a;
+              border-radius: 50%;
+              animation: spin 1s linear infinite;
+              margin-right: 8px;
+              vertical-align: middle;
+            }
+            @keyframes spin {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+            }
+            .status-indicator {
+              text-align: center;
+              margin-bottom: 16px;
+              padding: 8px 16px;
+              border-radius: 8px;
+              font-size: 0.9em;
+              font-weight: 500;
+            }
+            .status-connected {
+              background: #dcfce7;
+              color: #15803d;
+              border: 1px solid #bbf7d0;
+            }
+            .status-error {
+              background: #fecaca;
+              color: #dc2626;
+              border: 1px solid #fca5a5;
+            }
+            .status-warning {
+              background: #fef3c7;
+              color: #d97706;
+              border: 1px solid #fde68a;
+            }
+            .welcome-message {
+              background: #f0fdf4;
+              border-left: 4px solid #16a34a;
+              padding: 1rem;
+              margin-bottom: 1rem;
+              border-radius: 0 8px 8px 0;
+            }
+            .welcome-message h3 {
+              margin: 0 0 0.5rem 0;
+              color: #065f46;
+            }
+            .welcome-message p {
+              margin: 0;
+              color: #047857;
+              font-size: 0.95em;
+            }
+            @media (max-width: 800px) {
+              .chatbot-section {
+                max-width: 99vw;
+                padding: 1rem;
+              }
+              .chat-form {
+                flex-direction: column;
+                gap: 0.5rem;
+              }
+              .chat-clear-btn {
+                margin-left: 0;
+                width: 100%;
+              }
+            }
+            @media (max-width: 600px) {
+              .chatbot-section {
+                padding: 0.5rem;
+              }
+              .chat-header h2 {font-size: 1.5rem;}
+              .chat-header p {font-size: 1rem;}
+            }
+          </style>
+          <!-- Firebase SDKs for profile.js -->
+          <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+          <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+        </head>
+        <body class="min-h-screen">
+        
+        <!-- Header -->
+        <header class="header">
+          <div class="container flex-between">
+            <div class="flex items-center gap-2">
+              <!-- Leaf Icon SVG -->
+              <svg class="icon-lg text-green" fill="none" stroke="green" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M2 22s9-2 15-8 5-12 5-12-9 2-15 8-5 12-5 12z"/>
+              </svg>
+              <h1 class="title">Plant Doctor AI</h1>
+            </div>
+            <nav class="nav">
+              <a href="/">Home</a>
+              <a href="/predict">Upload & Predict</a>
+              <a href="/chatbot" class="active">Plant Saathi</a>
+              <a href="/about">About</a>
+              <div class="nav-actions" id="nav-actions">
+                <!-- Login/Signup or Profile will be injected here -->
+              </div>
+            </nav>
+          </div>
+        </header>
+        
+        <!-- Chatbot Section -->
+        <main class="container">
+          <section class="chatbot-section">
+            <div class="chat-header">
+              <h2 class="animate-pulse">🌱 Plant Saathi</h2>
+              <p>Ask about plant diseases, symptoms, treatment, or prevention strategies!</p>
+            </div>
+            
+            <!-- Status indicator -->
+            <div id="connection-status" class="status-indicator status-warning">🔄 Initializing...</div>
+            
+            <!-- Welcome message -->
+            <div class="welcome-message">
+              <h3>👋 Welcome to Plant Saathi!</h3>
+              <p>I'm here to help you with plant diseases, pest problems, treatments, and agricultural advice. Feel free to ask me anything about plant health!</p>
+            </div>
+            
+            <div id="chat-area" class="chat-area"></div>
+            <form id="chat-form" class="chat-form" autocomplete="off">
+              <textarea id="chat-input" class="chat-input" rows="2" placeholder="Ask me about plant diseases, symptoms, or treatments..." required></textarea>
+              <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                <button id="send-btn" type="submit" class="chat-send-btn">Send</button>
+                <button id="clear-btn" type="button" class="chat-clear-btn">Clear Chat</button>
+              </div>
+            </form>
+          </section>
+        </main>
+        
+        <!-- Profile.js Logic -->
+        <script>
+        const firebaseConfig = {
+          apiKey: "AIzaSyB-y52ekJkjgXYXhRNvvir0r9gU8CObpkM",
+          authDomain: "plant-doctor-63da7.firebaseapp.com",
+          projectId: "plant-doctor-63da7",
+          storageBucket: "plant-doctor-63da7.appspot.com",
+          messagingSenderId: "94281353808",
+          appId: "1:94281353808:web:5fa49e3d6e494868be5f55",
+          measurementId: "G-E5P4MZ68HW"
+        };
+        
+        // Initialize Firebase only if not already initialized
+        if (!firebase.apps.length) {
+          firebase.initializeApp(firebaseConfig);
+        }
+        const auth = firebase.auth();
+        
+        function renderProfile(user) {
+          const navActions = document.getElementById("nav-actions");
+          if (!navActions) return;
+          let displayName = user.displayName || user.email || "U";
+          let firstLetter = displayName.charAt(0).toUpperCase();
+          navActions.innerHTML = `
+            <div class="profile-circle" title="${displayName}" onclick="logout()">
+              ${firstLetter}
+            </div>
+          `;
+        }
+        
+        function renderLoginSignup() {
+          const navActions = document.getElementById("nav-actions");
+          if (!navActions) return;
+          navActions.innerHTML = `
+            <a href="/signin" class="btn btn-green">Log In</a>
+            <a href="/signup" class="btn btn-outline-green">Sign Up</a>
+          `;
+        }
+        
+        function logout() {
+          firebase.auth().signOut().then(() => {
+            window.location.reload();
+          });
+        }
+        
+        auth.onAuthStateChanged(user => {
+          if (user) {
+            renderProfile(user);
+          } else {
+            renderLoginSignup();
+          }
+        });
+        </script>
+        
+        <!-- Chatbot logic -->
+        <script>
+        const chatArea = document.getElementById('chat-area');
+        const chatForm = document.getElementById('chat-form');
+        const chatInput = document.getElementById('chat-input');
+        const sendBtn = document.getElementById('send-btn');
+        const clearBtn = document.getElementById('clear-btn');
+        const connectionStatus = document.getElementById('connection-status');
+        
+        // Use the same domain as current page for backend
+        const BACKEND_URL = window.location.origin;
+        
+        console.log('🌱 Plant Doctor AI Chatbot initialized');
+        console.log('🔗 Backend URL:', BACKEND_URL);
+        
+        // Load chat history from localStorage
+        let history = [];
+        try {
+          const savedHistory = localStorage.getItem('pd_chat_history');
+          if (savedHistory) {
+            history = JSON.parse(savedHistory);
+          }
+        } catch (e) {
+          console.warn('Could not load chat history:', e);
+          history = [];
+        }
+        
+        // Test backend connection on page load
+        async function testBackendConnection() {
+          try {
+            connectionStatus.innerHTML = '🔄 Testing connection...';
+            connectionStatus.className = 'status-indicator status-warning';
+            
+            console.log('🧪 Testing backend connection...');
+            
+            // First test basic Flask backend
+            const backendResponse = await fetch(`${BACKEND_URL}/`, {
+              method: 'GET',
+              mode: 'cors'
+            });
+            
+            if (!backendResponse.ok) {
+              throw new Error(`Backend responded with status ${backendResponse.status}`);
+            }
+            
+            console.log('✅ Flask backend is running');
+            
+            // Then test Gemini API connectivity
+            const geminiTest = await fetch(`${BACKEND_URL}/test-gemini`, {
+              method: 'GET',
+              mode: 'cors'
+            });
+            
+            const geminiData = await geminiTest.json();
+            console.log('🤖 Gemini test result:', geminiData);
+            
+            if (geminiData.success) {
+              connectionStatus.innerHTML = '✅ Ready - Gemini AI Connected';
+              connectionStatus.className = 'status-indicator status-connected';
+              console.log('✅ Everything is working!');
+            } else {
+              connectionStatus.innerHTML = '⚠️ Backend OK - Gemini API Issues';
+              connectionStatus.className = 'status-indicator status-warning';
+              console.warn('⚠️ Gemini API issues:', geminiData.error);
+            }
+            
+          } catch (error) {
+            connectionStatus.innerHTML = '❌ Backend Connection Failed - Run: python app.py';
+            connectionStatus.className = 'status-indicator status-error';
+            console.error('❌ Connection test failed:', error);
+          }
+        }
+        
+        function renderChatHistory() {
+          chatArea.innerHTML = '';
+          history.forEach(msg => {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'chat-message ' + (msg.role === "user" ? "user" : "bot");
+            msgDiv.innerHTML = `
+              <span class="chat-timestamp">${msg.role === "user" ? "You" : "Plant Doctor"} (${msg.time || ""}):</span>
+              ${msg.role === "bot" ? formatBotMessage(msg.content) : escapeHTML(msg.content)}
+            `;
+            chatArea.appendChild(msgDiv);
+            const clearDiv = document.createElement('div');
+            clearDiv.className = "chat-clear";
+            chatArea.appendChild(clearDiv);
+          });
+          chatArea.scrollTop = chatArea.scrollHeight;
+        }
+        
+        function escapeHTML(text) {
+          const div = document.createElement('div');
+          div.textContent = text;
+          return div.innerHTML;
+        }
+        
+        function formatBotMessage(text) {
+          // Enhanced markdown formatting for bot messages with table support
+          let formatted = escapeHTML(text);
+          
+          // Headers (# ## ### etc.) - must come before other formatting
+          formatted = formatted.replace(/^#### (.*$)/gm, '<h4 style="color: #065f46; margin: 1rem 0 0.5rem 0; font-size: 1.1em; font-weight: 600;">$1</h4>');
+          formatted = formatted.replace(/^### (.*$)/gm, '<h3 style="color: #065f46; margin: 1rem 0 0.5rem 0; font-size: 1.2em; font-weight: 600;">$1</h3>');
+          formatted = formatted.replace(/^## (.*$)/gm, '<h2 style="color: #065f46; margin: 1.2rem 0 0.6rem 0; font-size: 1.4em; font-weight: 700;">$1</h2>');
+          formatted = formatted.replace(/^# (.*$)/gm, '<h1 style="color: #065f46; margin: 1.5rem 0 0.8rem 0; font-size: 1.6em; font-weight: 700;">$1</h1>');
+          
+          // Process tables first (before other formatting)
+          formatted = formatted.replace(/^\|(.+)\|$/gm, function(match) {
+            return 'TABLE_ROW_MARKER' + match + 'TABLE_ROW_MARKER';
+          });
+          
+          // Convert table rows
+          const tableRegex = /TABLE_ROW_MARKER\|(.+?)\|TABLE_ROW_MARKER(?:\n(?:TABLE_ROW_MARKER\|.*?\|TABLE_ROW_MARKER|\|.*?\||---+.*?))*(?=\n[^|]|$)/g;
+          
+          formatted = formatted.replace(tableRegex, function(tableMatch) {
+            const rows = tableMatch.split('\n').filter(row => row.includes('|'));
+            let tableHTML = '<table style="border-collapse: collapse; margin: 1rem 0; width: 100%; font-size: 0.9em;">';
+            let isHeader = true;
+            
+            rows.forEach((row, index) => {
+              // Clean up row markers
+              row = row.replace(/TABLE_ROW_MARKER/g, '');
+              
+              // Skip separator rows (--- lines)
+              if (row.match(/^\s*\|[\s\-\|:]*\|\s*$/)) {
+                isHeader = false;
+                return;
+              }
+              
+              // Split cells and clean them
+              const cells = row.split('|').slice(1, -1).map(cell => cell.trim());
+              
+              if (cells.length > 0) {
+                const cellTag = isHeader ? 'th' : 'td';
+                const cellStyle = isHeader 
+                  ? 'background: #f0fdf4; border: 1px solid #bbf7d0; padding: 8px 12px; font-weight: 600; color: #065f46;'
+                  : 'border: 1px solid #bbf7d0; padding: 8px 12px; background: #fff;';
+                
+                tableHTML += '<tr>';
+                cells.forEach(cell => {
+                  tableHTML += `<${cellTag} style="${cellStyle}">${cell}</${cellTag}>`;
+                });
+                tableHTML += '</tr>';
+                
+                if (isHeader) isHeader = false;
+              }
+            });
+            
+            tableHTML += '</table>';
+            return tableHTML;
+          });
+          
+          // Bold text (**text** or ****text****)
+          formatted = formatted.replace(/\*{4}(.*?)\*{4}/g, '<strong style="color: #16a34a; font-weight: 700;">$1</strong>');
+          formatted = formatted.replace(/\*{2}(.*?)\*{2}/g, '<strong>$1</strong>');
+          
+          // Italic text (*text*)
+          formatted = formatted.replace(/(?<!\*)\*([^*\n]+)\*(?!\*)/g, '<em>$1</em>');
+          
+          // Code blocks (```code```)
+          formatted = formatted.replace(/```([\s\S]*?)```/g, '<pre style="background: #f3f4f6; border: 1px solid #d1d5db; border-radius: 6px; padding: 12px; margin: 1rem 0; overflow-x: auto; font-family: monospace; font-size: 0.9em;"><code>$1</code></pre>');
+          
+          // Inline code (`code`)
+          formatted = formatted.replace(/`([^`\n]+)`/g, '<code style="background: #f3f4f6; border: 1px solid #d1d5db; padding: 2px 4px; border-radius: 3px; font-family: monospace; font-size: 0.9em;">$1</code>');
+          
+          // Blockquotes (> text)
+          formatted = formatted.replace(/^> (.+)$/gm, '<blockquote style="border-left: 4px solid #16a34a; margin: 1rem 0; padding: 0.5rem 1rem; background: #f0fdf4; font-style: italic;">$1</blockquote>');
+          
+          // Horizontal rules (--- or ***)
+          formatted = formatted.replace(/^(---+|\*{3,})$/gm, '<hr style="border: none; border-top: 2px solid #e5e7eb; margin: 1.5rem 0;">');
+          
+          // Ordered lists (1. item, 2. item)
+          let listItems = [];
+          formatted = formatted.replace(/^(\s*)(\d+)\.\s+(.+)$/gm, function(match, indent, num, content) {
+            const level = Math.floor(indent.length / 2);
+            return `LIST_ITEM_ORDERED_${level}|||${num}|||${content}`;
+          });
+          
+          // Unordered lists (* item, - item, + item)
+          formatted = formatted.replace(/^(\s*)([\*\-\+])\s+(.+)$/gm, function(match, indent, bullet, content) {
+            const level = Math.floor(indent.length / 2);
+            return `LIST_ITEM_UNORDERED_${level}|||${content}`;
+          });
+          
+          // Convert list markers to HTML
+          formatted = formatted.replace(/LIST_ITEM_ORDERED_(\d+)\|\|\|(\d+)\|\|\|(.+)/g, function(match, level, num, content) {
+            return `<li style="margin: 0.25rem 0;"><strong>${num}.</strong> ${content}</li>`;
+          });
+          
+          formatted = formatted.replace(/LIST_ITEM_UNORDERED_(\d+)\|\|\|(.+)/g, function(match, level, content) {
+            return `<li style="margin: 0.25rem 0;">• ${content}</li>`;
+          });
+          
+          // Wrap consecutive list items in ul/ol tags
+          formatted = formatted.replace(/(<li[^>]*>.*?<\/li>(?:\s*<li[^>]*>.*?<\/li>)*)/g, function(match) {
+            if (match.includes('<strong>')) {
+              return `<ol style="margin: 0.5rem 0; padding-left: 1.5rem;">${match}</ol>`;
+            } else {
+              return `<ul style="margin: 0.5rem 0; padding-left: 1.5rem; list-style: none;">${match}</ul>`;
+            }
+          });
+          
+          // Links [text](url)
+          formatted = formatted.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" style="color: #16a34a; text-decoration: underline;" target="_blank" rel="noopener noreferrer">$1</a>');
+          
+          // Scientific names and key terms
+          formatted = formatted.replace(/(\b(?:Plant|Disease|Symptoms?|Causes?|Treatments?|Medicines?|Prevention|Management|Control|Pathogen|Diagnosis|Inspection):\s*)/gi, "<strong style='color: #16a34a; font-weight: 600;'>$1</strong>");
+          
+          // Scientific names (genus species)
+          formatted = formatted.replace(/\b([A-Z][a-z]+ [a-z]+)\b/g, '<em style="color: #6b7280; font-style: italic;">$1</em>');
+          
+          // Convert line breaks and paragraphs
+          formatted = formatted.replace(/\n\s*\n/g, '</p><p style="margin: 0.8rem 0;">');
+          formatted = formatted.replace(/\n/g, '<br>');
+          
+          // Wrap in paragraph tags (but avoid wrapping tables, lists, headers, blockquotes)
+          if (!formatted.includes('<table') && !formatted.includes('<ul') && !formatted.includes('<ol') && 
+              !formatted.includes('<h1') && !formatted.includes('<h2') && !formatted.includes('<h3') && 
+              !formatted.includes('<blockquote')) {
+            formatted = '<p style="margin: 0.5rem 0;">' + formatted + '</p>';
+          } else {
+            // Add some top margin for complex content
+            formatted = '<div style="margin-top: 0.5rem;">' + formatted + '</div>';
+          }
+          
+          // Clean up empty paragraphs and divs
+          formatted = formatted.replace(/<p[^>]*>\s*<\/p>/g, '');
+          formatted = formatted.replace(/<div[^>]*>\s*<\/div>/g, '');
+          
+          return formatted;
+        }
+        
+        // Test connection when page loads
+        testBackendConnection();
+        renderChatHistory();
+        
+        chatForm.addEventListener('submit', async function(e) {
+          e.preventDefault();
+          const question = chatInput.value.trim();
+          if (!question) return;
+          
+          const now = new Date();
+          const time = now.getHours().toString().padStart(2,'0') + ":" + now.getMinutes().toString().padStart(2,'0');
+          
+          console.log('📤 Sending message:', question);
+          
+          // Add user message to history
+          history.push({role:"user", content:question, time});
+          renderChatHistory();
+          chatInput.value = "";
+          sendBtn.disabled = true;
+          sendBtn.innerHTML = `<span class="chat-loader"></span>Thinking...`;
+        
+          let botMsg = {role:"bot", content:"Sorry, I couldn't process your request.", time};
+          
+          try {
+            console.log('🚀 Calling Flask API...');
+            
+            // Call Flask backend API
+            const response = await fetch(`${BACKEND_URL}/api/chat`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              mode: 'cors',
+              body: JSON.stringify({
+                message: question,
+                history: history.slice(0, -1) // Send history without the current user message
+              })
+            });
+        
+            console.log('📡 Response status:', response.status);
+            
+            const data = await response.json();
+            console.log('📦 Response data:', data);
+            
+            if (!response.ok) {
+              throw new Error(data.error || `HTTP ${response.status}: ${data.details || 'Unknown error'}`);
+            }
+            
+            if (data.response) {
+              botMsg.content = data.response;
+              connectionStatus.innerHTML = '✅ Ready - Gemini AI Connected';
+              connectionStatus.className = 'status-indicator status-connected';
+              console.log('✅ Got response from Gemini');
+            } else {
+              botMsg.content = "Sorry, I didn't receive a proper response from the AI.";
+              console.warn('⚠️ No response in data');
+            }
+            
+          } catch (error) {
+            console.error('❌ Error calling Flask API:', error);
+            
+            if (error.message.includes('Failed to fetch') || error.message.includes('fetch')) {
+              botMsg.content = `❌ Cannot connect to Flask backend. Please make sure you're running: python app.py`;
+              connectionStatus.innerHTML = '❌ Backend Connection Failed';
+            } else if (error.message.includes('404')) {
+              botMsg.content = `❌ API endpoint not found. Make sure Flask backend is running with correct routes.`;
+              connectionStatus.innerHTML = '❌ API Route Error';
+            } else {
+              botMsg.content = `❌ Error: ${error.message}`;
+              connectionStatus.innerHTML = '❌ API Error - Check Console';
+            }
+            connectionStatus.className = 'status-indicator status-error';
+          }
+          
+          botMsg.time = new Date().getHours().toString().padStart(2,'0') + ":" + new Date().getMinutes().toString().padStart(2,'0');
+          history.push(botMsg);
+          
+          // Save to localStorage
+          try {
+            localStorage.setItem('pd_chat_history', JSON.stringify(history));
+          } catch (e) {
+            console.warn('Could not save chat history:', e);
+          }
+          
+          sendBtn.disabled = false;
+          sendBtn.innerHTML = "Send";
+          renderChatHistory();
+        });
+        
+        clearBtn.addEventListener('click', function() {
+          console.log('🧹 Clearing chat history');
+          history = [];
+          try {
+            localStorage.setItem('pd_chat_history', JSON.stringify(history));
+          } catch (e) {
+            console.warn('Could not clear chat history:', e);
+          }
+          renderChatHistory();
+        });
+        
+        // Allow Enter to send message (Shift+Enter for new line)
+        chatInput.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            chatForm.dispatchEvent(new Event('submit'));
+          }
+        });
+        
+        // Auto-resize textarea
+        chatInput.addEventListener('input', function() {
+          this.style.height = 'auto';
+          this.style.height = (this.scrollHeight) + 'px';
+        });
+        
+        </script>
+        </body>
+        </html>
+        """
 
 @app.route('/api/chat', methods=['POST'])
 def chat():
