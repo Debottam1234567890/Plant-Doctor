@@ -29,3 +29,4 @@ transformers==4.55.4
 wandb==0.21.1
 wikipedia==1.4.0
 flask==2.2.3
+Werkzeug==2.3.7
