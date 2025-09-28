@@ -3995,7 +3995,7 @@ def signin():
 CORS(app)  # Enable CORS for all routes
 
 # Gemini API configuration
-GEMINI_API_KEY = "AIzaSyCnAHW3IzqHD1yb3MkE-V4kELMs2gse8AI"
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
 
 @app.route('/chatbot')
