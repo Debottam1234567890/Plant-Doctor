@@ -69,7 +69,7 @@ class_names = [
     "Tomato Yellow Virus"
 ]
 
-app = Flask(__name__, static_folder="static", static_url_path="")
+app = Flask(__name__, static_folder="assets", static_url_path="")
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
 
 # Global variables
@@ -2240,53 +2240,170 @@ def predict_page():
             reader.readAsDataURL(file);
             }
             
+            // Replace the existing openCamera function in your HTML file with this improved version:
+
             function openCamera() {
-            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-            navigator.mediaDevices.getUserMedia({ video: true })
-            .then(function(stream) {
-            const video = document.createElement('video');
-            video.srcObject = stream;
-            video.play();
-            const cameraDiv = document.createElement('div');
-            cameraDiv.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;';
-            video.style.cssText = 'max-width: 90%; max-height: 70%; border-radius: 1rem;';
-            const captureBtn = document.createElement('button');
-            captureBtn.textContent = 'Capture Photo';
-            captureBtn.className = 'btn-action';
-            captureBtn.style.cssText = 'margin: 1rem; padding: 1rem 2rem;';
-            const closeBtn = document.createElement('button');
-            closeBtn.textContent = 'Close Camera';
-            closeBtn.className = 'btn-action btn-secondary';
-            closeBtn.style.cssText = 'margin: 1rem; padding: 1rem 2rem;';
-            cameraDiv.appendChild(video);
-            cameraDiv.appendChild(captureBtn);
-            cameraDiv.appendChild(closeBtn);
-            document.body.appendChild(cameraDiv);
-            captureBtn.addEventListener('click', function() {
-            const canvas = document.createElement('canvas');
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            canvas.getContext('2d').drawImage(video, 0, 0);
-            canvas.toBlob(function(blob) {
-            const file = new File([blob], 'camera-capture.jpg', { type: 'image/jpeg' });
-            handleFile(file);
-            stream.getTracks().forEach(track => track.stop());
-            document.body.removeChild(cameraDiv);
-            });
-            });
-            closeBtn.addEventListener('click', function() {
-            stream.getTracks().forEach(track => track.stop());
-            document.body.removeChild(cameraDiv);
-            });
+            // Check if the browser supports camera access
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                alert('Camera is not supported in this browser or requires HTTPS connection.');
+                return;
+            }
+
+            // Check if we're on HTTPS (required for camera access)
+            if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
+                alert('Camera access requires HTTPS connection for security reasons.');
+                return;
+            }
+
+            const cameraBtn = document.getElementById('cameraBtn');
+            const originalBtnText = cameraBtn.innerHTML;
+            cameraBtn.innerHTML = 'Requesting Camera Access...';
+            cameraBtn.disabled = true;
+
+            // Request camera access with better error handling
+            navigator.mediaDevices.getUserMedia({ 
+                video: { 
+                    facingMode: 'environment', // Use back camera on mobile if available
+                    width: { ideal: 1280 },
+                    height: { ideal: 720 }
+                } 
             })
-            .catch(function(err) {
-            alert('Camera access denied or not available.');
-            console.error('Camera error:', err);
+            .then(function(stream) {
+                console.log('Camera access granted');
+                
+                // Reset button
+                cameraBtn.innerHTML = originalBtnText;
+                cameraBtn.disabled = false;
+
+                // Create camera interface
+                const video = document.createElement('video');
+                video.srcObject = stream;
+                video.autoplay = true;
+                video.playsInline = true; // Important for iOS
+
+                const cameraDiv = document.createElement('div');
+                cameraDiv.style.cssText = `
+                    position: fixed; 
+                    top: 0; 
+                    left: 0; 
+                    width: 100%; 
+                    height: 100%; 
+                    background: rgba(0,0,0,0.9); 
+                    z-index: 1000; 
+                    display: flex; 
+                    flex-direction: column; 
+                    align-items: center; 
+                    justify-content: center;
+                    padding: 20px;
+                    box-sizing: border-box;
+                `;
+
+                video.style.cssText = `
+                    max-width: 90%; 
+                    max-height: 60%; 
+                    border-radius: 1rem;
+                    object-fit: cover;
+                `;
+
+                const buttonContainer = document.createElement('div');
+                buttonContainer.style.cssText = `
+                    display: flex;
+                    gap: 1rem;
+                    margin-top: 1rem;
+                    flex-wrap: wrap;
+                    justify-content: center;
+                `;
+
+                const captureBtn = document.createElement('button');
+                captureBtn.textContent = '📸 Capture Photo';
+                captureBtn.className = 'btn-action';
+                captureBtn.style.cssText = 'padding: 1rem 2rem; font-size: 1.1rem;';
+
+                const closeBtn = document.createElement('button');
+                closeBtn.textContent = '❌ Close Camera';
+                closeBtn.className = 'btn-action btn-secondary';
+                closeBtn.style.cssText = 'padding: 1rem 2rem; font-size: 1.1rem;';
+
+                buttonContainer.appendChild(captureBtn);
+                buttonContainer.appendChild(closeBtn);
+                cameraDiv.appendChild(video);
+                cameraDiv.appendChild(buttonContainer);
+                document.body.appendChild(cameraDiv);
+
+                // Wait for video to load
+                video.addEventListener('loadedmetadata', function() {
+                    console.log('Camera video loaded');
+                });
+
+                captureBtn.addEventListener('click', function() {
+                    try {
+                        const canvas = document.createElement('canvas');
+                        canvas.width = video.videoWidth || 640;
+                        canvas.height = video.videoHeight || 480;
+                        
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                        
+                        canvas.toBlob(function(blob) {
+                            if (blob) {
+                                const file = new File([blob], 'camera-capture.jpg', { type: 'image/jpeg' });
+                                handleFile(file);
+                                
+                                // Clean up
+                                stream.getTracks().forEach(track => track.stop());
+                                document.body.removeChild(cameraDiv);
+                                console.log('Photo captured successfully');
+                            } else {
+                                alert('Failed to capture photo. Please try again.');
+                            }
+                        }, 'image/jpeg', 0.8);
+                    } catch (error) {
+                        console.error('Capture error:', error);
+                        alert('Failed to capture photo: ' + error.message);
+                    }
+                });
+
+                closeBtn.addEventListener('click', function() {
+                    stream.getTracks().forEach(track => track.stop());
+                    document.body.removeChild(cameraDiv);
+                    console.log('Camera closed by user');
+                });
+
+                // Handle escape key
+                document.addEventListener('keydown', function escapeHandler(e) {
+                    if (e.key === 'Escape' && document.body.contains(cameraDiv)) {
+                        stream.getTracks().forEach(track => track.stop());
+                        document.body.removeChild(cameraDiv);
+                        document.removeEventListener('keydown', escapeHandler);
+                    }
+                });
+
+            })
+            .catch(function(error) {
+                console.error('Camera access error:', error);
+                
+                // Reset button
+                cameraBtn.innerHTML = originalBtnText;
+                cameraBtn.disabled = false;
+
+                // Provide specific error messages
+                let errorMessage = 'Camera access failed: ';
+                
+                if (error.name === 'NotAllowedError') {
+                    errorMessage += 'Camera permission denied. Please allow camera access and try again.';
+                } else if (error.name === 'NotFoundError') {
+                    errorMessage += 'No camera found on this device.';
+                } else if (error.name === 'NotSupportedError') {
+                    errorMessage += 'Camera is not supported in this browser.';
+                } else if (error.name === 'NotReadableError') {
+                    errorMessage += 'Camera is already in use by another application.';
+                } else {
+                    errorMessage += error.message || 'Unknown error occurred.';
+                }
+                
+                alert(errorMessage);
             });
-            } else {
-            alert('Camera is not supported in this browser.');
-            }
-            }
+        }
             
             function analyzeImage() {
             if (!currentImage) return;
@@ -5020,7 +5137,7 @@ def test_gemini():
     except Exception as e:
         return jsonify({
             'error': str(e),
-            'api_key_set': bool(GEMINI_API_KEY and GEMINI_API_KEY != "YOUR_API_KEY_HERE"),
+            'api_key_set': bool(GEMINI_API_KEY and GEMINI_API_KEY != GEMINI_API_KEY),
             'api_url': GEMINI_API_URL,
             'success': False,
             'message': f"❌ Test failed: {str(e)}"
