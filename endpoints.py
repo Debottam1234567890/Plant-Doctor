@@ -8220,6 +8220,7 @@ def chatbot():
             <nav class="nav">
                 <a href="/">Home</a>
                 <a href="/predict">Upload & Predict</a>
+                <a href="/gallery">Disease Gallery</a>
                 <a href="/chatbot" class="active">Plant Saathi</a>
                 <a href="/about">About</a>
                 <div class="nav-actions" id="nav-actions"></div>
