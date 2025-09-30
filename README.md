@@ -37,14 +37,14 @@ To train the model on your dataset:
 python engine.py
 ```
 
-### Running Inference (UI)
+### Running the UI
 
-If you have the UI file (e.g., `ui.py` with Streamlit):
+If you have the UI file (e.g., `endpoints.py`):
 
 ```bash
-streamlit run ui.py
+python3 endpoints.py
 ```
-Note: The actual hosted app (plant-doctor-ai.streamlit.app) has to be "waken up" at times due to streamlit requirements, but the actual loading of the app takes 2-3 seconds only.
+Note: The actual hosted app (PlantDrAI.xyz) has to be "waken up" at times due to Render (the hosting platform) requirements, but the actual loading of the app takes minimal time
 ---
 
 ## Dataset
@@ -62,12 +62,6 @@ This project uses the **PlantVillage dataset** and **PlantDoc dataset**, which c
 * Expand to support **ResNet50/ResNet101** for better accuracy.
 * Optimize model for **mobile deployment**.
 * Potential integration with a **startup solution** for farmers.
-
----
-
-## License
-
-This project is licensed under the **Apache 2.0 License** – free to use, modify, and distribute with attribution.
 
 ---
 
