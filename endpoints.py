@@ -932,9 +932,10 @@ def index():
                 </div>
                 <nav class="nav">
                     <a href="/">Home</a>
-                    <a href="predict">Upload & Predict</a>
+                    <a href="/predict">Upload & Predict</a>
+                    <a href="/gallery">Disease Gallery</a>
                     <a href="/chatbot">Plant Saathi</a>
-                    <a href="about">About</a>
+                    <a href="/about">About</a>
                     <div class="nav-actions" id="nav-actions">
                     <!-- Login/Signup or Profile will be injected here -->
                     </div>
@@ -1954,6 +1955,7 @@ def predict_page():
             <nav class="nav">
                 <a href="/">Home</a>
                 <a href="/predict" class="active">Upload & Predict</a>
+                <a href="/gallery">Disease Gallery</a>
                 <a href="/chatbot">Plant Saathi</a>
                 <a href="/about">About</a>
             <div class="nav-actions" id="nav-actions">
@@ -1995,6 +1997,12 @@ def predict_page():
             </svg>
             Take Photo with Camera
             </button>
+            <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById('cameraBtn').addEventListener('click', openCamera);
+            });
+
+            </script>
             </div>
             
             <!-- Image Preview -->
@@ -2178,7 +2186,6 @@ def predict_page():
             document.getElementById('newImageBtn').addEventListener('click', resetUpload);
             document.getElementById('newAnalysisBtn').addEventListener('click', resetUpload);
             document.getElementById('generateReportBtn').addEventListener('click', generateReport);
-            document.getElementById('viewGradcamBtn').addEventListener('click', showGradcam);
             document.getElementById('cameraBtn').addEventListener('click', openCamera);
             
             // Progress dots animation
@@ -2242,76 +2249,85 @@ def predict_page():
             
             // Replace the existing openCamera function in your HTML file with this improved version:
 
-            function openCamera() {
-            // Check if the browser supports camera access
-            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                alert('Camera is not supported in this browser or requires HTTPS connection.');
-                return;
-            }
+            async function openCamera() {
+                const cameraBtn = document.getElementById('cameraBtn');
+                const originalBtnText = cameraBtn.innerHTML;
 
-            // Check if we're on HTTPS (required for camera access)
-            if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
-                alert('Camera access requires HTTPS connection for security reasons.');
-                return;
-            }
+                // Check for browser support
+                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                    alert('Camera is not supported in this browser or requires HTTPS connection.');
+                    return;
+                }
 
-            const cameraBtn = document.getElementById('cameraBtn');
-            const originalBtnText = cameraBtn.innerHTML;
-            cameraBtn.innerHTML = 'Requesting Camera Access...';
-            cameraBtn.disabled = true;
+                // Check HTTPS (required outside localhost)
+                if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
+                    alert('Camera access requires HTTPS connection for security reasons.');
+                    return;
+                }
 
-            // Request camera access with better error handling
-            navigator.mediaDevices.getUserMedia({ 
-                video: { 
-                    facingMode: 'environment', // Use back camera on mobile if available
-                    width: { ideal: 1280 },
-                    height: { ideal: 720 }
-                } 
-            })
-            .then(function(stream) {
-                console.log('Camera access granted');
-                
+                cameraBtn.innerHTML = 'Requesting Camera Access...';
+                cameraBtn.disabled = true;
+
+                let stream;
+                try {
+                    stream = await navigator.mediaDevices.getUserMedia({
+                        video: {
+                            facingMode: 'environment', // back camera if available
+                            width: { ideal: 1280 },
+                            height: { ideal: 720 }
+                        }
+                    });
+                } catch (error) {
+                    console.error('Camera access error:', error);
+                    cameraBtn.innerHTML = originalBtnText;
+                    cameraBtn.disabled = false;
+
+                    let errorMessage = 'Camera access failed: ';
+                    if (error.name === 'NotAllowedError') {
+                        errorMessage += 'Camera permission denied. Please allow camera access and try again.';
+                    } else if (error.name === 'NotFoundError') {
+                        errorMessage += 'No camera found on this device.';
+                    } else if (error.name === 'NotSupportedError') {
+                        errorMessage += 'Camera is not supported in this browser.';
+                    } else if (error.name === 'NotReadableError') {
+                        errorMessage += 'Camera is already in use by another application.';
+                    } else {
+                        errorMessage += error.message || 'Unknown error occurred.';
+                    }
+                    alert(errorMessage);
+                    return;
+                }
+
                 // Reset button
                 cameraBtn.innerHTML = originalBtnText;
                 cameraBtn.disabled = false;
 
-                // Create camera interface
+                // Create video element
                 const video = document.createElement('video');
                 video.srcObject = stream;
                 video.autoplay = true;
-                video.playsInline = true; // Important for iOS
+                video.playsInline = true; // iOS compatibility
 
+                // Create overlay
                 const cameraDiv = document.createElement('div');
                 cameraDiv.style.cssText = `
-                    position: fixed; 
-                    top: 0; 
-                    left: 0; 
-                    width: 100%; 
-                    height: 100%; 
-                    background: rgba(0,0,0,0.9); 
-                    z-index: 1000; 
-                    display: flex; 
-                    flex-direction: column; 
-                    align-items: center; 
-                    justify-content: center;
-                    padding: 20px;
-                    box-sizing: border-box;
+                    position: fixed;
+                    top: 0; left: 0; width: 100%; height: 100%;
+                    background: rgba(0,0,0,0.9); z-index: 1000;
+                    display: flex; flex-direction: column;
+                    align-items: center; justify-content: center;
+                    padding: 20px; box-sizing: border-box;
                 `;
 
                 video.style.cssText = `
-                    max-width: 90%; 
-                    max-height: 60%; 
-                    border-radius: 1rem;
-                    object-fit: cover;
+                    max-width: 90%; max-height: 60%;
+                    border-radius: 1rem; object-fit: cover;
                 `;
 
                 const buttonContainer = document.createElement('div');
                 buttonContainer.style.cssText = `
-                    display: flex;
-                    gap: 1rem;
-                    margin-top: 1rem;
-                    flex-wrap: wrap;
-                    justify-content: center;
+                    display: flex; gap: 1rem; margin-top: 1rem;
+                    flex-wrap: wrap; justify-content: center;
                 `;
 
                 const captureBtn = document.createElement('button');
@@ -2330,26 +2346,22 @@ def predict_page():
                 cameraDiv.appendChild(buttonContainer);
                 document.body.appendChild(cameraDiv);
 
-                // Wait for video to load
-                video.addEventListener('loadedmetadata', function() {
-                    console.log('Camera video loaded');
-                });
+                // Video loaded metadata
+                video.addEventListener('loadedmetadata', () => console.log('Camera video loaded'));
 
-                captureBtn.addEventListener('click', function() {
+                // Capture photo
+                captureBtn.addEventListener('click', () => {
                     try {
                         const canvas = document.createElement('canvas');
                         canvas.width = video.videoWidth || 640;
                         canvas.height = video.videoHeight || 480;
-                        
                         const ctx = canvas.getContext('2d');
                         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                        
-                        canvas.toBlob(function(blob) {
+
+                        canvas.toBlob((blob) => {
                             if (blob) {
                                 const file = new File([blob], 'camera-capture.jpg', { type: 'image/jpeg' });
-                                handleFile(file);
-                                
-                                // Clean up
+                                handleFile(file); // your existing handler
                                 stream.getTracks().forEach(track => track.stop());
                                 document.body.removeChild(cameraDiv);
                                 console.log('Photo captured successfully');
@@ -2357,53 +2369,30 @@ def predict_page():
                                 alert('Failed to capture photo. Please try again.');
                             }
                         }, 'image/jpeg', 0.8);
-                    } catch (error) {
-                        console.error('Capture error:', error);
-                        alert('Failed to capture photo: ' + error.message);
+                    } catch (err) {
+                        console.error('Capture error:', err);
+                        alert('Failed to capture photo: ' + err.message);
                     }
                 });
 
-                closeBtn.addEventListener('click', function() {
+                // Close camera
+                closeBtn.addEventListener('click', () => {
                     stream.getTracks().forEach(track => track.stop());
                     document.body.removeChild(cameraDiv);
                     console.log('Camera closed by user');
                 });
 
-                // Handle escape key
-                document.addEventListener('keydown', function escapeHandler(e) {
+                // Escape key closes camera
+                const escapeHandler = (e) => {
                     if (e.key === 'Escape' && document.body.contains(cameraDiv)) {
                         stream.getTracks().forEach(track => track.stop());
                         document.body.removeChild(cameraDiv);
                         document.removeEventListener('keydown', escapeHandler);
                     }
-                });
+                };
+                document.addEventListener('keydown', escapeHandler);
+            }
 
-            })
-            .catch(function(error) {
-                console.error('Camera access error:', error);
-                
-                // Reset button
-                cameraBtn.innerHTML = originalBtnText;
-                cameraBtn.disabled = false;
-
-                // Provide specific error messages
-                let errorMessage = 'Camera access failed: ';
-                
-                if (error.name === 'NotAllowedError') {
-                    errorMessage += 'Camera permission denied. Please allow camera access and try again.';
-                } else if (error.name === 'NotFoundError') {
-                    errorMessage += 'No camera found on this device.';
-                } else if (error.name === 'NotSupportedError') {
-                    errorMessage += 'Camera is not supported in this browser.';
-                } else if (error.name === 'NotReadableError') {
-                    errorMessage += 'Camera is already in use by another application.';
-                } else {
-                    errorMessage += error.message || 'Unknown error occurred.';
-                }
-                
-                alert(errorMessage);
-            });
-        }
             
             function analyzeImage() {
             if (!currentImage) return;
@@ -3133,6 +3122,7 @@ def about_page():
                 <nav class="nav">
                     <a href="/">Home</a>
                     <a href="/predict">Upload & Predict</a>
+                    <a href="/gallery">Disease Gallery</a>
                     <a href="/chatbot">Plant Saathi</a>
                     <a href="/about" class="active">About</a>
                     <div class="nav-actions" id="nav-actions">
@@ -3461,6 +3451,3805 @@ def about_page():
             """
     except Exception as e:
         return f"Error loading about page: {str(e)}"
+
+@app.route('/gallery')
+def gallery_page():
+    return """
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Disease Gallery - Plant Doctor AI</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            /* General styles */
+            body {
+                margin: 0;
+                font-family: 'Segoe UI', 'Arial', sans-serif;
+                background: linear-gradient(135deg, #f0fdf4 0%, #d1fae5 100%);
+                color: #222;
+            }
+            .min-h-screen { min-height: 100vh; }
+            .container {
+                max-width: 1400px;
+                margin: 0 auto;
+                padding: 0 1rem;
+            }
+            .flex { display: flex; }
+            .flex-between { display: flex; align-items: center; justify-content: space-between; }
+            .items-center { align-items: center; }
+            .justify-center { justify-content: center; }
+            .gap-2 { gap: 0.5rem; }
+            .gap-3 { gap: 0.75rem; }
+            .text-center { text-align: center; }
+            .mb-12 { margin-bottom: 3rem; }
+            .mb-10 { margin-bottom: 2.5rem; }
+            .mb-8 { margin-bottom: 2rem; }
+            .mb-4 { margin-bottom: 1rem; }
+            .mr-3 { margin-right: 0.75rem; }
+            
+            /* Header */
+            .header {
+                background: #fff;
+                box-shadow: 0 2px 8px -2px rgba(16, 185, 129, 0.08);
+                border-bottom: 1px solid #bbf7d0;
+                padding: 1rem 0;
+            }
+            .title {
+                font-size: 2rem;
+                font-weight: bold;
+                color: #065f46;
+            }
+            .nav {
+                display: flex;
+                align-items: center;
+                gap: 1.5rem;
+            }
+            .nav a {
+                color: #047857;
+                font-weight: 500;
+                text-decoration: none;
+                transition: color 0.2s;
+            }
+            .nav a:hover {
+                color: #065f46;
+            }
+            .nav-actions {
+                display: flex;
+                gap: 0.75rem;
+                margin-left: 1.5rem;
+            }
+            .btn {
+                padding: 0.5rem 1rem;
+                border-radius: 0.75rem;
+                font-weight: 500;
+                transition: all .2s;
+                box-shadow: none;
+                border: none;
+                cursor: pointer;
+                text-decoration: none;
+                display: inline-block;
+            }
+            .btn-green {
+                background: #16a34a;
+                color: #fff;
+            }
+            .btn-green:hover {
+                background: #166534;
+                box-shadow: 0 2px 8px -2px #16a34a44;
+            }
+            .btn-outline-green {
+                background: #fff;
+                border: 2px solid #16a34a;
+                color: #16a34a;
+            }
+            .btn-outline-green:hover {
+                background: #f0fdf4;
+                box-shadow: 0 2px 8px -2px #16a34a22;
+            }
+            .profile-circle {
+                width: 40px;
+                height: 40px;
+                background: #16a34a;
+                color: #fff;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: bold;
+                font-size: 1.2rem;
+                cursor: pointer;
+                border: 2px solid #fff;
+                box-shadow: 0 2px 8px -2px #16a34a44;
+                transition: background .2s;
+            }
+            .profile-circle:hover {
+                background: #166534;
+            }
+            
+            /* Hero Section */
+            .hero-section {
+                padding: 3rem 0 2rem;
+            }
+            .hero-title {
+                font-size: 2.5rem;
+                font-weight: bold;
+                color: #065f46;
+                margin-bottom: 1rem;
+                animation: pulse 2s infinite;
+            }
+            @keyframes pulse {
+                0%, 100% { opacity: 1; }
+                50% { opacity: .7; }
+            }
+            .hero-subtitle {
+                font-size: 1.25rem;
+                color: #047857;
+                max-width: 700px;
+                margin: 0 auto 2rem;
+                line-height: 1.6;
+            }
+            
+            /* Search Section */
+            .search-container {
+                max-width: 600px;
+                margin: 0 auto 2rem;
+                position: relative;
+            }
+            .search-input {
+                width: 100%;
+                padding: 1rem 3rem 1rem 1.5rem;
+                border: 2px solid #bbf7d0;
+                border-radius: 1rem;
+                font-size: 1.1rem;
+                outline: none;
+                transition: all 0.3s;
+                background: #fff;
+                box-shadow: 0 4px 24px -8px rgba(22, 163, 74, 0.15);
+            }
+            .search-input:focus {
+                border-color: #16a34a;
+                box-shadow: 0 4px 24px -8px rgba(22, 163, 74, 0.25);
+            }
+            .search-icon {
+                position: absolute;
+                right: 1.5rem;
+                top: 50%;
+                transform: translateY(-50%);
+                color: #047857;
+                pointer-events: none;
+                width: 24px;
+                height: 24px;
+            }
+            
+            /* Gallery Grid */
+            .gallery-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+                gap: 2rem;
+                padding: 2rem 0;
+            }
+            
+            /* Disease Card */
+            .disease-card {
+                background: #fff;
+                border-radius: 1.25rem;
+                box-shadow: 0 4px 24px -8px rgba(22, 163, 74, 0.15);
+                overflow: hidden;
+                transition: all 0.3s;
+                cursor: pointer;
+            }
+            .disease-card:hover {
+                transform: translateY(-8px);
+                box-shadow: 0 12px 40px -8px rgba(22, 163, 74, 0.25);
+            }
+            .card-image-container {
+                position: relative;
+                width: 100%;
+                height: 220px;
+                overflow: hidden;
+                background: linear-gradient(135deg, #f0fdf4 0%, #d1fae5 100%);
+            }
+            .card-image {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transition: transform 0.3s;
+            }
+            .disease-card:hover .card-image {
+                transform: scale(1.1);
+            }
+            .card-badge {
+                position: absolute;
+                top: 1rem;
+                right: 1rem;
+                background: rgba(22, 163, 74, 0.9);
+                color: #fff;
+                padding: 0.4rem 0.8rem;
+                border-radius: 1rem;
+                font-size: 0.85rem;
+                font-weight: 600;
+                box-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.3);
+            }
+            .card-badge.healthy {
+                background: rgba(34, 197, 94, 0.9);
+            }
+            .img-gradient {
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(to top, rgba(22, 163, 74, 0.2) 0%, transparent 100%);
+                pointer-events: none;
+            }
+            .card-content {
+                padding: 1.5rem;
+            }
+            .card-title {
+                font-size: 1.4rem;
+                font-weight: bold;
+                color: #065f46;
+                margin-bottom: 0.5rem;
+            }
+            .card-plant {
+                color: #047857;
+                font-size: 0.95rem;
+                margin-bottom: 1rem;
+                font-weight: 500;
+                display: flex;
+                align-items: center;
+                gap: 0.3rem;
+            }
+            .card-info {
+                display: flex;
+                gap: 0.75rem;
+                margin-bottom: 1rem;
+                flex-wrap: wrap;
+            }
+            .info-badge {
+                display: flex;
+                align-items: center;
+                gap: 0.3rem;
+                font-size: 0.85rem;
+                color: #059669;
+                background: #f0fdf4;
+                padding: 0.3rem 0.6rem;
+                border-radius: 0.5rem;
+            }
+            .card-symptoms {
+                color: #374151;
+                font-size: 0.9rem;
+                line-height: 1.5;
+                margin-bottom: 1rem;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
+            .card-footer {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding-top: 1rem;
+                border-top: 1px solid #f0fdf4;
+            }
+            .view-details-btn {
+                background: #16a34a;
+                color: #fff;
+                padding: 0.5rem 1rem;
+                border-radius: 0.75rem;
+                border: none;
+                cursor: pointer;
+                font-weight: 600;
+                transition: all 0.3s;
+                font-size: 0.9rem;
+            }
+            .view-details-btn:hover {
+                background: #166534;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 16px -4px rgba(22, 163, 74, 0.4);
+            }
+            
+            /* Modal */
+            .modal {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.7);
+                z-index: 1000;
+                overflow-y: auto;
+            }
+            .modal.active {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 2rem;
+            }
+            .modal-content {
+                background: #fff;
+                border-radius: 1.5rem;
+                max-width: 800px;
+                width: 100%;
+                max-height: 90vh;
+                overflow-y: auto;
+                position: relative;
+                box-shadow: 0 20px 60px -10px rgba(0, 0, 0, 0.5);
+            }
+            .modal-header {
+                padding: 2rem;
+                border-bottom: 1px solid #e5e7eb;
+                position: sticky;
+                top: 0;
+                background: #fff;
+                z-index: 10;
+                border-radius: 1.5rem 1.5rem 0 0;
+            }
+            .modal-close {
+                position: absolute;
+                top: 1.5rem;
+                right: 1.5rem;
+                background: #f3f4f6;
+                border: none;
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                cursor: pointer;
+                font-size: 1.5rem;
+                color: #374151;
+                transition: all 0.3s;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .modal-close:hover {
+                background: #e5e7eb;
+                transform: scale(1.1);
+            }
+            .modal-body {
+                padding: 2rem;
+            }
+            .modal-image {
+                width: 100%;
+                height: 300px;
+                object-fit: cover;
+                border-radius: 1rem;
+                margin-bottom: 1.5rem;
+            }
+            .modal-title {
+                font-size: 2rem;
+                font-weight: bold;
+                color: #065f46;
+                margin-bottom: 0.5rem;
+            }
+            .modal-section {
+                margin-bottom: 1.5rem;
+            }
+            .section-title {
+                font-size: 1.2rem;
+                font-weight: bold;
+                color: #047857;
+                margin-bottom: 0.5rem;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            .section-content {
+                color: #374151;
+                line-height: 1.7;
+            }
+            .section-list {
+                list-style: none;
+                padding: 0;
+            }
+            .section-list li {
+                padding: 0.5rem 0;
+                padding-left: 1.5rem;
+                position: relative;
+                color: #374151;
+            }
+            .section-list li:before {
+                content: "✓";
+                position: absolute;
+                left: 0;
+                color: #16a34a;
+                font-weight: bold;
+            }
+            
+            /* No Results */
+            .no-results {
+                text-align: center;
+                padding: 4rem 2rem;
+                display: none;
+            }
+            .no-results.show {
+                display: block;
+            }
+            .no-results-icon {
+                font-size: 4rem;
+                margin-bottom: 1rem;
+            }
+            .no-results-text {
+                font-size: 1.5rem;
+                color: #047857;
+                font-weight: 600;
+            }
+            
+            /* Loading */
+            .loading {
+                text-align: center;
+                padding: 4rem 2rem;
+            }
+            .spinner {
+                width: 50px;
+                height: 50px;
+                border: 4px solid #bbf7d0;
+                border-top: 4px solid #16a34a;
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+                margin: 0 auto 1rem;
+            }
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+            
+            /* Footer */
+            .footer {
+                background: #065f46;
+                color: #fff;
+                margin-top: 5rem;
+                padding: 2rem 0;
+                text-align: center;
+            }
+            .footer-title {
+                font-size: 1.1rem;
+                font-weight: 600;
+                color: #fff;
+                margin-bottom: 0.5rem;
+            }
+            .footer-desc {
+                color: #bbf7d0;
+                font-size: 1rem;
+            }
+            
+            /* Icons */
+            .icon-sm { width: 16px; height: 16px; }
+            .icon-md { width: 24px; height: 24px; }
+            .icon-lg { width: 32px; height: 32px; }
+            
+            /* Responsive */
+            @media (max-width: 768px) {
+                .gallery-grid {
+                    grid-template-columns: 1fr;
+                }
+                .hero-title {
+                    font-size: 2rem;
+                }
+                .modal-content {
+                    margin: 1rem;
+                }
+                .nav {
+                    flex-wrap: wrap;
+                    gap: 1rem;
+                }
+            }
+        </style>
+    </head>
+    <body class="min-h-screen">
+        <!-- Header -->
+        <header class="header">
+            <div class="container flex-between">
+                <div class="flex items-center gap-2">
+                    <svg class="icon-lg" style="color: #16a34a;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M2 22s9-2 15-8 5-12 5-12-9 2-15 8-5 12-5 12z"/>
+                    </svg>
+                    <h1 class="title">Plant Doctor AI</h1>
+                </div>
+                <nav class="nav">
+                    <a href="/">Home</a>
+                    <a href="/predict">Upload & Predict</a>
+                    <a href="/gallery">Disease Gallery</a>
+                    <a href="/chatbot">Plant Saathi</a>
+                    <a href="/about">About</a>
+                    <div class="nav-actions" id="nav-actions">
+                        <!-- Login/Signup or Profile will be injected here -->
+                    </div>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="container">
+            <!-- Hero Section -->
+            <section class="hero-section text-center">
+                <h2 class="hero-title">Disease Gallery</h2>
+                <p class="hero-subtitle">
+                    Browse through our comprehensive collection of plant diseases. Search by plant type or disease name to learn about symptoms, causes, and treatments.
+                </p>
+            </section>
+
+            <!-- Search Section -->
+            <section class="text-center mb-8">
+                <div class="search-container">
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        class="search-input" 
+                        placeholder="Search by plant or disease name..."
+                        autocomplete="off"
+                    >
+                    <svg class="search-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <circle cx="11" cy="11" r="8"/>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
+                </div>
+            </section>
+
+            <!-- Loading -->
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p style="color: #047857; font-weight: 500;">Loading disease gallery...</p>
+            </div>
+
+            <!-- Gallery Grid -->
+            <div class="gallery-grid" id="galleryGrid"></div>
+
+            <!-- No Results -->
+            <div class="no-results" id="noResults">
+                <div class="no-results-icon">🔍</div>
+                <p class="no-results-text">No diseases found matching your search</p>
+                <p style="color: #059669; margin-top: 1rem;">Try adjusting your search terms</p>
+            </div>
+        </main>
+
+        <!-- Modal -->
+        <div class="modal" id="diseaseModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="modal-close" onclick="closeModal()">×</button>
+                </div>
+                <div class="modal-body" id="modalBody"></div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="flex items-center justify-center gap-2 mb-4">
+                    <svg class="icon-md" style="color: #fff;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M2 22s9-2 15-8 5-12 5-12-9 2-15 8-5 12-5 12z"/>
+                    </svg>
+                    <span class="footer-title">Plant Doctor AI</span>
+                </div>
+                <p class="footer-desc">Powered by AI • Helping farmers worldwide</p>
+            </div>
+        </footer>
+
+        <!-- Firebase SDKs -->
+        <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+        
+        <script>
+            // Firebase Configuration
+            const firebaseConfig = {
+                apiKey: "AIzaSyB-y52ekJkjgXYXhRNvvir0r9gU8CObpkM",
+                authDomain: "plant-doctor-63da7.firebaseapp.com",
+                projectId: "plant-doctor-63da7",
+                storageBucket: "plant-doctor-63da7.appspot.com",
+                messagingSenderId: "94281353808",
+                appId: "1:94281353808:web:5fa49e3d6e494868be5f55",
+                measurementId: "G-E5P4MZ68HW"
+            };
+
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+            const auth = firebase.auth();
+
+            function renderProfile(user) {
+                const navActions = document.getElementById("nav-actions");
+                if (!navActions) return;
+
+                let displayName = user.displayName || user.email || "U";
+                let firstLetter = displayName.charAt(0).toUpperCase();
+
+                navActions.innerHTML = `
+                    <div class="profile-circle" title="${displayName}" onclick="logout()">
+                        ${firstLetter}
+                    </div>
+                `;
+            }
+
+            function renderLoginSignup() {
+                const navActions = document.getElementById("nav-actions");
+                if (!navActions) return;
+                navActions.innerHTML = `
+                    <a href="/signin" class="btn btn-green">Log In</a>
+                    <a href="/signup" class="btn btn-outline-green">Sign Up</a>
+                `;
+            }
+
+            function logout() {
+                firebase.auth().signOut().then(() => {
+                    window.location.reload();
+                });
+            }
+
+            auth.onAuthStateChanged(user => {
+                if (user) {
+                    renderProfile(user);
+                } else {
+                    renderLoginSignup();
+                }
+            });
+
+            // Disease data embedded from JSON
+            const diseaseData = {
+        "Peach Leaf Curl": {
+            "plant": "Peach",
+            "disease": "Leaf Curl",
+            "causes": [
+                "Fungal infection",
+                "Poor air circulation",
+                "High humidity"
+            ],
+            "symptoms": [
+                "Curling of leaves",
+                "Red or yellow discoloration",
+                "Leaf drop"
+            ],
+            "severity_mild": "Leaves may curl slightly but the plant remains healthy overall.",
+            "severity_moderate": "Leaves show significant curling and discoloration, affecting plant health.",
+            "severity_severe": "Leaves are severely curled and discolored, leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Prune affected leaves",
+                "Improve air circulation",
+                "Apply fungicide",
+                "Maintain proper humidity levels"
+            ],
+            "medicines": [
+                "Copper fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 14,
+            "prevention": [
+                "Regularly inspect plants for early signs of disease",
+                "Ensure good air circulation around plants",
+                "Avoid overhead watering"
+            ]
+        },
+        "Tomato Late Blight": {
+            "plant": "Tomato",
+            "disease": "Late Blight",
+            "causes": [
+                "Fungal infection (Phytophthora infestans)",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Dark, water-soaked spots on leaves",
+                "White fungal growth on undersides of leaves",
+                "Wilting and browning of leaves"
+            ],
+            "severity_mild": "Few leaves show dark spots but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant wilting and discoloration.",
+            "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected plants",
+                "Apply fungicide",
+                "Improve air circulation",
+                "Avoid overhead watering"
+            ],
+            "medicines": [
+                "Copper fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 10,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Corn Leaf Blight": {
+            "plant": "Corn",
+            "disease": "Leaf Blight",
+            "causes": [
+                "Fungal infection",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Brown spots on leaves",
+                "Yellowing of leaf edges",
+                "Wilting of leaves"
+            ],
+            "severity_mild": "Few leaves show brown spots but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+            "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected leaves",
+                "Apply fungicide",
+                "Improve air circulation",
+                "Avoid overhead watering"
+            ],
+            "medicines": [
+                "Copper fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 12,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Apple Rust": {
+            "plant": "Apple",
+            "disease": "Rust",
+            "causes": [
+                "Fungal infection",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Orange or yellow spots on leaves",
+                "Rusty appearance on undersides of leaves",
+                "Leaf drop"
+            ],
+            "severity_mild": "Few leaves show orange spots but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant discoloration and leaf drop.",
+            "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected leaves",
+                "Apply fungicide",
+                "Improve air circulation",
+                "Maintain proper humidity levels"
+            ],
+            "medicines": [
+                "Copper fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 10,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Apple Black Rot": {
+            "plant": "Apple",
+            "disease": "Black Rot",
+            "causes": [
+                "Fungal infection (Botryosphaeria obtusa)",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Dark, sunken lesions on fruit",
+                "Black streaks on leaves",
+                "Leaf drop"
+            ],
+            "severity_mild": "Few fruits show dark lesions but the plant remains healthy.",
+            "severity_moderate": "Multiple fruits affected with significant lesions and leaf drop.",
+            "severity_severe": "Widespread fruit damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected fruits",
+                "Apply fungicide",
+                "Improve air circulation",
+                "Maintain proper humidity levels"
+            ],
+            "medicines": [
+                "Copper fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 14,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Tomato Mosaic Virus": {
+            "plant": "Tomato",
+            "disease": "Mosaic Virus",
+            "causes": [
+                "Viral infection",
+                "Insect vectors (aphids, whiteflies)",
+                "Contaminated tools or seeds"
+            ],
+            "symptoms": [
+                "Mosaic pattern on leaves",
+                "Stunted growth",
+                "Yellowing of leaves"
+            ],
+            "severity_mild": "Few leaves show mosaic patterns but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant stunting and yellowing.",
+            "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected plants",
+                "Control insect vectors",
+                "Sanitize tools and equipment"
+            ],
+            "medicines": [
+                "Insecticidal soap",
+                "Neem oil"
+            ],
+            "progression_days": 7,
+            "prevention": [
+                "Use virus-resistant varieties",
+                "Control insect populations",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Peach Healthy": {
+            "plant": "Peach",
+            "disease": "Healthy",
+            "causes": [],
+            "symptoms": [],
+            "severity_mild": "",
+            "severity_moderate": "",
+            "severity_severe": "",
+            "treatment": [],
+            "medicines": [],
+            "progression_days": 0,
+            "prevention": []
+        },
+        "Potato Healthy": {
+            "plant": "Potato",
+            "disease": "Healthy",
+            "causes": [],
+            "symptoms": [],
+            "severity_mild": "",
+            "severity_moderate": "",
+            "severity_severe": "",
+            "treatment": [],
+            "medicines": [],
+            "progression_days": 0,
+            "prevention": []
+        },
+        "Tomato Yellow Virus": {
+            "plant": "Tomato",
+            "disease": "Yellow Virus",
+            "causes": [
+                "Viral infection",
+                "Insect vectors (aphids, whiteflies)",
+                "Contaminated tools or seeds"
+            ],
+            "symptoms": [
+                "Yellowing of leaves",
+                "Stunted growth",
+                "Leaf curling"
+            ],
+            "severity_mild": "Few leaves show yellowing but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant stunting and curling.",
+            "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected plants",
+                "Control insect vectors",
+                "Sanitize tools and equipment"
+            ],
+            "medicines": [
+                "Insecticidal soap",
+                "Neem oil"
+            ],
+            "progression_days": 7,
+            "prevention": [
+                "Use virus-resistant varieties",
+                "Control insect populations",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Squash Powdery Mildew": {
+            "plant": "Squash",
+            "disease": "Powdery Mildew",
+            "causes": [
+                "Fungal infection",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "White, powdery spots on leaves",
+                "Leaf curling and distortion",
+                "Yellowing of leaves"
+            ],
+            "severity_mild": "Few leaves show white spots but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant curling and yellowing.",
+            "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected leaves",
+                "Apply fungicide",
+                "Improve air circulation",
+                "Maintain proper humidity levels"
+            ],
+            "medicines": [
+                "Sulfur fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 10,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Tomato Early Blight": {
+            "plant": "Tomato",
+            "disease": "Early Blight",
+            "causes": [
+                "Fungal infection (Alternaria solani)",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Dark, concentric rings on leaves",
+                "Yellowing of leaf edges",
+                "Wilting of leaves"
+            ],
+            "severity_mild": "Few leaves show dark rings but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+            "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected leaves",
+                "Apply fungicide",
+                "Improve air circulation",
+                "Avoid overhead watering"
+            ],
+            "medicines": [
+                "Copper fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 12,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Orange Citrus Greening": {
+            "plant": "Orange",
+            "disease": "Citrus Greening",
+            "causes": [
+                "Bacterial infection (Candidatus Liberibacter asiaticus)",
+                "Insect vectors (Asian citrus psyllid)"
+            ],
+            "symptoms": [
+                "Yellowing of leaves",
+                "Stunted growth",
+                "Bitter, misshapen fruit"
+            ],
+            "severity_mild": "Few leaves show yellowing but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant stunting and fruit deformities.",
+            "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected plants",
+                "Control insect vectors",
+                "Sanitize tools and equipment"
+            ],
+            "medicines": [
+                "Insecticidal soap",
+                "Neem oil"
+            ],
+            "progression_days": 14,
+            "prevention": [
+                "Use disease-resistant varieties",
+                "Control insect populations",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Bell Pepper Leaf Spot": {
+            "plant": "Bell Pepper",
+            "disease": "Leaf Spot",
+            "causes": [
+                "Fungal infection",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Brown or black spots on leaves",
+                "Yellowing of leaf edges",
+                "Wilting of leaves"
+            ],
+            "severity_mild": "Few leaves show spots but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+            "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected leaves",
+                "Apply fungicide",
+                "Improve air circulation",
+                "Avoid overhead watering"
+            ],
+            "medicines": [
+                "Copper fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 10,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Strawberry Healthy": {
+            "plant": "Strawberry",
+            "disease": "Healthy",
+            "causes": [],
+            "symptoms": [],
+            "severity_mild": "",
+            "severity_moderate": "",
+            "severity_severe": "",
+            "treatment": [],
+            "medicines": [],
+            "progression_days": 0,
+            "prevention": []
+        },
+        "Apple Scab": {
+            "plant": "Apple",
+            "disease": "Scab",
+            "causes": [
+                "Fungal infection (Venturia inaequalis)",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Olive-green to black lesions on leaves",
+                "Deformed fruit",
+                "Leaf drop"
+            ],
+            "severity_mild": "Few leaves show lesions but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant lesions and leaf drop.",
+            "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected leaves",
+                "Apply fungicide",
+                "Improve air circulation",
+                "Maintain proper humidity levels"
+            ],
+            "medicines": [
+                "Copper fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 12,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Tomato Leaf Mold": {
+            "plant": "Tomato",
+            "disease": "Leaf Mold",
+            "causes": [
+                "Fungal infection (Fulvia fulva)",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Yellowing of leaves",
+                "Grayish mold on undersides of leaves",
+                "Wilting of leaves"
+            ],
+            "severity_mild": "Few leaves show yellowing but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant wilting and discoloration.",
+            "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected leaves",
+                "Apply fungicide",
+                "Improve air circulation",
+                "Avoid overhead watering"
+            ],
+            "medicines": [
+                "Copper fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 10,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Tomato Target Spot": {
+            "plant": "Tomato",
+            "disease": "Target Spot",
+            "causes": [
+                "Fungal infection (Corynespora cassiicola)",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Dark, circular spots on leaves",
+                "Yellowing of leaf edges",
+                "Wilting of leaves"
+            ],
+            "severity_mild": "Few leaves show dark spots but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+            "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected leaves",
+                "Apply fungicide",
+                "Improve air circulation",
+                "Avoid overhead watering"
+            ],
+            "medicines": [
+                "Copper fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 12,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Soybean Healthy": {
+            "plant": "Soybean",
+            "disease": "Healthy",
+            "causes": [],
+            "symptoms": [],
+            "severity_mild": "",
+            "severity_moderate": "",
+            "severity_severe": "",
+            "treatment": [],
+            "medicines": [],
+            "progression_days": 0,
+            "prevention": []
+        },
+        "Grape Esca": {
+            "plant": "Grape",
+            "disease": "Esca",
+            "causes": [
+                "Fungal infection (Phaeomoniella chlamydospora)",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Leaf yellowing and wilting",
+                "Dark streaks on wood",
+                "Poor fruit development"
+            ],
+            "severity_mild": "Few leaves show yellowing but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant wilting and poor fruit development.",
+            "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected plants",
+                "Improve air circulation",
+                "Maintain proper humidity levels"
+            ],
+            "medicines": [
+                "Copper fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 14,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Tomato Bacterial Spot": {
+            "plant": "Tomato",
+            "disease": "Bacterial Spot",
+            "causes": [
+                "Bacterial infection (Xanthomonas campestris pv. vesicatoria)",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Water-soaked spots on leaves",
+                "Yellowing of leaf edges",
+                "Wilting of leaves"
+            ],
+            "severity_mild": "Few leaves show water-soaked spots but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+            "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected leaves",
+                "Apply bactericide",
+                "Improve air circulation",
+                "Avoid overhead watering"
+            ],
+            "medicines": [
+                "Copper bactericide",
+                "Neem oil"
+            ],
+            "progression_days": 10,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Strawberry Leaf Scorch": {
+            "plant": "Strawberry",
+            "disease": "Leaf Scorch",
+            "causes": [
+                "Fungal infection",
+                "High temperatures",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Brown, scorched edges on leaves",
+                "Wilting of leaves",
+                "Reduced fruit yield"
+            ],
+            "severity_mild": "Few leaves show scorched edges but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant wilting and reduced yield.",
+            "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy affected leaves",
+                "Improve air circulation",
+                "Maintain proper watering practices"
+            ],
+            "medicines": [
+                "Copper fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 10,
+            "prevention": [
+                "Plant resistant varieties",
+                "Ensure proper spacing between plants",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Grape Leaf Blight": {
+            "plant": "Grape",
+            "disease": "Leaf Blight",
+            "causes": [
+                "Fungal infection (Phomopsis viticola)",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Brown spots on leaves",
+                "Yellowing of leaf edges",
+                "Wilting of leaves"
+            ],
+            "severity_mild": "Few leaves show brown spots but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+            "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected leaves",
+                "Apply fungicide",
+                "Improve air circulation",
+                "Avoid overhead watering"
+            ],
+            "medicines": [
+                "Copper fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 12,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Potato Late Blight": {
+            "plant": "Potato",
+            "disease": "Late Blight",
+            "causes": [
+                "Fungal infection (Phytophthora infestans)",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Dark, water-soaked spots on leaves",
+                "White fungal growth on undersides of leaves",
+                "Wilting and browning of leaves"
+            ],
+            "severity_mild": "Few leaves show dark spots but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant wilting and discoloration.",
+            "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected plants",
+                "Apply fungicide",
+                "Improve air circulation",
+                "Avoid overhead watering"
+            ],
+            "medicines": [
+                "Copper fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 10,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Corn Healthy": {
+            "plant": "Corn",
+            "disease": "Healthy",
+            "causes": [],
+            "symptoms": [],
+            "severity_mild": "",
+            "severity_moderate": "",
+            "severity_severe": "",
+            "treatment": [],
+            "medicines": [],
+            "progression_days": 0,
+            "prevention": []
+        },
+        "Cherry Healthy": {
+            "plant": "Cherry",
+            "disease": "Healthy",
+            "causes": [],
+            "symptoms": [],
+            "severity_mild": "",
+            "severity_moderate": "",
+            "severity_severe": "",
+            "treatment": [],
+            "medicines": [],
+            "progression_days": 0,
+            "prevention": []
+        },
+        "Bell Pepper Healthy": {
+            "plant": "Bell Pepper",
+            "disease": "Healthy",
+            "causes": [],
+            "symptoms": [],
+            "severity_mild": "",
+            "severity_moderate": "",
+            "severity_severe": "",
+            "treatment": [],
+            "medicines": [],
+            "progression_days": 0,
+            "prevention": []
+        },
+        "Corn Rust": {
+            "plant": "Corn",
+            "disease": "Rust",
+            "causes": [
+                "Fungal infection (Puccinia sorghi)",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Orange or brown pustules on leaves",
+                "Yellowing of leaf edges",
+                "Wilting of leaves"
+            ],
+            "severity_mild": "Few leaves show pustules but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+            "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected leaves",
+                "Apply fungicide",
+                "Improve air circulation",
+                "Avoid overhead watering"
+            ],
+            "medicines": [
+                "Copper fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 10,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Blueberry Healthy": {
+            "plant": "Blueberry",
+            "disease": "Healthy",
+            "causes": [],
+            "symptoms": [],
+            "severity_mild": "",
+            "severity_moderate": "",
+            "severity_severe": "",
+            "treatment": [],
+            "medicines": [],
+            "progression_days": 0,
+            "prevention": []
+        },
+        "Apple Healthy": {
+            "plant": "Apple",
+            "disease": "Healthy",
+            "causes": [],
+            "symptoms": [],
+            "severity_mild": "",
+            "severity_moderate": "",
+            "severity_severe": "",
+            "treatment": [],
+            "medicines": [],
+            "progression_days": 0,
+            "prevention": []
+        },
+        "Potato Early Blight": {
+            "plant": "Potato",
+            "disease": "Early Blight",
+            "causes": [
+                "Fungal infection (Alternaria solani)",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Dark, concentric rings on leaves",
+                "Yellowing of leaf edges",
+                "Wilting of leaves"
+            ],
+            "severity_mild": "Few leaves show dark rings but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+            "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected leaves",
+                "Apply fungicide",
+                "Improve air circulation",
+                "Avoid overhead watering"
+            ],
+            "medicines": [
+                "Copper fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 12,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Cherry Powdery Mildew": {
+            "plant": "Cherry",
+            "disease": "Powdery Mildew",
+            "causes": [
+                "Fungal infection",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "White, powdery spots on leaves",
+                "Leaf curling and distortion",
+                "Yellowing of leaves"
+            ],
+            "severity_mild": "Few leaves show white spots but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant curling and yellowing.",
+            "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected leaves",
+                "Apply fungicide",
+                "Improve air circulation",
+                "Maintain proper humidity levels"
+            ],
+            "medicines": [
+                "Sulfur fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 10,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Corn Gray Leaf Spot": {
+            "plant": "Corn",
+            "disease": "Gray Leaf Spot",
+            "causes": [
+                "Fungal infection (Cercospora zeae-maydis)",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Grayish-brown spots on leaves",
+                "Yellowing of leaf edges",
+                "Wilting of leaves"
+            ],
+            "severity_mild": "Few leaves show gray spots but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+            "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected leaves",
+                "Apply fungicide",
+                "Improve air circulation",
+                "Avoid overhead watering"
+            ],
+            "medicines": [
+                "Copper fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 12,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Grape Black Rot": {
+            "plant": "Grape",
+            "disease": "Black Rot",
+            "causes": [
+                "Fungal infection (Guignardia bidwellii)",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Dark, sunken lesions on fruit",
+                "Black streaks on leaves",
+                "Leaf drop"
+            ],
+            "severity_mild": "Few fruits show dark lesions but the plant remains healthy.",
+            "severity_moderate": "Multiple fruits affected with significant lesions and leaf drop.",
+            "severity_severe": "Widespread fruit damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected fruits",
+                "Apply fungicide",
+                "Improve air circulation",
+                "Maintain proper humidity levels"
+            ],
+            "medicines": [
+                "Copper fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 14,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Raspberry Healthy": {
+            "plant": "Raspberry",
+            "disease": "Healthy",
+            "causes": [],
+            "symptoms": [],
+            "severity_mild": "",
+            "severity_moderate": "",
+            "severity_severe": "",
+            "treatment": [],
+            "medicines": [],
+            "progression_days": 0,
+            "prevention": []
+        },
+        "Grape Healthy": {
+            "plant": "Grape",
+            "disease": "Healthy",
+            "causes": [],
+            "symptoms": [],
+            "severity_mild": "",
+            "severity_moderate": "",
+            "severity_severe": "",
+            "treatment": [],
+            "medicines": [],
+            "progression_days": 0,
+            "prevention": []
+        },
+        "Tomato Spider Mite": {
+            "plant": "Tomato",
+            "disease": "Spider Mite",
+            "causes": [
+                "Insect infestation (Tetranychus urticae)",
+                "High temperatures",
+                "Low humidity"
+            ],
+            "symptoms": [
+                "Fine webbing on leaves",
+                "Yellowing and stippling of leaves",
+                "Leaf drop"
+            ],
+            "severity_mild": "Few leaves show webbing but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant yellowing and stippling.",
+            "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infested leaves",
+                "Apply miticide",
+                "Increase humidity around plants"
+            ],
+            "medicines": [
+                "Insecticidal soap",
+                "Neem oil"
+            ],
+            "progression_days": 7,
+            "prevention": [
+                "Regularly inspect plants for early signs of infestation",
+                "Maintain proper humidity levels",
+                "Avoid overcrowding plants"
+            ]
+        },
+        "Tomato Healthy": {
+            "plant": "Tomato",
+            "disease": "Healthy",
+            "causes": [],
+            "symptoms": [],
+            "severity_mild": "",
+            "severity_moderate": "",
+            "severity_severe": "",
+            "treatment": [],
+            "medicines": [],
+            "progression_days": 0,
+            "prevention": []
+        },
+        "Tomato Septoria Leaf Spot": {
+            "plant": "Tomato",
+            "disease": "Septoria Leaf Spot",
+            "causes": [
+                "Fungal infection (Septoria lycopersici)",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Small, dark spots on leaves",
+                "Yellowing of leaf edges",
+                "Wilting of leaves"
+            ],
+            "severity_mild": "Few leaves show dark spots but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+            "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected leaves",
+                "Apply fungicide",
+                "Improve air circulation",
+                "Avoid overhead watering"
+            ],
+            "medicines": [
+                "Copper fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 10,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Banana Bunchy Top Virus": {
+            "plant": "Banana",
+            "disease": "Bunchy Top Virus",
+            "causes": [
+                "Viral infection",
+                "Insect vectors (aphids)",
+                "Contaminated tools or seeds"
+            ],
+            "symptoms": [
+                "Stunted growth",
+                "Bunchy appearance of leaves",
+                "Yellowing of leaf edges"
+            ],
+            "severity_mild": "Few leaves show stunted growth but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant stunting and yellowing.",
+            "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected plants",
+                "Control insect vectors",
+                "Sanitize tools and equipment"
+            ],
+            "medicines": [
+                "Insecticidal soap",
+                "Neem oil"
+            ],
+            "progression_days": 7,
+            "prevention": [
+                "Use virus-resistant varieties",
+                "Control insect populations",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Banana Sigatoka": {
+            "plant": "Banana",
+            "disease": "Sigatoka",
+            "causes": [
+                "Fungal infection (Mycosphaerella fijiensis)",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Dark streaks on leaves",
+                "Yellowing of leaf edges",
+                "Leaf drop"
+            ],
+            "severity_mild": "Few leaves show dark streaks but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant yellowing and leaf drop.",
+            "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected leaves",
+                "Apply fungicide",
+                "Improve air circulation",
+                "Maintain proper humidity levels"
+            ],
+            "medicines": [
+                "Copper fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 10,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Guava Rust": {
+            "plant": "Guava",
+            "disease": "Rust",
+            "causes": [
+                "Fungal infection (Puccinia psidii)",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Rusty, orange spots on leaves",
+                "Yellowing of leaf edges",
+                "Wilting of leaves"
+            ],
+            "severity_mild": "Few leaves show rusty spots but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+            "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected leaves",
+                "Apply fungicide",
+                "Improve air circulation",
+                "Avoid overhead watering"
+            ],
+            "medicines": [
+                "Copper fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 10,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Guava Wilt": {
+            "plant": "Guava",
+            "disease": "Wilt",
+            "causes": [
+                "Fungal infection (Fusarium oxysporum)",
+                "High temperatures",
+                "Poor drainage"
+            ],
+            "symptoms": [
+                "Wilting of leaves",
+                "Yellowing of leaf edges",
+                "Stunted growth"
+            ],
+            "severity_mild": "Few leaves show wilting but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant yellowing and stunting.",
+            "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected plants",
+                "Improve soil drainage",
+                "Avoid overwatering"
+            ],
+            "medicines": [
+                "Copper fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 14,
+            "prevention": [
+                "Plant resistant varieties",
+                "Ensure proper soil drainage",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Mango Anthracnose": {
+            "plant": "Mango",
+            "disease": "Anthracnose",
+            "causes": [
+                "Fungal infection (Colletotrichum gloeosporioides)",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Dark, sunken lesions on fruit",
+                "Leaf spots",
+                "Wilting of leaves"
+            ],
+            "severity_mild": "Few fruits show dark lesions but the plant remains healthy.",
+            "severity_moderate": "Multiple fruits affected with significant lesions and leaf spots.",
+            "severity_severe": "Widespread fruit damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected fruits",
+                "Apply fungicide",
+                "Improve air circulation",
+                "Maintain proper humidity levels"
+            ],
+            "medicines": [
+                "Copper fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 14,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Mango Powdery Mildew": {
+            "plant": "Mango",
+            "disease": "Powdery Mildew",
+            "causes": [
+                "Fungal infection",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "White, powdery spots on leaves",
+                "Leaf curling and distortion",
+                "Yellowing of leaves"
+            ],
+            "severity_mild": "Few leaves show white spots but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant curling and yellowing.",
+            "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected leaves",
+                "Apply fungicide",
+                "Improve air circulation",
+                "Maintain proper humidity levels"
+            ],
+            "medicines": [
+                "Sulfur fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 10,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Papaya Ring Spot Virus": {
+            "plant": "Papaya",
+            "disease": "Ring Spot Virus",
+            "causes": [
+                "Viral infection",
+                "Insect vectors (aphids)",
+                "Contaminated tools or seeds"
+            ],
+            "symptoms": [
+                "Yellow rings on leaves",
+                "Stunted growth",
+                "Reduced fruit yield"
+            ],
+            "severity_mild": "Few leaves show yellow rings but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant stunting and reduced yield.",
+            "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected plants",
+                "Control insect vectors",
+                "Sanitize tools and equipment"
+            ],
+            "medicines": [
+                "Insecticidal soap",
+                "Neem oil"
+            ],
+            "progression_days": 7,
+            "prevention": [
+                "Use virus-resistant varieties",
+                "Control insect populations",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Peach Leaf Spot": {
+            "plant": "Peach",
+            "disease": "Leaf Spot",
+            "causes": [
+                "Fungal infection (Cladosporium carpophilum)",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Brown or black spots on leaves",
+                "Yellowing of leaf edges",
+                "Wilting of leaves"
+            ],
+            "severity_mild": "Few leaves show spots but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+            "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected leaves",
+                "Apply fungicide",
+                "Improve air circulation",
+                "Avoid overhead watering"
+            ],
+            "medicines": [
+                "Copper fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 10,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Pomegranate Bacterial Blight": {
+            "plant": "Pomegranate",
+            "disease": "Bacterial Blight",
+            "causes": [
+                "Bacterial infection (Xanthomonas axonopodis)",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Water-soaked spots on leaves",
+                "Yellowing of leaf edges",
+                "Wilting of leaves"
+            ],
+            "severity_mild": "Few leaves show water-soaked spots but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+            "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected leaves",
+                "Apply bactericide",
+                "Improve air circulation",
+                "Avoid overhead watering"
+            ],
+            "medicines": [
+                "Copper bactericide",
+                "Neem oil"
+            ],
+            "progression_days": 10,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Pomegranate Leaf Spot": {
+            "plant": "Pomegranate",
+            "disease": "Leaf Spot",
+            "causes": [
+                "Fungal infection (Alternaria spp.)",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Dark, circular spots on leaves",
+                "Yellowing of leaf edges",
+                "Wilting of leaves"
+            ],
+            "severity_mild": "Few leaves show dark spots but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+            "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected leaves",
+                "Apply fungicide",
+                "Improve air circulation",
+                "Avoid overhead watering"
+            ],
+            "medicines": [
+                "Copper fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 12,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Rice Bacterial Leaf Blight": {
+            "plant": "Rice",
+            "disease": "Bacterial Leaf Blight",
+            "causes": [
+                "Bacterial infection (Xanthomonas oryzae pv. oryzae)",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Water-soaked lesions on leaves",
+                "Yellowing of leaf edges",
+                "Wilting of leaves"
+            ],
+            "severity_mild": "Few leaves show water-soaked lesions but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+            "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected leaves",
+                "Apply bactericide",
+                "Improve air circulation",
+                "Avoid overhead watering"
+            ],
+            "medicines": [
+                "Copper bactericide",
+                "Neem oil"
+            ],
+            "progression_days": 10,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Rice Brown Spot": {
+            "plant": "Rice",
+            "disease": "Brown Spot",
+            "causes": [
+                "Fungal infection (Bipolaris oryzae)",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Brown, oval spots on leaves",
+                "Yellowing of leaf edges",
+                "Wilting of leaves"
+            ],
+            "severity_mild": "Few leaves show brown spots but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+            "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected leaves",
+                "Apply fungicide",
+                "Improve air circulation",
+                "Avoid overhead watering"
+            ],
+            "medicines": [
+                "Copper fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 12,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Sugarcane Red Rot": {
+            "plant": "Sugarcane",
+            "disease": "Red Rot",
+            "causes": [
+                "Fungal infection (Colletotrichum falcatum)",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Red or brown lesions on stalks",
+                "Wilting of leaves",
+                "Reduced sugar content"
+            ],
+            "severity_mild": "Few stalks show red lesions but the plant remains healthy.",
+            "severity_moderate": "Multiple stalks affected with significant wilting and reduced sugar content.",
+            "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected plants",
+                "Apply fungicide",
+                "Improve air circulation",
+                "Maintain proper humidity levels"
+            ],
+            "medicines": [
+                "Copper fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 14,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Wheat Leaf Rust": {
+            "plant": "Wheat",
+            "disease": "Leaf Rust",
+            "causes": [
+                "Fungal infection (Puccinia triticina)",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Orange or brown pustules on leaves",
+                "Yellowing of leaf edges",
+                "Wilting of leaves"
+            ],
+            "severity_mild": "Few leaves show pustules but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+            "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected leaves",
+                "Apply fungicide",
+                "Improve air circulation",
+                "Avoid overhead watering"
+            ],
+            "medicines": [
+                "Copper fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 10,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Wheat Stem Rust": {
+            "plant": "Wheat",
+            "disease": "Stem Rust",
+            "causes": [
+                "Fungal infection (Puccinia graminis)",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Dark brown or black pustules on stems",
+                "Yellowing of leaves",
+                "Wilting of leaves"
+            ],
+            "severity_mild": "Few stems show pustules but the plant remains healthy.",
+            "severity_moderate": "Multiple stems affected with significant yellowing and wilting.",
+            "severity_severe": "Widespread stem damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected plants",
+                "Apply fungicide",
+                "Improve air circulation",
+                "Avoid overhead watering"
+            ],
+            "medicines": [
+                "Copper fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 12,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Tea Blister Blight": {
+            "plant": "Tea",
+            "disease": "Blister Blight",
+            "causes": [
+                "Fungal infection (Exobasidium vexans)",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Blister-like lesions on leaves",
+                "Yellowing of leaf edges",
+                "Wilting of leaves"
+            ],
+            "severity_mild": "Few leaves show blisters but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+            "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected leaves",
+                "Apply fungicide",
+                "Improve air circulation",
+                "Maintain proper humidity levels"
+            ],
+            "medicines": [
+                "Copper fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 10,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Cabbage Looper": {
+            "plant": "Cabbage",
+            "disease": "Looper",
+            "causes": [
+                "Insect infestation (Trichoplusia ni)",
+                "High temperatures",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Chewed holes in leaves",
+                "Caterpillar-like larvae on leaves",
+                "Wilting of leaves"
+            ],
+            "severity_mild": "Few leaves show chewed holes but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant chewing and wilting.",
+            "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infested leaves",
+                "Apply insecticide",
+                "Increase air circulation",
+                "Regularly inspect plants for early signs of infestation"
+            ],
+            "medicines": [
+                "Insecticidal soap",
+                "Neem oil"
+            ],
+            "progression_days": 7,
+            "prevention": [
+                "Regularly inspect plants for early signs of infestation",
+                "Maintain proper humidity levels",
+                "Avoid overcrowding plants"
+            ]
+        },
+        "Apple Powdery Mildew": {
+            "plant": "Apple",
+            "disease": "Powdery Mildew",
+            "causes": [
+                "Fungal infection",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "White, powdery spots on leaves",
+                "Leaf curling and distortion",
+                "Yellowing of leaves"
+            ],
+            "severity_mild": "Few leaves show white spots but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant curling and yellowing.",
+            "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected leaves",
+                "Apply fungicide",
+                "Improve air circulation",
+                "Maintain proper humidity levels"
+            ],
+            "medicines": [
+                "Sulfur fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 10,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Cashew Anthracnose": {
+            "plant": "Cashew",
+            "disease": "Anthracnose",
+            "causes": [
+                "Fungal infection (Colletotrichum gloeosporioides)",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Dark, sunken lesions on leaves and fruit",
+                "Leaf drop",
+                "Wilting of leaves"
+            ],
+            "severity_mild": "Few leaves show dark lesions but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant lesions and leaf drop.",
+            "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected leaves and fruit",
+                "Apply fungicide",
+                "Improve air circulation",
+                "Maintain proper humidity levels"
+            ],
+            "medicines": [
+                "Copper fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 14,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Cashew Gumosis": {
+            "plant": "Cashew",
+            "disease": "Gummosis",
+            "causes": [
+                "Fungal infection (Phytophthora spp.)",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Gum oozing from bark",
+                "Wilting of leaves",
+                "Stunted growth"
+            ],
+            "severity_mild": "Few branches show gum oozing but the plant remains healthy.",
+            "severity_moderate": "Multiple branches affected with significant wilting and stunting.",
+            "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected branches",
+                "Apply fungicide",
+                "Improve air circulation",
+                "Avoid overhead watering"
+            ],
+            "medicines": [
+                "Copper fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 10,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Cashew Healthy": {
+            "plant": "Cashew",
+            "disease": "Healthy",
+            "causes": [],
+            "symptoms": [],
+            "severity_mild": "",
+            "severity_moderate": "",
+            "severity_severe": "",
+            "treatment": [],
+            "medicines": [],
+            "progression_days": 0,
+            "prevention": []
+        },
+        "Cashew Leaf Miner": {
+            "plant": "Cashew",
+            "disease": "Leaf Miner",
+            "causes": [
+                "Insect infestation (Leucoptera coffeella)",
+                "High temperatures",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Tunnels in leaves",
+                "Yellowing of leaf edges",
+                "Wilting of leaves"
+            ],
+            "severity_mild": "Few leaves show tunnels but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+            "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infested leaves",
+                "Apply insecticide",
+                "Increase air circulation",
+                "Regularly inspect plants for early signs of infestation"
+            ],
+            "medicines": [
+                "Insecticidal soap",
+                "Neem oil"
+            ],
+            "progression_days": 7,
+            "prevention": [
+                "Regularly inspect plants for early signs of infestation",
+                "Maintain proper humidity levels",
+                "Avoid overcrowding plants"
+            ]
+        },
+        "Cashew Red Rust": {
+            "plant": "Cashew",
+            "disease": "Red Rust",
+            "causes": [
+                "Fungal infection (Puccinia psidii)",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Rusty, orange spots on leaves",
+                "Yellowing of leaf edges",
+                "Wilting of leaves"
+            ],
+            "severity_mild": "Few leaves show rusty spots but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+            "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected leaves",
+                "Apply fungicide",
+                "Improve air circulation",
+                "Avoid overhead watering"
+            ],
+            "medicines": [
+                "Copper fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 10,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Cassava Bacterial Blight": {
+            "plant": "Cassava",
+            "disease": "Bacterial Blight",
+            "causes": [
+                "Bacterial infection (Xanthomonas axonopodis)",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Water-soaked spots on leaves",
+                "Yellowing of leaf edges",
+                "Wilting of leaves"
+            ],
+            "severity_mild": "Few leaves show water-soaked spots but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+            "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected leaves",
+                "Apply bactericide",
+                "Improve air circulation",
+                "Avoid overhead watering"
+            ],
+            "medicines": [
+                "Copper bactericide",
+                "Neem oil"
+            ],
+            "progression_days": 10,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Cassava Brown Spot": {
+            "plant": "Cassava",
+            "disease": "Brown Spot",
+            "causes": [
+                "Fungal infection (Alternaria spp.)",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Dark, circular spots on leaves",
+                "Yellowing of leaf edges",
+                "Wilting of leaves"
+            ],
+            "severity_mild": "Few leaves show dark spots but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+            "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected leaves",
+                "Apply fungicide",
+                "Improve air circulation",
+                "Avoid overhead watering"
+            ],
+            "medicines": [
+                "Copper fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 12,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Cassava Green Mite": {
+            "plant": "Cassava",
+            "disease": "Green Mite",
+            "causes": [
+                "Insect infestation (Mononychellus tanajoa)",
+                "High temperatures",
+                "Low humidity"
+            ],
+            "symptoms": [
+                "Yellowing and stippling of leaves",
+                "Webbing on leaves",
+                "Leaf drop"
+            ],
+            "severity_mild": "Few leaves show yellowing but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant stippling and webbing.",
+            "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infested leaves",
+                "Apply miticide",
+                "Increase humidity around plants"
+            ],
+            "medicines": [
+                "Insecticidal soap",
+                "Neem oil"
+            ],
+            "progression_days": 7,
+            "prevention": [
+                "Regularly inspect plants for early signs of infestation",
+                "Maintain proper humidity levels",
+                "Avoid overcrowding plants"
+            ]
+        },
+        "Cassava Healthy": {
+            "plant": "Cassava",
+            "disease": "Healthy",
+            "causes": [],
+            "symptoms": [],
+            "severity_mild": "",
+            "severity_moderate": "",
+            "severity_severe": "",
+            "treatment": [],
+            "medicines": [],
+            "progression_days": 0,
+            "prevention": []
+        },
+        "Cassava Mosaic": {
+            "plant": "Cassava",
+            "disease": "Mosaic",
+            "causes": [
+                "Viral infection (Cassava mosaic virus)",
+                "Insect vectors (whiteflies)",
+                "Contaminated tools or seeds"
+            ],
+            "symptoms": [
+                "Mosaic patterns on leaves",
+                "Stunted growth",
+                "Reduced yield"
+            ],
+            "severity_mild": "Few leaves show mosaic patterns but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant stunting and reduced yield.",
+            "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected plants",
+                "Control insect vectors",
+                "Sanitize tools and equipment"
+            ],
+            "medicines": [
+                "Insecticidal soap",
+                "Neem oil"
+            ],
+            "progression_days": 7,
+            "prevention": [
+                "Use virus-resistant varieties",
+                "Control insect populations",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Cercospora Leaf Spot": {
+            "plant": "Cassava",
+            "disease": "Cercospora Leaf Spot",
+            "causes": [
+                "Fungal infection (Cercospora spp.)",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Dark, circular spots on leaves",
+                "Yellowing of leaf edges",
+                "Wilting of leaves"
+            ],
+            "severity_mild": "Few leaves show dark spots but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+            "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected leaves",
+                "Apply fungicide",
+                "Improve air circulation",
+                "Avoid overhead watering"
+            ],
+            "medicines": [
+                "Copper fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 12,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Citrus Rust Mite": {
+            "plant": "Citrus",
+            "disease": "Rust Mite",
+            "causes": [
+                "Insect infestation (Phyllocoptruta oleivora)",
+                "High temperatures",
+                "Low humidity"
+            ],
+            "symptoms": [
+                "Bronzing of leaves",
+                "Stippling on fruit",
+                "Reduced fruit quality"
+            ],
+            "severity_mild": "Few leaves show bronzing but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant stippling and reduced fruit quality.",
+            "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infested leaves",
+                "Apply miticide",
+                "Increase humidity around plants"
+            ],
+            "medicines": [
+                "Insecticidal soap",
+                "Neem oil"
+            ],
+            "progression_days": 7,
+            "prevention": [
+                "Regularly inspect plants for early signs of infestation",
+                "Maintain proper humidity levels",
+                "Avoid overcrowding plants"
+            ]
+        },
+        "Coffee Rust": {
+            "plant": "Coffee",
+            "disease": "Rust",
+            "causes": [
+                "Fungal infection (Hemileia vastatrix)",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Yellow-orange spots on leaves",
+                "Leaf drop",
+                "Reduced yield"
+            ],
+            "severity_mild": "Few leaves show yellow-orange spots but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant leaf drop and reduced yield.",
+            "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected leaves",
+                "Apply fungicide",
+                "Improve air circulation",
+                "Maintain proper humidity levels"
+            ],
+            "medicines": [
+                "Copper fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 14,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Garlic Healthy": {
+            "plant": "Garlic",
+            "disease": "Healthy",
+            "causes": [],
+            "symptoms": [],
+            "severity_mild": "",
+            "severity_moderate": "",
+            "severity_severe": "",
+            "treatment": [],
+            "medicines": [],
+            "progression_days": 0,
+            "prevention": []
+        },
+        "Ginger Healthy": {
+            "plant": "Ginger",
+            "disease": "Healthy",
+            "causes": [],
+            "symptoms": [],
+            "severity_mild": "",
+            "severity_moderate": "",
+            "severity_severe": "",
+            "treatment": [],
+            "medicines": [],
+            "progression_days": 0,
+            "prevention": []
+        },
+        "Grape Leaf Rust Mite": {
+            "plant": "Grape",
+            "disease": "Leaf Rust Mite",
+            "causes": [
+                "Insect infestation (Calepitrimerus vitis)",
+                "High temperatures",
+                "Low humidity"
+            ],
+            "symptoms": [
+                "Bronzing of leaves",
+                "Stippling on fruit",
+                "Reduced fruit quality"
+            ],
+            "severity_mild": "Few leaves show bronzing but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant stippling and reduced fruit quality.",
+            "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infested leaves",
+                "Apply miticide",
+                "Increase humidity around plants"
+            ],
+            "medicines": [
+                "Insecticidal soap",
+                "Neem oil"
+            ],
+            "progression_days": 7,
+            "prevention": [
+                "Regularly inspect plants for early signs of infestation",
+                "Maintain proper humidity levels",
+                "Avoid overcrowding plants"
+            ]
+        },
+        "Lemon Canker": {
+            "plant": "Lemon",
+            "disease": "Canker",
+            "causes": [
+                "Bacterial infection (Xanthomonas citri)",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Water-soaked lesions on leaves and fruit",
+                "Yellowing of leaf edges",
+                "Wilting of leaves"
+            ],
+            "severity_mild": "Few leaves show water-soaked lesions but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+            "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected leaves and fruit",
+                "Apply bactericide",
+                "Improve air circulation",
+                "Avoid overhead watering"
+            ],
+            "medicines": [
+                "Copper bactericide",
+                "Neem oil"
+            ],
+            "progression_days": 10,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Maize Fall Armyworm": {
+            "plant": "Maize",
+            "disease": "Fall Armyworm",
+            "causes": [
+                "Insect infestation (Spodoptera frugiperda)",
+                "High temperatures",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Chewed holes in leaves",
+                "Caterpillar-like larvae on leaves",
+                "Wilting of leaves"
+            ],
+            "severity_mild": "Few leaves show chewed holes but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant chewing and wilting.",
+            "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infested leaves",
+                "Apply insecticide",
+                "Increase air circulation",
+                "Regularly inspect plants for early signs of infestation"
+            ],
+            "medicines": [
+                "Insecticidal soap",
+                "Neem oil"
+            ],
+            "progression_days": 7,
+            "prevention": [
+                "Regularly inspect plants for early signs of infestation",
+                "Maintain proper humidity levels",
+                "Avoid overcrowding plants"
+            ]
+        },
+        "Maize Grasshopper": {
+            "plant": "Maize",
+            "disease": "Grasshopper",
+            "causes": [
+                "Insect infestation (Zonocerus variegatus)",
+                "High temperatures",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Chewed holes in leaves",
+                "Wilting of leaves",
+                "Reduced yield"
+            ],
+            "severity_mild": "Few leaves show chewed holes but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant wilting and reduced yield.",
+            "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infested leaves",
+                "Apply insecticide",
+                "Increase air circulation",
+                "Regularly inspect plants for early signs of infestation"
+            ],
+            "medicines": [
+                "Insecticidal soap",
+                "Neem oil"
+            ],
+            "progression_days": 7,
+            "prevention": [
+                "Regularly inspect plants for early signs of infestation",
+                "Maintain proper humidity levels",
+                "Avoid overcrowding plants"
+            ]
+        },
+        "Maize Healthy": {
+            "plant": "Maize",
+            "disease": "Healthy",
+            "causes": [],
+            "symptoms": [],
+            "severity_mild": "",
+            "severity_moderate": "",
+            "severity_severe": "",
+            "treatment": [],
+            "medicines": [],
+            "progression_days": 0,
+            "prevention": []
+        },
+        "Maize Leaf Beetle": {
+            "plant": "Maize",
+            "disease": "Leaf Beetle",
+            "causes": [
+                "Insect infestation (Diabrotica spp.)",
+                "High temperatures",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Chewed holes in leaves",
+                "Wilting of leaves",
+                "Reduced yield"
+            ],
+            "severity_mild": "Few leaves show chewed holes but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant wilting and reduced yield.",
+            "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infested leaves",
+                "Apply insecticide",
+                "Increase air circulation",
+                "Regularly inspect plants for early signs of infestation"
+            ],
+            "medicines": [
+                "Insecticidal soap",
+                "Neem oil"
+            ],
+            "progression_days": 7,
+            "prevention": [
+                "Regularly inspect plants for early signs of infestation",
+                "Maintain proper humidity levels",
+                "Avoid overcrowding plants"
+            ]
+        },
+        "Maize Leaf Blight": {
+            "plant": "Maize",
+            "disease": "Leaf Blight",
+            "causes": [
+                "Fungal infection (Exserohilum turcicum)",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Water-soaked lesions on leaves",
+                "Yellowing of leaf edges",
+                "Wilting of leaves"
+            ],
+            "severity_mild": "Few leaves show water-soaked lesions but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+            "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected leaves",
+                "Apply fungicide",
+                "Improve air circulation",
+                "Avoid overhead watering"
+            ],
+            "medicines": [
+                "Copper fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 10,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Maize Leaf Spot": {
+            "plant": "Maize",
+            "disease": "Leaf Spot",
+            "causes": [
+                "Fungal infection (Cercospora zeae-maydis)",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Dark, circular spots on leaves",
+                "Yellowing of leaf edges",
+                "Wilting of leaves"
+            ],
+            "severity_mild": "Few leaves show dark spots but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+            "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected leaves",
+                "Apply fungicide",
+                "Improve air circulation",
+                "Avoid overhead watering"
+            ],
+            "medicines": [
+                "Copper fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 12,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Maize Streak Virus": {
+            "plant": "Maize",
+            "disease": "Streak Virus",
+            "causes": [
+                "Viral infection (Maize streak virus)",
+                "Insect vectors (leafhoppers)",
+                "Contaminated tools or seeds"
+            ],
+            "symptoms": [
+                "Streaks on leaves",
+                "Stunted growth",
+                "Reduced yield"
+            ],
+            "severity_mild": "Few leaves show streaks but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant stunting and reduced yield.",
+            "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected plants",
+                "Control insect vectors",
+                "Sanitize tools and equipment"
+            ],
+            "medicines": [
+                "Insecticidal soap",
+                "Neem oil"
+            ],
+            "progression_days": 7,
+            "prevention": [
+                "Use virus-resistant varieties",
+                "Control insect populations",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Myrtle Rust": {
+            "plant": "Myrtle",
+            "disease": "Rust",
+            "causes": [
+                "Fungal infection (Puccinia psidii)",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Rusty, orange spots on leaves",
+                "Yellowing of leaf edges",
+                "Wilting of leaves"
+            ],
+            "severity_mild": "Few leaves show rusty spots but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+            "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected leaves",
+                "Apply fungicide",
+                "Improve air circulation",
+                "Avoid overhead watering"
+            ],
+            "medicines": [
+                "Copper fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 10,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Nitrogen Deficiency": {
+            "plant": "General",
+            "disease": "Nitrogen Deficiency",
+            "causes": [
+                "Insufficient nitrogen in soil",
+                "Poor soil fertility",
+                "Lack of organic matter"
+            ],
+            "symptoms": [
+                "Yellowing of older leaves",
+                "Stunted growth",
+                "Reduced yield"
+            ],
+            "severity_mild": "Few leaves show yellowing but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant stunting and reduced yield.",
+            "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Apply nitrogen-rich fertilizer",
+                "Incorporate organic matter into soil",
+                "Regularly test soil for nutrient levels"
+            ],
+            "medicines": [
+                "Urea fertilizer",
+                "Compost"
+            ],
+            "progression_days": 14,
+            "prevention": [
+                "Regularly test soil for nutrient levels",
+                "Maintain proper soil fertility",
+                "Incorporate organic matter into soil"
+            ]
+        },
+        "Onion Healthy": {
+            "plant": "Onion",
+            "disease": "Healthy",
+            "causes": [],
+            "symptoms": [],
+            "severity_mild": "",
+            "severity_moderate": "",
+            "severity_severe": "",
+            "treatment": [],
+            "medicines": [],
+            "progression_days": 0,
+            "prevention": []
+        },
+        "Peach Scab": {
+            "plant": "Peach",
+            "disease": "Scab",
+            "causes": [
+                "Fungal infection (Cladosporium carpophilum)",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Dark, sunken lesions on fruit",
+                "Leaf drop",
+                "Wilting of leaves"
+            ],
+            "severity_mild": "Few fruits show dark lesions but the plant remains healthy.",
+            "severity_moderate": "Multiple fruits affected with significant leaf drop and wilting.",
+            "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected fruit",
+                "Apply fungicide",
+                "Improve air circulation",
+                "Maintain proper humidity levels"
+            ],
+            "medicines": [
+                "Copper fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 14,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Pear Scab": {
+            "plant": "Pear",
+            "disease": "Scab",
+            "causes": [
+                "Fungal infection (Venturia pirina)",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Dark, sunken lesions on leaves and fruit",
+                "Leaf drop",
+                "Wilting of leaves"
+            ],
+            "severity_mild": "Few leaves and fruits show dark lesions but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves and fruits affected with significant leaf drop and wilting.",
+            "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected leaves and fruit",
+                "Apply fungicide",
+                "Improve air circulation",
+                "Maintain proper humidity levels"
+            ],
+            "medicines": [
+                "Copper fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 14,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Potassium Deficiency": {
+            "plant": "General",
+            "disease": "Potassium Deficiency",
+            "causes": [
+                "Insufficient potassium in soil",
+                "Poor soil fertility",
+                "Lack of organic matter"
+            ],
+            "symptoms": [
+                "Yellowing of leaf edges",
+                "Wilting of leaves",
+                "Reduced yield"
+            ],
+            "severity_mild": "Few leaves show yellowing but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant wilting and reduced yield.",
+            "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Apply potassium-rich fertilizer",
+                "Incorporate organic matter into soil",
+                "Regularly test soil for nutrient levels"
+            ],
+            "medicines": [
+                "Potassium sulfate fertilizer",
+                "Compost"
+            ],
+            "progression_days": 14,
+            "prevention": [
+                "Regularly test soil for nutrient levels",
+                "Maintain proper soil fertility",
+                "Incorporate organic matter into soil"
+            ]
+        },
+        "Potato Hollow Heart": {
+            "plant": "Potato",
+            "disease": "Hollow Heart",
+            "causes": [
+                "Rapid growth due to excess nitrogen",
+                "Inconsistent watering",
+                "Poor soil aeration"
+            ],
+            "symptoms": [
+                "Hollow cavities in tubers",
+                "Reduced yield",
+                "Poor quality of tubers"
+            ],
+            "severity_mild": "Few tubers show small cavities but the plant remains healthy.",
+            "severity_moderate": "Multiple tubers affected with significant cavities and reduced yield.",
+            "severity_severe": "Widespread damage leading to poor quality of tubers if untreated.",
+            "treatment": [
+                "Adjust nitrogen levels in soil",
+                "Ensure consistent watering",
+                "Improve soil aeration"
+            ],
+            "medicines": [],
+            "progression_days": 14,
+            "prevention": [
+                "Regularly test soil for nutrient levels",
+                "Maintain proper soil fertility",
+                "Avoid excessive nitrogen fertilization"
+            ]
+        },
+        "Rice Leaf Smut": {
+            "plant": "Rice",
+            "disease": "Leaf Smut",
+            "causes": [
+                "Fungal infection (Entyloma oryzae)",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "White, powdery spots on leaves",
+                "Yellowing of leaf edges",
+                "Wilting of leaves"
+            ],
+            "severity_mild": "Few leaves show white spots but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+            "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected leaves",
+                "Apply fungicide",
+                "Improve air circulation",
+                "Avoid overhead watering"
+            ],
+            "medicines": [
+                "Copper fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 10,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Sogatella Rice": {
+            "plant": "Rice",
+            "disease": "Sogatella",
+            "causes": [
+                "Insect infestation (Sogatella furcifera)",
+                "High temperatures",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Yellowing and wilting of leaves",
+                "Stippling on leaves",
+                "Reduced yield"
+            ],
+            "severity_mild": "Few leaves show yellowing but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant stippling and reduced yield.",
+            "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infested leaves",
+                "Apply insecticide",
+                "Increase air circulation",
+                "Regularly inspect plants for early signs of infestation"
+            ],
+            "medicines": [
+                "Insecticidal soap",
+                "Neem oil"
+            ],
+            "progression_days": 7,
+            "prevention": [
+                "Regularly inspect plants for early signs of infestation",
+                "Maintain proper humidity levels",
+                "Avoid overcrowding plants"
+            ]
+        },
+        "Tea Algal Leaf": {
+            "plant": "Tea",
+            "disease": "Algal Leaf",
+            "causes": [
+                "Algal infection (Cephaleuros virescens)",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Green, velvety patches on leaves",
+                "Yellowing of leaf edges",
+                "Wilting of leaves"
+            ],
+            "severity_mild": "Few leaves show green patches but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+            "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected leaves",
+                "Apply fungicide",
+                "Improve air circulation",
+                "Avoid overhead watering"
+            ],
+            "medicines": [
+                "Copper fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 10,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Tea Anthracnose": {
+            "plant": "Tea",
+            "disease": "Anthracnose",
+            "causes": [
+                "Fungal infection (Colletotrichum camelliae)",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Dark, sunken lesions on leaves",
+                "Leaf drop",
+                "Wilting of leaves"
+            ],
+            "severity_mild": "Few leaves show dark lesions but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant leaf drop and wilting.",
+            "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected leaves",
+                "Apply fungicide",
+                "Improve air circulation",
+                "Maintain proper humidity levels"
+            ],
+            "medicines": [
+                "Copper fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 14,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Tea Bird Eye Spot": {
+            "plant": "Tea",
+            "disease": "Bird Eye Spot",
+            "causes": [
+                "Fungal infection (Cercospora theae)",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Small, circular spots on leaves",
+                "Yellowing of leaf edges",
+                "Wilting of leaves"
+            ],
+            "severity_mild": "Few leaves show small spots but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+            "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected leaves",
+                "Apply fungicide",
+                "Improve air circulation",
+                "Avoid overhead watering"
+            ],
+            "medicines": [
+                "Copper fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 12,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Tea Brown Blight": {
+            "plant": "Tea",
+            "disease": "Brown Blight",
+            "causes": [
+                "Fungal infection (Pestalotiopsis spp.)",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Brown, sunken lesions on leaves",
+                "Leaf drop",
+                "Wilting of leaves"
+            ],
+            "severity_mild": "Few leaves show brown lesions but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant leaf drop and wilting.",
+            "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected leaves",
+                "Apply fungicide",
+                "Improve air circulation",
+                "Maintain proper humidity levels"
+            ],
+            "medicines": [
+                "Copper fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 14,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Tea Healthy": {
+            "plant": "Tea",
+            "disease": "Healthy",
+            "causes": [],
+            "symptoms": [],
+            "severity_mild": "",
+            "severity_moderate": "",
+            "severity_severe": "",
+            "treatment": [],
+            "medicines": [],
+            "progression_days": 0,
+            "prevention": []
+        },
+        "Tea Red Leaf Spot": {
+            "plant": "Tea",
+            "disease": "Red Leaf Spot",
+            "causes": [
+                "Fungal infection (Diplocarpon earliana)",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Red, circular spots on leaves",
+                "Yellowing of leaf edges",
+                "Wilting of leaves"
+            ],
+            "severity_mild": "Few leaves show red spots but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+            "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected leaves",
+                "Apply fungicide",
+                "Improve air circulation",
+                "Avoid overhead watering"
+            ],
+            "medicines": [
+                "Copper fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 12,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Tomato Canker": {
+            "plant": "Tomato",
+            "disease": "Canker",
+            "causes": [
+                "Bacterial infection (Clavibacter michiganensis)",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Water-soaked lesions on stems and leaves",
+                "Yellowing of leaf edges",
+                "Wilting of leaves"
+            ],
+            "severity_mild": "Few stems show water-soaked lesions but the plant remains healthy.",
+            "severity_moderate": "Multiple stems affected with significant yellowing and wilting.",
+            "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected stems and leaves",
+                "Apply bactericide",
+                "Improve air circulation",
+                "Avoid overhead watering"
+            ],
+            "medicines": [
+                "Copper bactericide",
+                "Neem oil"
+            ],
+            "progression_days": 10,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Tomato Leaf Blight": {
+            "plant": "Tomato",
+            "disease": "Leaf Blight",
+            "causes": [
+                "Fungal infection (Alternaria solani)",
+                "High humidity",
+                "Poor air circulation"
+            ],
+            "symptoms": [
+                "Water-soaked lesions on leaves",
+                "Yellowing of leaf edges",
+                "Wilting of leaves"
+            ],
+            "severity_mild": "Few leaves show water-soaked lesions but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant yellowing and wilting.",
+            "severity_severe": "Widespread leaf damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected leaves",
+                "Apply fungicide",
+                "Improve air circulation",
+                "Avoid overhead watering"
+            ],
+            "medicines": [
+                "Copper fungicide",
+                "Neem oil"
+            ],
+            "progression_days": 10,
+            "prevention": [
+                "Plant resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Tomato Leaf Curl": {
+            "plant": "Tomato",
+            "disease": "Leaf Curl",
+            "causes": [
+                "Viral infection (Tomato yellow leaf curl virus)",
+                "Insect vectors (whiteflies)",
+                "Contaminated tools or seeds"
+            ],
+            "symptoms": [
+                "Curling of leaves",
+                "Stunted growth",
+                "Reduced yield"
+            ],
+            "severity_mild": "Few leaves show curling but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant stunting and reduced yield.",
+            "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected plants",
+                "Control insect vectors",
+                "Sanitize tools and equipment"
+            ],
+            "medicines": [
+                "Insecticidal soap",
+                "Neem oil"
+            ],
+            "progression_days": 7,
+            "prevention": [
+                "Use virus-resistant varieties",
+                "Control insect populations",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Tomato Two-Spotted Spider Mite": {
+            "plant": "Tomato",
+            "disease": "Two-Spotted Spider Mite",
+            "causes": [
+                "Insect infestation (Tetranychus urticae)",
+                "High temperatures",
+                "Low humidity"
+            ],
+            "symptoms": [
+                "Fine webbing on leaves",
+                "Yellowing and stippling of leaves",
+                "Reduced yield"
+            ],
+            "severity_mild": "Few leaves show fine webbing but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant yellowing and stippling.",
+            "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infested leaves",
+                "Apply miticide",
+                "Increase humidity around plants"
+            ],
+            "medicines": [
+                "Insecticidal soap",
+                "Neem oil"
+            ],
+            "progression_days": 7,
+            "prevention": [
+                "Regularly inspect plants for early signs of infestation",
+                "Maintain proper humidity levels",
+                "Avoid overcrowding plants"
+            ]
+        },
+        "Tomato Verticulium Wilt": {
+            "plant": "Tomato",
+            "disease": "Verticillium Wilt",
+            "causes": [
+                "Fungal infection (Verticillium dahliae)",
+                "Poor soil drainage",
+                "Contaminated tools or seeds"
+            ],
+            "symptoms": [
+                "Wilting of leaves",
+                "Yellowing of leaf edges",
+                "Stunted growth"
+            ],
+            "severity_mild": "Few leaves show wilting but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant yellowing and stunting.",
+            "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Remove and destroy infected plants",
+                "Improve soil drainage",
+                "Sanitize tools and equipment"
+            ],
+            "medicines": [
+                "Fungicidal drench",
+                "Neem oil"
+            ],
+            "progression_days": 10,
+            "prevention": [
+                "Use resistant varieties",
+                "Rotate crops annually",
+                "Regularly inspect plants for early signs of disease"
+            ]
+        },
+        "Waterlogging in Plant": {
+            "plant": "General",
+            "disease": "Waterlogging",
+            "causes": [
+                "Excessive rainfall",
+                "Poor soil drainage",
+                "Overwatering"
+            ],
+            "symptoms": [
+                "Wilting of leaves",
+                "Yellowing of leaf edges",
+                "Root rot"
+            ],
+            "severity_mild": "Few leaves show wilting but the plant remains healthy.",
+            "severity_moderate": "Multiple leaves affected with significant yellowing and root issues.",
+            "severity_severe": "Widespread damage leading to potential death of the plant if untreated.",
+            "treatment": [
+                "Improve soil drainage",
+                "Reduce watering frequency",
+                "Remove affected plants"
+            ],
+            "medicines": [],
+            "progression_days": 14,
+            "prevention": [
+                "Ensure proper soil drainage",
+                "Avoid overwatering",
+                "Regularly inspect plants for early signs of waterlogging"
+            ]
+        }
+    }
+
+            let allDiseases = [];
+            let filteredDiseases = [];
+
+            function init() {
+                allDiseases = Object.keys(diseaseData).map(key => ({
+                    key: key,
+                    ...diseaseData[key]
+                }));
+                filteredDiseases = [...allDiseases];
+                
+                renderGallery();
+                
+                document.getElementById('loading').style.display = 'none';
+            }
+
+            document.getElementById('searchInput').addEventListener('input', (e) => {
+                applySearch(e.target.value);
+            });
+
+            function applySearch(searchTerm) {
+                const term = searchTerm.toLowerCase().trim();
+                
+                if (!term) {
+                    filteredDiseases = [...allDiseases];
+                    renderGallery();
+                    return;
+                }
+                
+                filteredDiseases = allDiseases.filter(d => {
+                    return d.plant?.toLowerCase().includes(term) ||
+                        d.disease?.toLowerCase().includes(term) ||
+                        d.key.toLowerCase().includes(term);
+                });
+                
+                renderGallery();
+            }
+
+            async function renderGallery() {
+                const grid = document.getElementById('galleryGrid');
+                const noResults = document.getElementById('noResults');
+                
+                if (filteredDiseases.length === 0) {
+                    grid.innerHTML = '';
+                    noResults.classList.add('show');
+                    return;
+                }
+                
+                noResults.classList.remove('show');
+                
+                const cardPromises = filteredDiseases.map(async (disease) => {
+                    const isHealthy = disease.disease === 'Healthy';
+                    const imagePath = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='300'%3E%3Crect fill='%23f0fdf4' width='800' height='300'/%3E%3Ctext fill='%23047857' font-family='Arial' font-size='20' x='50%25' y='50%25' text-anchor='middle'%3E${disease.plant} - ${disease.disease}%3C/text%3E%3C/svg%3E`;
+                    
+                    return `
+                        <div class="disease-card" onclick='openModal(${JSON.stringify(disease.key)})'>
+                            <div class="card-image-container">
+                                <img src="${imagePath}" alt="${disease.key}" class="card-image">
+                                <div class="img-gradient"></div>
+                                <div class="card-badge ${isHealthy ? 'healthy' : ''}">${isHealthy ? '✓ Healthy' : '⚠ Disease'}</div>
+                            </div>
+                            <div class="card-content">
+                                <h3 class="card-title">${disease.disease}</h3>
+                                <p class="card-plant">
+                                    <svg class="icon-sm" style="color: #047857;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path d="M2 22s9-2 15-8 5-12 5-12-9 2-15 8-5 12-5 12z"/>
+                                    </svg>
+                                    ${disease.plant}
+                                </p>
+                                ${!isHealthy ? `
+                                    <div class="card-info">
+                                        ${disease.progression_days > 0 ? `
+                                            <span class="info-badge">
+                                                <svg class="icon-sm" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                    <circle cx="12" cy="12" r="10"/>
+                                                    <polyline points="12 6 12 12 16 14"/>
+                                                </svg>
+                                                ${disease.progression_days} days
+                                            </span>
+                                        ` : ''}
+                                        ${disease.symptoms?.length > 0 ? `
+                                            <span class="info-badge">
+                                                <svg class="icon-sm" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                    <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                                                </svg>
+                                                ${disease.symptoms.length} symptoms
+                                            </span>
+                                        ` : ''}
+                                    </div>
+                                    ${disease.symptoms?.length > 0 ? `
+                                        <p class="card-symptoms">${disease.symptoms.join(', ')}</p>
+                                    ` : ''}
+                                ` : '<p class="card-symptoms">Plant is healthy with no disease detected.</p>'}
+                                <div class="card-footer">
+                                    <button class="view-details-btn">View Details →</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                const cards = await Promise.all(cardPromises);
+                grid.innerHTML = cards.join('');
+            }
+
+            async function openModal(diseaseKey) {
+                const disease = diseaseData[diseaseKey];
+                const modal = document.getElementById('diseaseModal');
+                const modalBody = document.getElementById('modalBody');
+                const isHealthy = disease.disease === 'Healthy';
+                const imagePath = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='300'%3E%3Crect fill='%23f0fdf4' width='800' height='300'/%3E%3Ctext fill='%23047857' font-family='Arial' font-size='20' x='50%25' y='50%25' text-anchor='middle'%3E${disease.plant} - ${disease.disease}%3C/text%3E%3C/svg%3E`;
+
+                modalBody.innerHTML = `
+                    <img src="${imagePath}" alt="${diseaseKey}" class="modal-image">
+                    <h2 class="modal-title">${disease.plant} - ${disease.disease}</h2>
+                    
+                    ${!isHealthy ? `
+                        ${disease.causes?.length > 0 ? `
+                            <div class="modal-section">
+                                <h3 class="section-title">
+                                    <svg class="icon-sm" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <line x1="12" y1="16" x2="12" y2="12"/>
+                                        <line x1="12" y1="8" x2="12.01" y2="8"/>
+                                    </svg>
+                                    Causes
+                                </h3>
+                                <ul class="section-list">
+                                    ${disease.causes.map(c => `<li>${c}</li>`).join('')}
+                                </ul>
+                            </div>
+                        ` : ''}
+                        
+                        ${disease.symptoms?.length > 0 ? `
+                            <div class="modal-section">
+                                <h3 class="section-title">
+                                    <svg class="icon-sm" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                                    </svg>
+                                    Symptoms
+                                </h3>
+                                <ul class="section-list">
+                                    ${disease.symptoms.map(s => `<li>${s}</li>`).join('')}
+                                </ul>
+                            </div>
+                        ` : ''}
+                        
+                        ${disease.severity_mild || disease.severity_moderate || disease.severity_severe ? `
+                            <div class="modal-section">
+                                <h3 class="section-title">
+                                    <svg class="icon-sm" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                    </svg>
+                                    Severity Levels
+                                </h3>
+                                ${disease.severity_mild ? `<p class="section-content"><strong>Mild:</strong> ${disease.severity_mild}</p>` : ''}
+                                ${disease.severity_moderate ? `<p class="section-content" style="margin-top: 0.5rem;"><strong>Moderate:</strong> ${disease.severity_moderate}</p>` : ''}
+                                ${disease.severity_severe ? `<p class="section-content" style="margin-top: 0.5rem;"><strong>Severe:</strong> ${disease.severity_severe}</p>` : ''}
+                            </div>
+                        ` : ''}
+                        
+                        ${disease.treatment?.length > 0 ? `
+                            <div class="modal-section">
+                                <h3 class="section-title">
+                                    <svg class="icon-sm" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                        <polyline points="22 4 12 14.01 9 11.01"/>
+                                    </svg>
+                                    Treatment
+                                </h3>
+                                <ul class="section-list">
+                                    ${disease.treatment.map(t => `<li>${t}</li>`).join('')}
+                                </ul>
+                            </div>
+                        ` : ''}
+                        
+                        ${disease.medicines?.length > 0 ? `
+                            <div class="modal-section">
+                                <h3 class="section-title">
+                                    <svg class="icon-sm" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                    </svg>
+                                    Recommended Medicines
+                                </h3>
+                                <ul class="section-list">
+                                    ${disease.medicines.map(m => `<li>${m}</li>`).join('')}
+                                </ul>
+                            </div>
+                        ` : ''}
+                        
+                        ${disease.prevention?.length > 0 ? `
+                            <div class="modal-section">
+                                <h3 class="section-title">
+                                    <svg class="icon-sm" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                    </svg>
+                                    Prevention
+                                </h3>
+                                <ul class="section-list">
+                                    ${disease.prevention.map(p => `<li>${p}</li>`).join('')}
+                                </ul>
+                            </div>
+                        ` : ''}
+                    ` : `
+                        <div class="modal-section">
+                            <p class="section-content">This plant is healthy with no disease detected. Continue regular care and monitoring to maintain plant health.</p>
+                        </div>
+                    `}
+                `;
+                
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeModal() {
+                const modal = document.getElementById('diseaseModal');
+                modal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+
+            document.getElementById('diseaseModal').addEventListener('click', (e) => {
+                if (e.target.id === 'diseaseModal') {
+                    closeModal();
+                }
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeModal();
+                }
+            });
+
+            init();
+        </script>
+    </body>
+    </html>
+    """
 
 @app.route('/api/predict', methods=['POST'])
 def predict():
@@ -4109,483 +7898,406 @@ def signin():
     </html>
     """
 
-CORS(app)  # Enable CORS for all routes
+CORS(app)
 
-# Gemini API configuration
+# Get Gemini API key from environment variable
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
 
 @app.route('/chatbot')
 def chatbot():
-    # Serve the chatbot.html file directly
-    try:
-        return send_from_directory('.', 'chatbot.html')
-    except FileNotFoundError:
-        return """
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-          <meta charset="UTF-8">
-          <title>Plant Saathi - Plant Doctor AI</title>
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <style>
-            body {
-              margin: 0;
-              font-family: 'Segoe UI', 'Arial', sans-serif;
-              background: linear-gradient(135deg, #f0fdf4 0%, #d1fae5 100%);
-              color: #222;
-            }
-            .min-h-screen { min-height: 100vh; }
-            .container {
-              max-width: 1100px;
-              margin: 0 auto;
-              padding: 0 1rem;
-            }
-            .flex { display: flex; }
-            .flex-between { display: flex; align-items: center; justify-content: space-between; }
-            .items-center { align-items: center; }
-            .gap-2 { gap: 0.5rem; }
-            .gap-3 { gap: 0.75rem; }
-            .text-center { text-align: center; }
-            .mb-12 { margin-bottom: 3rem; }
-            .mb-10 { margin-bottom: 2.5rem; }
-            .mt-12 { margin-top: 3rem; }
-            .mb-4 { margin-bottom: 1rem; }
-            .mr-3 { margin-right: 0.75rem; }
-            .center { display: flex; justify-content: center; }
-            .animate-pulse {
-              animation: pulse 2s infinite;
-            }
-            @keyframes pulse {
-              0%, 100% { opacity: 1; }
-              50% { opacity: .7; }
-            }
-            .animate-bounce {
-              animation: bounce 1.5s infinite;
-            }
-            @keyframes bounce {
-              0%, 100% { transform: translateY(0);}
-              50% { transform: translateY(-8px);}
-            }
-            .animate-spin {
-              animation: spin 8s linear infinite;
-            }
-            @keyframes spin {
-              100% { transform: rotate(360deg);}
-            }
-            .header {
-              background: #fff;
-              box-shadow: 0 2px 8px -2px rgba(16, 185, 129, 0.08);
-              border-bottom: 1px solid #bbf7d0;
-            }
-            .icon-lg {
-              width: 32px;
-              height: 32px;
-            }
-        
-            .title {
-              font-size: 2rem;
-              font-weight: bold;
-              color: #065f46;
-            }
-            .nav {
-              display: flex;
-              align-items: center;
-              gap: 1.5rem;
-            }
-            .nav a {
-              color: #047857;
-              font-weight: 500;
-              text-decoration: none;
-              transition: color 0.2s;
-            }
-            .nav a:hover, .nav a.active {
-              color: #065f46;
-            }
-            .nav-actions {
-              display: flex;
-              gap: 0.75rem;
-              margin-left: 1.5rem;
-            }
-            .btn {
-              padding: 0.5rem 1rem;
-              border-radius: 0.75rem;
-              font-weight: 500;
-              transition: all .2s;
-              box-shadow: none;
-              border: none;
-              cursor: pointer;
-            }
-            .btn-green {
-              background: #16a34a;
-              color: #fff;
-            }
-            .btn-green:hover {
-              background: #166534;
-              box-shadow: 0 2px 8px -2px #16a34a44;
-            }
-            .btn-outline-green {
-              background: #fff;
-              border: 2px solid #16a34a;
-              color: #16a34a;
-            }
-            .btn-outline-green:hover {
-              background: #f0fdf4;
-              box-shadow: 0 2px 8px -2px #16a34a22;
-            }
-            .profile-circle {
-              width: 40px;
-              height: 40px;
-              background: #16a34a;
-              color: #fff;
-              border-radius: 50%;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              font-weight: bold;
-              font-size: 1.2rem;
-              cursor: pointer;
-              border: 2px solid #fff;
-              box-shadow: 0 2px 8px -2px #16a34a44;
-              transition: background .2s;
-            }
-            .profile-circle:hover {
-              background: #166534;
-            }
-            /* Chatbot UI styles */
+    return """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Plant Saathi - Plant Doctor AI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+            background: linear-gradient(135deg, #f0fdf4 0%, #d1fae5 100%);
+            color: #222;
+        }
+        .min-h-screen { min-height: 100vh; }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        .flex { display: flex; }
+        .flex-between { display: flex; align-items: center; justify-content: space-between; }
+        .items-center { align-items: center; }
+        .gap-2 { gap: 0.5rem; }
+        .text-center { text-align: center; }
+        .animate-pulse { animation: pulse 2s infinite; }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .7; }
+        }
+        .header {
+            background: #fff;
+            box-shadow: 0 2px 8px -2px rgba(16, 185, 129, 0.08);
+            border-bottom: 1px solid #bbf7d0;
+        }
+        .icon-lg { width: 32px; height: 32px; }
+        .title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #065f46;
+        }
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        .nav a {
+            color: #047857;
+            font-weight: 500;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .nav a:hover, .nav a.active { color: #065f46; }
+        .nav-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-left: 1.5rem;
+        }
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 0.75rem;
+            font-weight: 500;
+            transition: all .2s;
+            box-shadow: none;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-green {
+            background: #16a34a;
+            color: #fff;
+        }
+        .btn-green:hover { background: #166534; }
+        .btn-outline-green {
+            background: #fff;
+            border: 2px solid #16a34a;
+            color: #16a34a;
+        }
+        .btn-outline-green:hover { background: #f0fdf4; }
+        .profile-circle {
+            width: 40px;
+            height: 40px;
+            background: #16a34a;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            cursor: pointer;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 8px -2px #16a34a44;
+            transition: background .2s;
+        }
+        .profile-circle:hover { background: #166534; }
+        .chatbot-section {
+            max-width: 700px;
+            margin: 0 auto 3rem auto;
+            background: #fff;
+            border-radius: 1.25rem;
+            box-shadow: 0 4px 32px -8px #16a34a22;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+        .chat-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .chat-header h2 {
+            color: #065f46;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        .chat-header p {
+            color: #047857;
+            font-size: 1.2rem;
+            margin-top: 0.5rem;
+        }
+        .chat-area {
+            width: 100%;
+            min-height: 340px;
+            max-height: 420px;
+            overflow-y: auto;
+            margin-bottom: 1rem;
+            padding-right: 6px;
+        }
+        .chat-message {
+            margin: 8px 0;
+            clear: both;
+            max-width: 70%;
+        }
+        .chat-message.user {
+            background: #CFEFFF;
+            color: #000;
+            padding: 10px;
+            border-radius: 10px;
+            float: right;
+            box-shadow: 0 1px 8px -2px #16a34a22;
+            margin-right: 0;
+            margin-left: auto;
+        }
+        .chat-message.bot {
+            background: #E2FFE2;
+            color: #000;
+            padding: 10px;
+            border-radius: 10px;
+            float: left;
+            box-shadow: 0 1px 8px -2px #16a34a22;
+            margin-left: 0;
+            margin-right: auto;
+            line-height: 1.5;
+        }
+        .chat-message.bot h1,
+        .chat-message.bot h2, 
+        .chat-message.bot h3 {
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        .chat-message.bot h1:first-child,
+        .chat-message.bot h2:first-child,
+        .chat-message.bot h3:first-child {
+            margin-top: 0;
+        }
+        .chat-message.bot ul,
+        .chat-message.bot ol {
+            margin: 0.5rem 0;
+            padding-left: 1.5rem;
+        }
+        .chat-message.bot p {
+            margin: 0.5rem 0;
+        }
+        .chat-timestamp {
+            font-size: 0.85em;
+            color: #888;
+            margin-bottom: 4px;
+            display: block;
+        }
+        .chat-clear { clear: both; }
+        .chat-form {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-end;
+            margin-top: 1rem;
+        }
+        .chat-input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid #bbf7d0;
+            border-radius: 0.75rem;
+            font-size: 1.05rem;
+            background: #f0fdf4;
+            color: #222;
+            transition: border .2s;
+            min-height: 50px;
+            resize: vertical;
+        }
+        .chat-input:focus {
+            border: 2px solid #16a34a;
+            outline: none;
+            background: #e6fcf0;
+        }
+        .chat-send-btn {
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, #16a34a, #22c55e);
+            color: #fff;
+            font-weight: 500;
+            border-radius: 0.75rem;
+            border: none;
+            cursor: pointer;
+            font-size: 1.05rem;
+            transition: background .2s;
+            box-shadow: 0 2px 8px -2px #16a34a22;
+        }
+        .chat-send-btn:hover:not(:disabled) { background: #166534; }
+        .chat-send-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+        .chat-clear-btn {
+            padding: 0.75rem 1rem;
+            background: #fff;
+            color: #16a34a;
+            border: 2px solid #16a34a;
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-left: 1rem;
+            transition: background .2s;
+        }
+        .chat-clear-btn:hover { background: #f0fdf4; }
+        .chat-loader {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f0fdf4;
+            border-top: 3px solid #16a34a;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .status-indicator {
+            text-align: center;
+            margin-bottom: 16px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+        .status-connected {
+            background: #dcfce7;
+            color: #15803d;
+            border: 1px solid #bbf7d0;
+        }
+        .status-error {
+            background: #fecaca;
+            color: #dc2626;
+            border: 1px solid #fca5a5;
+        }
+        .welcome-message {
+            background: #f0fdf4;
+            border-left: 4px solid #16a34a;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 0 8px 8px 0;
+        }
+        .welcome-message h3 {
+            margin: 0 0 0.5rem 0;
+            color: #065f46;
+        }
+        .welcome-message p {
+            margin: 0;
+            color: #047857;
+            font-size: 0.95em;
+        }
+        @media (max-width: 800px) {
             .chatbot-section {
-              max-width: 700px;
-              margin: 0 auto 3rem auto;
-              background: #fff;
-              border-radius: 1.25rem;
-              box-shadow: 0 4px 32px -8px #16a34a22;
-              padding: 2rem;
-              margin-top: 3rem;
-            }
-            .chat-header {
-              text-align: center;
-              margin-bottom: 2rem;
-            }
-            .chat-header h2 {
-              color: #065f46;
-              font-size: 2rem;
-              font-weight: 700;
-            }
-            .chat-header p {
-              color: #047857;
-              font-size: 1.2rem;
-              margin-top: 0.5rem;
-            }
-            .chat-area {
-              width: 100%;
-              min-height: 340px;
-              max-height: 420px;
-              overflow-y: auto;
-              margin-bottom: 1rem;
-              padding-right: 6px;
-            }
-            .chat-message {
-              margin: 8px 0;
-              clear: both;
-              max-width: 70%;
-            }
-            .chat-message.user {
-              background: #CFEFFF;
-              color: #000;
-              padding: 10px;
-              border-radius: 10px;
-              float: right;
-              box-shadow: 0 1px 8px -2px #16a34a22;
-              margin-right: 0;
-              margin-left: auto;
-            }
-            .chat-message.bot {
-              background: #E2FFE2;
-              color: #000;
-              padding: 10px;
-              border-radius: 10px;
-              float: left;
-              box-shadow: 0 1px 8px -2px #16a34a22;
-              margin-left: 0;
-              margin-right: auto;
-              line-height: 1.5;
-            }
-            
-            .chat-message.bot h1,
-            .chat-message.bot h2, 
-            .chat-message.bot h3 {
-              margin-top: 1rem;
-              margin-bottom: 0.5rem;
-            }
-            
-            .chat-message.bot h1:first-child,
-            .chat-message.bot h2:first-child,
-            .chat-message.bot h3:first-child {
-              margin-top: 0;
-            }
-            
-            .chat-message.bot ul,
-            .chat-message.bot ol {
-              margin: 0.5rem 0;
-              padding-left: 1.5rem;
-            }
-            
-            .chat-message.bot p {
-              margin: 0.5rem 0;
-            }
-            .chat-timestamp {
-              font-size: 0.85em;
-              color: #888;
-              margin-bottom: 4px;
-              display: block;
-            }
-            .chat-clear {
-              clear: both;
-            }
-            .chat-form {
-              display: flex;
-              gap: 1rem;
-              align-items: flex-end;
-              margin-top: 1rem;
-            }
-            .chat-input {
-              flex: 1;
-              padding: 0.75rem;
-              border: 1px solid #bbf7d0;
-              border-radius: 0.75rem;
-              font-size: 1.05rem;
-              background: #f0fdf4;
-              color: #222;
-              transition: border .2s;
-              min-height: 50px;
-              resize: vertical;
-            }
-            .chat-input:focus {
-              border: 2px solid #16a34a;
-              outline: none;
-              background: #e6fcf0;
-            }
-            .chat-send-btn {
-              padding: 0.75rem 1.5rem;
-              background: linear-gradient(135deg, #16a34a, #22c55e);
-              color: #fff;
-              font-weight: 500;
-              border-radius: 0.75rem;
-              border: none;
-              cursor: pointer;
-              font-size: 1.05rem;
-              transition: background .2s;
-              box-shadow: 0 2px 8px -2px #16a34a22;
-            }
-            .chat-send-btn:hover:not(:disabled) {
-              background: #166534;
-            }
-            .chat-send-btn:disabled {
-              opacity: 0.7;
-              cursor: not-allowed;
-            }
-            .chat-clear-btn {
-              padding: 0.75rem 1rem;
-              background: #fff;
-              color: #16a34a;
-              border: 2px solid #16a34a;
-              border-radius: 0.75rem;
-              font-size: 1rem;
-              cursor: pointer;
-              margin-left: 1rem;
-              transition: background .2s;
-            }
-            .chat-clear-btn:hover {
-              background: #f0fdf4;
-            }
-            .chat-loader {
-              display: inline-block;
-              width: 20px;
-              height: 20px;
-              border: 3px solid #f0fdf4;
-              border-top: 3px solid #16a34a;
-              border-radius: 50%;
-              animation: spin 1s linear infinite;
-              margin-right: 8px;
-              vertical-align: middle;
-            }
-            @keyframes spin {
-              0% { transform: rotate(0deg); }
-              100% { transform: rotate(360deg); }
-            }
-            .status-indicator {
-              text-align: center;
-              margin-bottom: 16px;
-              padding: 8px 16px;
-              border-radius: 8px;
-              font-size: 0.9em;
-              font-weight: 500;
-            }
-            .status-connected {
-              background: #dcfce7;
-              color: #15803d;
-              border: 1px solid #bbf7d0;
-            }
-            .status-error {
-              background: #fecaca;
-              color: #dc2626;
-              border: 1px solid #fca5a5;
-            }
-            .status-warning {
-              background: #fef3c7;
-              color: #d97706;
-              border: 1px solid #fde68a;
-            }
-            .welcome-message {
-              background: #f0fdf4;
-              border-left: 4px solid #16a34a;
-              padding: 1rem;
-              margin-bottom: 1rem;
-              border-radius: 0 8px 8px 0;
-            }
-            .welcome-message h3 {
-              margin: 0 0 0.5rem 0;
-              color: #065f46;
-            }
-            .welcome-message p {
-              margin: 0;
-              color: #047857;
-              font-size: 0.95em;
-            }
-            @media (max-width: 800px) {
-              .chatbot-section {
                 max-width: 99vw;
                 padding: 1rem;
-              }
-              .chat-form {
+            }
+            .chat-form {
                 flex-direction: column;
                 gap: 0.5rem;
-              }
-              .chat-clear-btn {
+            }
+            .chat-clear-btn {
                 margin-left: 0;
                 width: 100%;
-              }
             }
-            @media (max-width: 600px) {
-              .chatbot-section {
-                padding: 0.5rem;
-              }
-              .chat-header h2 {font-size: 1.5rem;}
-              .chat-header p {font-size: 1rem;}
-            }
-          </style>
-          <!-- Firebase SDKs for profile.js -->
-          <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-          <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
-        </head>
-        <body class="min-h-screen">
-        
-        <!-- Header -->
-        <header class="header">
-          <div class="container flex-between">
+        }
+        @media (max-width: 600px) {
+            .chatbot-section { padding: 0.5rem; }
+            .chat-header h2 { font-size: 1.5rem; }
+            .chat-header p { font-size: 1rem; }
+        }
+    </style>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+</head>
+<body class="min-h-screen">
+    <header class="header">
+        <div class="container flex-between">
             <div class="flex items-center gap-2">
-              <!-- Leaf Icon SVG -->
-              <svg class="icon-lg text-green" fill="none" stroke="green" stroke-width="2" viewBox="0 0 24 24">
-              <path d="M2 22s9-2 15-8 5-12 5-12-9 2-15 8-5 12-5 12z"/>
-              </svg>
-              <h1 class="title">Plant Doctor AI</h1>
+                <svg class="icon-lg text-green" fill="none" stroke="green" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M2 22s9-2 15-8 5-12 5-12-9 2-15 8-5 12-5 12z"/>
+                </svg>
+                <h1 class="title">Plant Doctor AI</h1>
             </div>
             <nav class="nav">
-              <a href="/">Home</a>
-              <a href="/predict">Upload & Predict</a>
-              <a href="/chatbot" class="active">Plant Saathi</a>
-              <a href="/about">About</a>
-              <div class="nav-actions" id="nav-actions">
-                <!-- Login/Signup or Profile will be injected here -->
-              </div>
+                <a href="/">Home</a>
+                <a href="/predict">Upload & Predict</a>
+                <a href="/chatbot" class="active">Plant Saathi</a>
+                <a href="/about">About</a>
+                <div class="nav-actions" id="nav-actions"></div>
             </nav>
-          </div>
-        </header>
-        
-        <!-- Chatbot Section -->
-        <main class="container">
-          <section class="chatbot-section">
+        </div>
+    </header>
+    
+    <main class="container">
+        <section class="chatbot-section">
             <div class="chat-header">
-              <h2 class="animate-pulse">🌱 Plant Saathi</h2>
-              <p>Ask about plant diseases, symptoms, treatment, or prevention strategies!</p>
+                <h2 class="animate-pulse">Plant Saathi</h2>
+                <p>Ask about plant diseases, symptoms, treatment, or prevention strategies!</p>
             </div>
             
-            <!-- Status indicator -->
-            <div id="connection-status" class="status-indicator status-warning">🔄 Initializing...</div>
+            <div id="connection-status" class="status-indicator status-connected">Ready to chat!</div>
             
-            <!-- Welcome message -->
             <div class="welcome-message">
-              <h3>👋 Welcome to Plant Saathi!</h3>
-              <p>I'm here to help you with plant diseases, pest problems, treatments, and agricultural advice. Feel free to ask me anything about plant health!</p>
+                <h3>Welcome to Plant Saathi!</h3>
+                <p>I'm here to help you with plant diseases, pest problems, treatments, and agricultural advice. Feel free to ask me anything about plant health!</p>
             </div>
             
             <div id="chat-area" class="chat-area"></div>
             <form id="chat-form" class="chat-form" autocomplete="off">
-              <textarea id="chat-input" class="chat-input" rows="2" placeholder="Ask me about plant diseases, symptoms, or treatments..." required></textarea>
-              <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                <button id="send-btn" type="submit" class="chat-send-btn">Send</button>
-                <button id="clear-btn" type="button" class="chat-clear-btn">Clear Chat</button>
-              </div>
+                <textarea id="chat-input" class="chat-input" rows="2" placeholder="Ask me about plant diseases, symptoms, or treatments..." required></textarea>
+                <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                    <button id="send-btn" type="submit" class="chat-send-btn">Send</button>
+                    <button id="clear-btn" type="button" class="chat-clear-btn">Clear Chat</button>
+                </div>
             </form>
-          </section>
-        </main>
-        
-        <!-- Profile.js Logic -->
-        <script>
+        </section>
+    </main>
+    
+    <script>
         const firebaseConfig = {
-          apiKey: "AIzaSyB-y52ekJkjgXYXhRNvvir0r9gU8CObpkM",
-          authDomain: "plant-doctor-63da7.firebaseapp.com",
-          projectId: "plant-doctor-63da7",
-          storageBucket: "plant-doctor-63da7.appspot.com",
-          messagingSenderId: "94281353808",
-          appId: "1:94281353808:web:5fa49e3d6e494868be5f55",
-          measurementId: "G-E5P4MZ68HW"
+            apiKey: "AIzaSyB-y52ekJkjgXYXhRNvvir0r9gU8CObpkM",
+            authDomain: "plant-doctor-63da7.firebaseapp.com",
+            projectId: "plant-doctor-63da7",
+            storageBucket: "plant-doctor-63da7.appspot.com",
+            messagingSenderId: "94281353808",
+            appId: "1:94281353808:web:5fa49e3d6e494868be5f55",
+            measurementId: "G-E5P4MZ68HW"
         };
         
-        // Initialize Firebase only if not already initialized
         if (!firebase.apps.length) {
-          firebase.initializeApp(firebaseConfig);
+            firebase.initializeApp(firebaseConfig);
         }
         const auth = firebase.auth();
         
         function renderProfile(user) {
-          const navActions = document.getElementById("nav-actions");
-          if (!navActions) return;
-          let displayName = user.displayName || user.email || "U";
-          let firstLetter = displayName.charAt(0).toUpperCase();
-          navActions.innerHTML = `
-            <div class="profile-circle" title="${displayName}" onclick="logout()">
-              ${firstLetter}
-            </div>
-          `;
+            const navActions = document.getElementById("nav-actions");
+            if (!navActions) return;
+            let displayName = user.displayName || user.email || "U";
+            let firstLetter = displayName.charAt(0).toUpperCase();
+            navActions.innerHTML = '<div class="profile-circle" title="' + displayName + '" onclick="logout()">' + firstLetter + '</div>';
         }
         
         function renderLoginSignup() {
-          const navActions = document.getElementById("nav-actions");
-          if (!navActions) return;
-          navActions.innerHTML = `
-            <a href="/signin" class="btn btn-green">Log In</a>
-            <a href="/signup" class="btn btn-outline-green">Sign Up</a>
-          `;
+            const navActions = document.getElementById("nav-actions");
+            if (!navActions) return;
+            navActions.innerHTML = '<a href="/signin" class="btn btn-green">Log In</a><a href="/signup" class="btn btn-outline-green">Sign Up</a>';
         }
         
         function logout() {
-          firebase.auth().signOut().then(() => {
-            window.location.reload();
-          });
+            firebase.auth().signOut().then(() => {
+                window.location.reload();
+            });
         }
         
         auth.onAuthStateChanged(user => {
-          if (user) {
-            renderProfile(user);
-          } else {
-            renderLoginSignup();
-          }
+            if (user) {
+                renderProfile(user);
+            } else {
+                renderLoginSignup();
+            }
         });
-        </script>
-        
-        <!-- Chatbot logic -->
-        <script>
+    </script>
+    
+    <script>
         const chatArea = document.getElementById('chat-area');
         const chatForm = document.getElementById('chat-form');
         const chatInput = document.getElementById('chat-input');
@@ -4593,351 +8305,229 @@ def chatbot():
         const clearBtn = document.getElementById('clear-btn');
         const connectionStatus = document.getElementById('connection-status');
         
-        // Use the same domain as current page for backend
         const BACKEND_URL = window.location.origin;
         
-        console.log('🌱 Plant Doctor AI Chatbot initialized');
-        console.log('🔗 Backend URL:', BACKEND_URL);
-        
-        // Load chat history from localStorage
         let history = [];
         try {
-          const savedHistory = localStorage.getItem('pd_chat_history');
-          if (savedHistory) {
-            history = JSON.parse(savedHistory);
-          }
+            const savedHistory = localStorage.getItem('pd_chat_history');
+            if (savedHistory) {
+                history = JSON.parse(savedHistory);
+            }
         } catch (e) {
-          console.warn('Could not load chat history:', e);
-          history = [];
-        }
-        
-        // Test backend connection on page load
-        async function testBackendConnection() {
-          try {
-            connectionStatus.innerHTML = '🔄 Testing connection...';
-            connectionStatus.className = 'status-indicator status-warning';
-            
-            console.log('🧪 Testing backend connection...');
-            
-            // First test basic Flask backend
-            const backendResponse = await fetch(`${BACKEND_URL}/`, {
-              method: 'GET',
-              mode: 'cors'
-            });
-            
-            if (!backendResponse.ok) {
-              throw new Error(`Backend responded with status ${backendResponse.status}`);
-            }
-            
-            console.log('✅ Flask backend is running');
-            
-            // Then test Gemini API connectivity
-            const geminiTest = await fetch(`${BACKEND_URL}/test-gemini`, {
-              method: 'GET',
-              mode: 'cors'
-            });
-            
-            const geminiData = await geminiTest.json();
-            console.log('🤖 Gemini test result:', geminiData);
-            
-            if (geminiData.success) {
-              connectionStatus.innerHTML = '✅ Ready - Gemini AI Connected';
-              connectionStatus.className = 'status-indicator status-connected';
-              console.log('✅ Everything is working!');
-            } else {
-              connectionStatus.innerHTML = '⚠️ Backend OK - Gemini API Issues';
-              connectionStatus.className = 'status-indicator status-warning';
-              console.warn('⚠️ Gemini API issues:', geminiData.error);
-            }
-            
-          } catch (error) {
-            connectionStatus.innerHTML = '❌ Backend Connection Failed - Run: python app.py';
-            connectionStatus.className = 'status-indicator status-error';
-            console.error('❌ Connection test failed:', error);
-          }
+            console.warn('Could not load chat history:', e);
+            history = [];
         }
         
         function renderChatHistory() {
-          chatArea.innerHTML = '';
-          history.forEach(msg => {
-            const msgDiv = document.createElement('div');
-            msgDiv.className = 'chat-message ' + (msg.role === "user" ? "user" : "bot");
-            msgDiv.innerHTML = `
-              <span class="chat-timestamp">${msg.role === "user" ? "You" : "Plant Doctor"} (${msg.time || ""}):</span>
-              ${msg.role === "bot" ? formatBotMessage(msg.content) : escapeHTML(msg.content)}
-            `;
-            chatArea.appendChild(msgDiv);
-            const clearDiv = document.createElement('div');
-            clearDiv.className = "chat-clear";
-            chatArea.appendChild(clearDiv);
-          });
-          chatArea.scrollTop = chatArea.scrollHeight;
+            chatArea.innerHTML = '';
+            history.forEach(msg => {
+                const msgDiv = document.createElement('div');
+                msgDiv.className = 'chat-message ' + (msg.role === "user" ? "user" : "bot");
+                msgDiv.innerHTML = '<span class="chat-timestamp">' + 
+                    (msg.role === "user" ? "You" : "Plant Doctor") + 
+                    ' (' + (msg.time || "") + '):</span>' +
+                    (msg.role === "bot" ? formatBotMessage(msg.content) : escapeHTML(msg.content));
+                chatArea.appendChild(msgDiv);
+                const clearDiv = document.createElement('div');
+                clearDiv.className = "chat-clear";
+                chatArea.appendChild(clearDiv);
+            });
+            chatArea.scrollTop = chatArea.scrollHeight;
         }
         
         function escapeHTML(text) {
-          const div = document.createElement('div');
-          div.textContent = text;
-          return div.innerHTML;
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
         }
         
         function formatBotMessage(text) {
-          // Enhanced markdown formatting for bot messages with table support
-          let formatted = escapeHTML(text);
-          
-          // Headers (# ## ### etc.) - must come before other formatting
-          formatted = formatted.replace(/^#### (.*$)/gm, '<h4 style="color: #065f46; margin: 1rem 0 0.5rem 0; font-size: 1.1em; font-weight: 600;">$1</h4>');
-          formatted = formatted.replace(/^### (.*$)/gm, '<h3 style="color: #065f46; margin: 1rem 0 0.5rem 0; font-size: 1.2em; font-weight: 600;">$1</h3>');
-          formatted = formatted.replace(/^## (.*$)/gm, '<h2 style="color: #065f46; margin: 1.2rem 0 0.6rem 0; font-size: 1.4em; font-weight: 700;">$1</h2>');
-          formatted = formatted.replace(/^# (.*$)/gm, '<h1 style="color: #065f46; margin: 1.5rem 0 0.8rem 0; font-size: 1.6em; font-weight: 700;">$1</h1>');
-          
-          // Process tables first (before other formatting)
-          formatted = formatted.replace(/^\|(.+)\|$/gm, function(match) {
-            return 'TABLE_ROW_MARKER' + match + 'TABLE_ROW_MARKER';
-          });
-          
-          // Convert table rows
-          const tableRegex = /TABLE_ROW_MARKER\|(.+?)\|TABLE_ROW_MARKER(?:\n(?:TABLE_ROW_MARKER\|.*?\|TABLE_ROW_MARKER|\|.*?\||---+.*?))*(?=\n[^|]|$)/g;
-          
-          formatted = formatted.replace(tableRegex, function(tableMatch) {
-            const rows = tableMatch.split('\n').filter(row => row.includes('|'));
-            let tableHTML = '<table style="border-collapse: collapse; margin: 1rem 0; width: 100%; font-size: 0.9em;">';
-            let isHeader = true;
+            let formatted = escapeHTML(text);
             
-            rows.forEach((row, index) => {
-              // Clean up row markers
-              row = row.replace(/TABLE_ROW_MARKER/g, '');
-              
-              // Skip separator rows (--- lines)
-              if (row.match(/^\s*\|[\s\-\|:]*\|\s*$/)) {
-                isHeader = false;
-                return;
-              }
-              
-              // Split cells and clean them
-              const cells = row.split('|').slice(1, -1).map(cell => cell.trim());
-              
-              if (cells.length > 0) {
-                const cellTag = isHeader ? 'th' : 'td';
-                const cellStyle = isHeader 
-                  ? 'background: #f0fdf4; border: 1px solid #bbf7d0; padding: 8px 12px; font-weight: 600; color: #065f46;'
-                  : 'border: 1px solid #bbf7d0; padding: 8px 12px; background: #fff;';
-                
-                tableHTML += '<tr>';
-                cells.forEach(cell => {
-                  tableHTML += `<${cellTag} style="${cellStyle}">${cell}</${cellTag}>`;
-                });
-                tableHTML += '</tr>';
-                
-                if (isHeader) isHeader = false;
-              }
+            formatted = formatted.replace(/^\\|(.+)\\|$/gm, function(match) {
+                return 'TABLE_ROW_MARKER' + match + 'TABLE_ROW_MARKER';
             });
             
-            tableHTML += '</table>';
-            return tableHTML;
-          });
-          
-          // Bold text (**text** or ****text****)
-          formatted = formatted.replace(/\*{4}(.*?)\*{4}/g, '<strong style="color: #16a34a; font-weight: 700;">$1</strong>');
-          formatted = formatted.replace(/\*{2}(.*?)\*{2}/g, '<strong>$1</strong>');
-          
-          // Italic text (*text*)
-          formatted = formatted.replace(/(?<!\*)\*([^*\n]+)\*(?!\*)/g, '<em>$1</em>');
-          
-          // Code blocks (```code```)
-          formatted = formatted.replace(/```([\s\S]*?)```/g, '<pre style="background: #f3f4f6; border: 1px solid #d1d5db; border-radius: 6px; padding: 12px; margin: 1rem 0; overflow-x: auto; font-family: monospace; font-size: 0.9em;"><code>$1</code></pre>');
-          
-          // Inline code (`code`)
-          formatted = formatted.replace(/`([^`\n]+)`/g, '<code style="background: #f3f4f6; border: 1px solid #d1d5db; padding: 2px 4px; border-radius: 3px; font-family: monospace; font-size: 0.9em;">$1</code>');
-          
-          // Blockquotes (> text)
-          formatted = formatted.replace(/^> (.+)$/gm, '<blockquote style="border-left: 4px solid #16a34a; margin: 1rem 0; padding: 0.5rem 1rem; background: #f0fdf4; font-style: italic;">$1</blockquote>');
-          
-          // Horizontal rules (--- or ***)
-          formatted = formatted.replace(/^(---+|\*{3,})$/gm, '<hr style="border: none; border-top: 2px solid #e5e7eb; margin: 1.5rem 0;">');
-          
-          // Ordered lists (1. item, 2. item)
-          let listItems = [];
-          formatted = formatted.replace(/^(\s*)(\d+)\.\s+(.+)$/gm, function(match, indent, num, content) {
-            const level = Math.floor(indent.length / 2);
-            return `LIST_ITEM_ORDERED_${level}|||${num}|||${content}`;
-          });
-          
-          // Unordered lists (* item, - item, + item)
-          formatted = formatted.replace(/^(\s*)([\*\-\+])\s+(.+)$/gm, function(match, indent, bullet, content) {
-            const level = Math.floor(indent.length / 2);
-            return `LIST_ITEM_UNORDERED_${level}|||${content}`;
-          });
-          
-          // Convert list markers to HTML
-          formatted = formatted.replace(/LIST_ITEM_ORDERED_(\d+)\|\|\|(\d+)\|\|\|(.+)/g, function(match, level, num, content) {
-            return `<li style="margin: 0.25rem 0;"><strong>${num}.</strong> ${content}</li>`;
-          });
-          
-          formatted = formatted.replace(/LIST_ITEM_UNORDERED_(\d+)\|\|\|(.+)/g, function(match, level, content) {
-            return `<li style="margin: 0.25rem 0;">• ${content}</li>`;
-          });
-          
-          // Wrap consecutive list items in ul/ol tags
-          formatted = formatted.replace(/(<li[^>]*>.*?<\/li>(?:\s*<li[^>]*>.*?<\/li>)*)/g, function(match) {
-            if (match.includes('<strong>')) {
-              return `<ol style="margin: 0.5rem 0; padding-left: 1.5rem;">${match}</ol>`;
-            } else {
-              return `<ul style="margin: 0.5rem 0; padding-left: 1.5rem; list-style: none;">${match}</ul>`;
-            }
-          });
-          
-          // Links [text](url)
-          formatted = formatted.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" style="color: #16a34a; text-decoration: underline;" target="_blank" rel="noopener noreferrer">$1</a>');
-          
-          // Scientific names and key terms
-          formatted = formatted.replace(/(\b(?:Plant|Disease|Symptoms?|Causes?|Treatments?|Medicines?|Prevention|Management|Control|Pathogen|Diagnosis|Inspection):\s*)/gi, "<strong style='color: #16a34a; font-weight: 600;'>$1</strong>");
-          
-          // Scientific names (genus species)
-          formatted = formatted.replace(/\b([A-Z][a-z]+ [a-z]+)\b/g, '<em style="color: #6b7280; font-style: italic;">$1</em>');
-          
-          // Convert line breaks and paragraphs
-          formatted = formatted.replace(/\n\s*\n/g, '</p><p style="margin: 0.8rem 0;">');
-          formatted = formatted.replace(/\n/g, '<br>');
-          
-          // Wrap in paragraph tags (but avoid wrapping tables, lists, headers, blockquotes)
-          if (!formatted.includes('<table') && !formatted.includes('<ul') && !formatted.includes('<ol') && 
-              !formatted.includes('<h1') && !formatted.includes('<h2') && !formatted.includes('<h3') && 
-              !formatted.includes('<blockquote')) {
-            formatted = '<p style="margin: 0.5rem 0;">' + formatted + '</p>';
-          } else {
-            // Add some top margin for complex content
-            formatted = '<div style="margin-top: 0.5rem;">' + formatted + '</div>';
-          }
-          
-          // Clean up empty paragraphs and divs
-          formatted = formatted.replace(/<p[^>]*>\s*<\/p>/g, '');
-          formatted = formatted.replace(/<div[^>]*>\s*<\/div>/g, '');
-          
-          return formatted;
+            const tableRegex = /TABLE_ROW_MARKER\\|(.+?)\\|TABLE_ROW_MARKER(?:\\n(?:TABLE_ROW_MARKER\\|.*?\\|TABLE_ROW_MARKER|\\|.*?\\||[\\-\\|: ]+))*(?=\\n[^|]|$)/g;
+            
+            formatted = formatted.replace(tableRegex, function(tableMatch) {
+                const rows = tableMatch.split('\\n').filter(row => row.includes('|'));
+                let tableHTML = '<table style="border-collapse: collapse; margin: 1rem 0; width: 100%; font-size: 0.9em;">';
+                let isHeader = true;
+                
+                rows.forEach((row) => {
+                    row = row.replace(/TABLE_ROW_MARKER/g, '');
+                    
+                    if (row.match(/^\\s*\\|[\\s\\-\\|:]*\\|\\s*$/)) {
+                        isHeader = false;
+                        return;
+                    }
+                    
+                    const cells = row.split('|').slice(1, -1).map(cell => cell.trim());
+                    
+                    if (cells.length > 0) {
+                        const cellTag = isHeader ? 'th' : 'td';
+                        const cellStyle = isHeader 
+                            ? 'background: #f0fdf4; border: 1px solid #bbf7d0; padding: 8px 12px; font-weight: 600; color: #065f46;'
+                            : 'border: 1px solid #bbf7d0; padding: 8px 12px; background: #fff;';
+                        
+                        tableHTML += '<tr>';
+                        cells.forEach(cell => {
+                            tableHTML += '<' + cellTag + ' style="' + cellStyle + '">' + cell + '</' + cellTag + '>';
+                        });
+                        tableHTML += '</tr>';
+                        
+                        if (isHeader) isHeader = false;
+                    }
+                });
+                
+                tableHTML += '</table>';
+                return tableHTML;
+            });
+            
+            formatted = formatted.replace(/^#### (.*$)/gm, '<h4 style="color: #065f46; margin: 1rem 0 0.5rem 0; font-size: 1.1em; font-weight: 600;">$1</h4>');
+            formatted = formatted.replace(/^### (.*$)/gm, '<h3 style="color: #065f46; margin: 1rem 0 0.5rem 0; font-size: 1.2em; font-weight: 600;">$1</h3>');
+            formatted = formatted.replace(/^## (.*$)/gm, '<h2 style="color: #065f46; margin: 1.2rem 0 0.6rem 0; font-size: 1.4em; font-weight: 700;">$1</h2>');
+            formatted = formatted.replace(/^# (.*$)/gm, '<h1 style="color: #065f46; margin: 1.5rem 0 0.8rem 0; font-size: 1.6em; font-weight: 700;">$1</h1>');
+            
+            formatted = formatted.replace(/```([\\s\\S]*?)```/g, '<pre style="background: #f3f4f6; border: 1px solid #d1d5db; border-radius: 6px; padding: 12px; margin: 1rem 0; overflow-x: auto; font-family: monospace; font-size: 0.9em;"><code>$1</code></pre>');
+            
+            formatted = formatted.replace(/`([^`\\n]+)`/g, '<code style="background: #f3f4f6; border: 1px solid #d1d5db; padding: 2px 6px; border-radius: 3px; font-family: monospace; font-size: 0.9em;">$1</code>');
+            
+            formatted = formatted.replace(/\\*\\*([^\\*\\n]+)\\*\\*/g, '<strong>$1</strong>');
+            formatted = formatted.replace(/__([^_\\n]+)__/g, '<strong>$1</strong>');
+            
+            formatted = formatted.replace(/(?<!\\*)\\*([^\\*\\n]+)\\*(?!\\*)/g, '<em>$1</em>');
+            formatted = formatted.replace(/(?<!_)_([^_\\n]+)_(?!_)/g, '<em>$1</em>');
+            
+            formatted = formatted.replace(/~~([^~\\n]+)~~/g, '<del>$1</del>');
+            
+            formatted = formatted.replace(/^&gt; (.+)$/gm, '<blockquote style="border-left: 4px solid #16a34a; margin: 1rem 0; padding: 0.5rem 1rem; background: #f0fdf4; font-style: italic;">$1</blockquote>');
+            
+            formatted = formatted.replace(/^(---+|\\*{3,})$/gm, '<hr style="border: none; border-top: 2px solid #e5e7eb; margin: 1.5rem 0;">');
+            
+            formatted = formatted.replace(/^[\\*\\-\\+] (.+)$/gm, '<li style="margin: 0.25rem 0;">• $1</li>');
+            
+            formatted = formatted.replace(/^\\d+\\. (.+)$/gm, '<li style="margin: 0.25rem 0;">$1</li>');
+            
+            formatted = formatted.replace(/(<li[^>]*>.*?<\\/li>(?:\\s*<li[^>]*>.*?<\\/li>)*)/g, '<ul style="margin: 0.5rem 0; padding-left: 1.5rem; list-style: none;">$1</ul>');
+            
+            formatted = formatted.replace(/\\[([^\\]]+)\\]\\(([^)]+)\\)/g, '<a href="$2" style="color: #16a34a; text-decoration: underline;" target="_blank" rel="noopener noreferrer">$1</a>');
+            
+            formatted = formatted.replace(/\\n/g, '<br>');
+            
+            return formatted;
         }
         
-        // Test connection when page loads
-        testBackendConnection();
         renderChatHistory();
         
         chatForm.addEventListener('submit', async function(e) {
-          e.preventDefault();
-          const question = chatInput.value.trim();
-          if (!question) return;
-          
-          const now = new Date();
-          const time = now.getHours().toString().padStart(2,'0') + ":" + now.getMinutes().toString().padStart(2,'0');
-          
-          console.log('📤 Sending message:', question);
-          
-          // Add user message to history
-          history.push({role:"user", content:question, time});
-          renderChatHistory();
-          chatInput.value = "";
-          sendBtn.disabled = true;
-          sendBtn.innerHTML = `<span class="chat-loader"></span>Thinking...`;
+            e.preventDefault();
+            const question = chatInput.value.trim();
+            if (!question) return;
+            
+            const now = new Date();
+            const time = now.getHours().toString().padStart(2,'0') + ":" + now.getMinutes().toString().padStart(2,'0');
+            
+            history.push({role:"user", content:question, time});
+            renderChatHistory();
+            chatInput.value = "";
+            sendBtn.disabled = true;
+            sendBtn.innerHTML = '<span class="chat-loader"></span>Thinking...';
         
-          let botMsg = {role:"bot", content:"Sorry, I couldn't process your request.", time};
-          
-          try {
-            console.log('🚀 Calling Flask API...');
+            let botMsg = {role:"bot", content:"Sorry, I couldn't process your request.", time};
             
-            // Call Flask backend API
-            const response = await fetch(`${BACKEND_URL}/api/chat`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              mode: 'cors',
-              body: JSON.stringify({
-                message: question,
-                history: history.slice(0, -1) // Send history without the current user message
-              })
-            });
-        
-            console.log('📡 Response status:', response.status);
+            try {
+                const response = await fetch(BACKEND_URL + '/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    mode: 'cors',
+                    body: JSON.stringify({
+                        message: question,
+                        history: history.slice(0, -1)
+                    })
+                });
             
-            const data = await response.json();
-            console.log('📦 Response data:', data);
-            
-            if (!response.ok) {
-              throw new Error(data.error || `HTTP ${response.status}: ${data.details || 'Unknown error'}`);
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.error || 'HTTP ' + response.status + ': ' + (data.details || 'Unknown error'));
+                }
+                
+                if (data.response) {
+                    botMsg.content = data.response;
+                    connectionStatus.innerHTML = 'Connected and ready!';
+                    connectionStatus.className = 'status-indicator status-connected';
+                } else {
+                    botMsg.content = "Sorry, I didn't receive a proper response from the AI.";
+                }
+                
+            } catch (error) {
+                console.error('Error calling Flask API:', error);
+                
+                if (error.message.includes('Failed to fetch') || error.message.includes('fetch')) {
+                    botMsg.content = 'Cannot connect to Flask backend. Please make sure you\\'re running: python app.py\\n\\nError: ' + error.message;
+                    connectionStatus.innerHTML = 'Backend Connection Failed';
+                } else if (error.message.includes('404')) {
+                    botMsg.content = 'API endpoint not found. Make sure Flask backend is running with correct routes.';
+                    connectionStatus.innerHTML = 'API Route Error';
+                } else {
+                    botMsg.content = 'Error: ' + error.message;
+                    connectionStatus.innerHTML = 'API Error - Check Console';
+                }
+                connectionStatus.className = 'status-indicator status-error';
             }
             
-            if (data.response) {
-              botMsg.content = data.response;
-              connectionStatus.innerHTML = '✅ Ready - Gemini AI Connected';
-              connectionStatus.className = 'status-indicator status-connected';
-              console.log('✅ Got response from Gemini');
-            } else {
-              botMsg.content = "Sorry, I didn't receive a proper response from the AI.";
-              console.warn('⚠️ No response in data');
+            botMsg.time = new Date().getHours().toString().padStart(2,'0') + ":" + new Date().getMinutes().toString().padStart(2,'0');
+            history.push(botMsg);
+            
+            try {
+                localStorage.setItem('pd_chat_history', JSON.stringify(history));
+            } catch (e) {
+                console.warn('Could not save chat history:', e);
             }
             
-          } catch (error) {
-            console.error('❌ Error calling Flask API:', error);
-            
-            if (error.message.includes('Failed to fetch') || error.message.includes('fetch')) {
-              botMsg.content = `❌ Cannot connect to Flask backend. Please make sure you're running: python app.py`;
-              connectionStatus.innerHTML = '❌ Backend Connection Failed';
-            } else if (error.message.includes('404')) {
-              botMsg.content = `❌ API endpoint not found. Make sure Flask backend is running with correct routes.`;
-              connectionStatus.innerHTML = '❌ API Route Error';
-            } else {
-              botMsg.content = `❌ Error: ${error.message}`;
-              connectionStatus.innerHTML = '❌ API Error - Check Console';
-            }
-            connectionStatus.className = 'status-indicator status-error';
-          }
-          
-          botMsg.time = new Date().getHours().toString().padStart(2,'0') + ":" + new Date().getMinutes().toString().padStart(2,'0');
-          history.push(botMsg);
-          
-          // Save to localStorage
-          try {
-            localStorage.setItem('pd_chat_history', JSON.stringify(history));
-          } catch (e) {
-            console.warn('Could not save chat history:', e);
-          }
-          
-          sendBtn.disabled = false;
-          sendBtn.innerHTML = "Send";
-          renderChatHistory();
+            sendBtn.disabled = false;
+            sendBtn.innerHTML = "Send";
+            renderChatHistory();
         });
         
         clearBtn.addEventListener('click', function() {
-          console.log('🧹 Clearing chat history');
-          history = [];
-          try {
-            localStorage.setItem('pd_chat_history', JSON.stringify(history));
-          } catch (e) {
-            console.warn('Could not clear chat history:', e);
-          }
-          renderChatHistory();
+            history = [];
+            try {
+                localStorage.setItem('pd_chat_history', JSON.stringify(history));
+            } catch (e) {
+                console.warn('Could not clear chat history:', e);
+            }
+            renderChatHistory();
         });
         
-        // Allow Enter to send message (Shift+Enter for new line)
         chatInput.addEventListener('keydown', function(e) {
-          if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            chatForm.dispatchEvent(new Event('submit'));
-          }
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                chatForm.dispatchEvent(new Event('submit'));
+            }
         });
         
-        // Auto-resize textarea
         chatInput.addEventListener('input', function() {
-          this.style.height = 'auto';
-          this.style.height = (this.scrollHeight) + 'px';
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
         });
-        
-        </script>
-        </body>
-        </html>
-        """
+    </script>
+</body>
+</html>
+"""
 
 @app.route('/api/chat', methods=['POST'])
 def chat():
-    try:
+    try:        
+        if not GEMINI_API_KEY:
+            return jsonify({
+                'error': 'GEMINI_API_KEY environment variable not set'
+            }), 500
+        
         data = request.get_json()
         
         if not data or 'message' not in data:
@@ -4946,13 +8536,8 @@ def chat():
         user_message = data['message']
         chat_history = data.get('history', [])
         
-        print(f"📩 Received message: {user_message}")
-        print(f"📚 Chat history length: {len(chat_history)}")
-        
-        # Prepare the contents array for Gemini API
         contents = []
         
-        # Add system prompt
         contents.append({
             "role": "user",
             "parts": [{
@@ -4967,7 +8552,6 @@ def chat():
             }]
         })
         
-        # Add recent chat history (last 4 exchanges)
         recent_history = chat_history[-8:] if len(chat_history) > 8 else chat_history
         for msg in recent_history:
             role = "user" if msg['role'] == "user" else "model"
@@ -4976,13 +8560,11 @@ def chat():
                 "parts": [{"text": msg['content']}]
             })
         
-        # Add current user message
         contents.append({
             "role": "user",
             "parts": [{"text": user_message}]
         })
         
-        # Prepare the request body for Gemini API
         request_body = {
             "contents": contents,
             "generationConfig": {
@@ -5011,15 +8593,10 @@ def chat():
             ]
         }
         
-        print(f"🚀 Making request to Gemini API...")
-        
-        # Make request to Gemini API with correct headers
         headers = {
             'Content-Type': 'application/json',
             'x-goog-api-key': GEMINI_API_KEY
         }
-        
-        print(f"🔗 Request URL: {GEMINI_API_URL}")
         
         response = requests.post(
             GEMINI_API_URL,
@@ -5028,14 +8605,8 @@ def chat():
             timeout=30
         )
         
-        print(f"📊 Response status: {response.status_code}")
-        
         if response.status_code != 200:
             error_text = response.text
-            print(f"❌ Gemini API Error: {response.status_code}")
-            print(f"❌ Response text: {error_text}")
-            
-            # Try to parse error response
             try:
                 error_json = response.json()
                 error_message = error_json.get('error', {}).get('message', error_text)
@@ -5049,9 +8620,7 @@ def chat():
             }), 500
         
         response_data = response.json()
-        print(f"✅ Gemini response received successfully")
         
-        # Extract the generated text
         if (response_data.get('candidates') and 
             len(response_data['candidates']) > 0 and 
             response_data['candidates'][0].get('content') and 
@@ -5059,100 +8628,29 @@ def chat():
             len(response_data['candidates'][0]['content']['parts']) > 0):
             
             generated_text = response_data['candidates'][0]['content']['parts'][0]['text']
-            print(f"📝 Generated response length: {len(generated_text)} characters")
             
             return jsonify({
                 'response': generated_text,
                 'status': 'success'
             })
         else:
-            print(f"❌ Unexpected response format from Gemini")
-            print(f"Response data: {json.dumps(response_data, indent=2)}")
             return jsonify({
                 'error': 'No content generated by Gemini API',
                 'details': str(response_data)
             }), 500
             
     except requests.exceptions.Timeout:
-        print("⏰ Request timeout")
         return jsonify({'error': 'Request to Gemini API timed out'}), 504
     except requests.exceptions.RequestException as e:
-        print(f"🌐 Network error: {str(e)}")
         return jsonify({'error': f'Network error: {str(e)}'}), 500
     except json.JSONDecodeError as e:
-        print(f"📄 JSON decode error: {str(e)}")
         return jsonify({'error': f'JSON decode error: {str(e)}'}), 500
     except Exception as e:
-        print(f"💥 Unexpected error: {str(e)}")
         import traceback
         traceback.print_exc()
         return jsonify({'error': f'Internal server error: {str(e)}'}), 500
-
-@app.route('/test-gemini')
-def test_gemini():
-    """Test endpoint to check Gemini API connectivity"""
-    try:
-        print("🧪 Testing Gemini API...")
-        
-        test_request = {
-            "contents": [{
-                "role": "user",
-                "parts": [{"text": "Hello! Can you help with plant diseases?"}]
-            }],
-            "generationConfig": {
-                "maxOutputTokens": 100
-            }
-        }
-        
-        headers = {
-            'Content-Type': 'application/json',
-            'x-goog-api-key': GEMINI_API_KEY
-        }
-        
-        response = requests.post(
-            GEMINI_API_URL,
-            headers=headers,
-            json=test_request,
-            timeout=15
-        )
-        
-        result = {
-            'status_code': response.status_code,
-            'api_key_set': bool(GEMINI_API_KEY and GEMINI_API_KEY != "YOUR_API_KEY_HERE"),
-            'api_url': GEMINI_API_URL,
-            'success': response.status_code == 200
-        }
-        
-        if response.status_code == 200:
-            response_data = response.json()
-            if response_data.get('candidates'):
-                result['test_response'] = response_data['candidates'][0]['content']['parts'][0]['text'][:100] + "..."
-            result['message'] = "✅ Gemini API is working correctly!"
-        else:
-            result['error'] = response.text
-            result['message'] = f"❌ Gemini API test failed with status {response.status_code}"
-        
-        return jsonify(result)
-        
-    except Exception as e:
-        return jsonify({
-            'error': str(e),
-            'api_key_set': bool(GEMINI_API_KEY and GEMINI_API_KEY != GEMINI_API_KEY),
-            'api_url': GEMINI_API_URL,
-            'success': False,
-            'message': f"❌ Test failed: {str(e)}"
-        })
-
-@app.errorhandler(404)
-def not_found(error):
-    return jsonify({'error': 'Endpoint not found'}), 404
-
-@app.errorhandler(500)
-def internal_error(error):
-    return jsonify({'error': 'Internal server error'}), 500
-
-if __name__ == '__main__':
-    initialize_app()
-    port = int(os.environ.get("PORT", 10000))  # Render gives you this automatically
-    app.run(host="0.0.0.0", port=port, debug=False)
-
+    
+print("Starting Flask app...")
+initialize_app()
+print(f"GEMINI_API_KEY set: {'Yes' if GEMINI_API_KEY else 'No'}")
+app.run(debug=False, host='0.0.0.0', port=5000)
